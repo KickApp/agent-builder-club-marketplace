@@ -33,7 +33,7 @@ works for someone who has none of this conversation.
       Data stays fixed across iterations so the only variable is the skill.
 - [ ] 5. Approval gate: the user approves the output and the skill, explicitly. Then
       run the writing gates (line-by-line comparison, em dash sweep, five sections)
-      and hand over the skill folder. Offer `skill-pr` to contribute it to the catalog.
+      and hand over the skill folder.
 
 ## Guardrails
 

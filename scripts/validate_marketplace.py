@@ -27,4 +27,6 @@ for entry in plugins:
         sys.exit(
             f"{manifest} name {plugin.get('name')!r} != marketplace entry {name!r}"
         )
+    if "license" in plugin or "license" in entry:
+        sys.exit("public catalog must not declare a license field")
     print(f"ok {name} -> {source.relative_to(ROOT)}")
