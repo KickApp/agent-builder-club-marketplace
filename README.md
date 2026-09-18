@@ -11,7 +11,7 @@ In Claude Code or Cowork:
 /plugin install kick-abc@agent-builder-club
 ```
 
-If the repository is private, Claude uses your existing GitHub credentials. For Anthropic's public plugin directory, this repo needs to be public.
+The repository is public. Direct pushes are closed; fork it and open a pull request if you want to propose a change.
 
 Enable the plugin, then ask Claude to run the work. Sidekick is the entry point when you have not named a skill.
 
@@ -46,7 +46,3 @@ Users install with `/plugin install <plugin>@agent-builder-club`.
 ## Source
 
 Assembled from `abc/templated/` in [KickApp/agent-factory](https://github.com/KickApp/agent-factory) (`kick-abc`).
-
-## License
-
-Apache-2.0. See `LICENSE`.

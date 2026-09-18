@@ -28,7 +28,3 @@ Enable the plugin, then complete Kick sign-in when a skill needs the ledger.
 
 Skills are connector-agnostic; Kick execution lives in each skill's
 `reference/kick.md`, which loads Kick's published guides at runtime.
-
-## License
-
-Apache-2.0 (see the `license` field in `.claude-plugin/plugin.json`).
