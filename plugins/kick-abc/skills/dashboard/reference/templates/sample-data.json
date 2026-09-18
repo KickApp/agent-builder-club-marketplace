@@ -1,0 +1,821 @@
+{
+  "meta": {
+    "entity": "Northwind Trading Co.",
+    "title": "Performance dashboard",
+    "mark": "Northwind",
+    "period": "FY 2026",
+    "source": "Accounting system · accrual basis",
+    "closedThrough": "December 2026"
+  },
+  "views": [
+    {
+      "name": "Performance",
+      "sections": [
+        {
+          "type": "kpi",
+          "items": [
+            {
+              "label": "Revenue",
+              "value": 4205000,
+              "fmt": "currency",
+              "sub": "FY 2026",
+              "delta": {
+                "value": 0.06186868686868685
+              },
+              "spark": [
+                315375,
+                323785,
+                340605,
+                353220,
+                361630,
+                374245,
+                361630,
+                353220,
+                349015,
+                344810,
+                365835,
+                361630
+              ]
+            },
+            {
+              "label": "Net income",
+              "value": 104000,
+              "fmt": "currency",
+              "sub": "2.5% of revenue",
+              "delta": {
+                "value": -0.26241134751773054
+              },
+              "spark": [
+                5720,
+                6448,
+                7384,
+                8216,
+                9152,
+                9776,
+                9256,
+                8944,
+                8632,
+                9152,
+                10400,
+                10920
+              ]
+            },
+            {
+              "label": "Cash on hand",
+              "value": 290000,
+              "fmt": "currency",
+              "sub": "December 31"
+            },
+            {
+              "label": "Monthly spend",
+              "value": 340583,
+              "fmt": "currency",
+              "sub": "3-month average · 0.9 months of cash"
+            }
+          ]
+        },
+        {
+          "type": "yoy",
+          "title": "Revenue",
+          "span": "half",
+          "fmt": "currency",
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "current": {
+            "name": "FY 2026",
+            "values": [
+              315375,
+              323785,
+              340605,
+              353220,
+              361630,
+              374245,
+              361630,
+              353220,
+              349015,
+              344810,
+              365835,
+              361630
+            ]
+          },
+          "prior": {
+            "name": "FY 2025",
+            "values": [
+              297000,
+              304920,
+              320760,
+              332640,
+              340560,
+              352440,
+              340560,
+              332640,
+              328680,
+              324720,
+              344520,
+              340560
+            ]
+          }
+        },
+        {
+          "type": "yoy",
+          "title": "Net income",
+          "span": "half",
+          "fmt": "currency",
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "current": {
+            "name": "FY 2026",
+            "values": [
+              5720,
+              6448,
+              7384,
+              8216,
+              9152,
+              9776,
+              9256,
+              8944,
+              8632,
+              9152,
+              10400,
+              10920
+            ]
+          },
+          "prior": {
+            "name": "FY 2025",
+            "values": [
+              7755,
+              8742,
+              10011,
+              11139,
+              12408,
+              13254,
+              12549,
+              12126,
+              11703,
+              12408,
+              14100,
+              14805
+            ]
+          }
+        },
+        {
+          "type": "kpi",
+          "compact": true,
+          "items": [
+            {
+              "label": "Locations",
+              "value": 5,
+              "fmt": "number",
+              "sub": "plus untagged activity"
+            },
+            {
+              "label": "Biggest location",
+              "value": 0.5331747919143877,
+              "fmt": "percent",
+              "sub": "Northgate, share of revenue"
+            },
+            {
+              "label": "Most profitable",
+              "value": 214000,
+              "fmt": "currency",
+              "sub": "Northgate"
+            },
+            {
+              "label": "Least profitable",
+              "value": -18400,
+              "fmt": "currency",
+              "sub": "Riverside · 6 months negative"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "title": "Profit by location, by month",
+          "fmt": "currency",
+          "note": "Revenue less costs tagged to each location, before $235,600 of unallocated overhead.",
+          "columns": [
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "series": [
+            {
+              "label": "Northgate",
+              "values": [
+                17600,
+                18200,
+                18600,
+                18900,
+                19200,
+                19500
+              ]
+            },
+            {
+              "label": "Lakeside",
+              "values": [
+                6100,
+                6000,
+                5900,
+                5900,
+                5850,
+                5850
+              ]
+            },
+            {
+              "label": "Riverside",
+              "values": [
+                -3100,
+                -4200,
+                -5000,
+                -5600,
+                -6400,
+                -7100
+              ]
+            },
+            {
+              "label": "Fairview",
+              "values": [
+                2500,
+                2500,
+                2550,
+                2550,
+                2550,
+                2550
+              ]
+            },
+            {
+              "label": "Eastport",
+              "values": [
+                1700,
+                1700,
+                1750,
+                1750,
+                1750,
+                1750
+              ]
+            },
+            {
+              "label": "Unassigned",
+              "values": [
+                3100,
+                3150,
+                3150,
+                3200,
+                3200,
+                3200
+              ],
+              "color": "#d2d2d8"
+            }
+          ]
+        },
+        {
+          "type": "kpi",
+          "compact": true,
+          "items": [
+            {
+              "label": "Products",
+              "value": 19,
+              "fmt": "number",
+              "sub": "distinct items in the period"
+            },
+            {
+              "label": "Biggest seller",
+              "value": 0.3024970273483948,
+              "fmt": "percent",
+              "sub": "20lb Copy Paper (case)"
+            },
+            {
+              "label": "Best margin",
+              "value": 0.5476190476190477,
+              "fmt": "percent",
+              "sub": "Custom Letterhead · 3.1% of revenue"
+            },
+            {
+              "label": "Selling below cost",
+              "value": 1,
+              "fmt": "number",
+              "sub": "Value Copy Paper (case) · $18,300 a year"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Profit per unit by product",
+          "fmt": "currency",
+          "sort": true,
+          "note": "Price and cost as recorded on the item. Ranked by profit dollars.",
+          "columns": [
+            "Item",
+            "Units",
+            "Revenue",
+            "Price",
+            "Unit cost",
+            "Unit margin",
+            "Margin %",
+            "Profit"
+          ],
+          "rows": [
+            {
+              "cells": [
+                "24lb Premium Paper (case)",
+                {
+                  "v": 11200,
+                  "fmt": "number"
+                },
+                {
+                  "v": 806400
+                },
+                {
+                  "v": 72
+                },
+                {
+                  "v": 38.0
+                },
+                {
+                  "v": 34.0
+                },
+                {
+                  "v": 0.4722222222222222,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 380800.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "20lb Copy Paper (case)",
+                {
+                  "v": 26500,
+                  "fmt": "number"
+                },
+                {
+                  "v": 1272000
+                },
+                {
+                  "v": 48
+                },
+                {
+                  "v": 34.0
+                },
+                {
+                  "v": 14.0
+                },
+                {
+                  "v": 0.2916666666666667,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 371000.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Manila Folders (box)",
+                {
+                  "v": 17800,
+                  "fmt": "number"
+                },
+                {
+                  "v": 569600
+                },
+                {
+                  "v": 32
+                },
+                {
+                  "v": 17.5
+                },
+                {
+                  "v": 14.5
+                },
+                {
+                  "v": 0.453125,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 258100.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Toner Cartridge",
+                {
+                  "v": 6400,
+                  "fmt": "number"
+                },
+                {
+                  "v": 569600
+                },
+                {
+                  "v": 89
+                },
+                {
+                  "v": 58.0
+                },
+                {
+                  "v": 31.0
+                },
+                {
+                  "v": 0.34831460674157305,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 198400.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Cardstock (case)",
+                {
+                  "v": 5900,
+                  "fmt": "number"
+                },
+                {
+                  "v": 383500
+                },
+                {
+                  "v": 65
+                },
+                {
+                  "v": 41.0
+                },
+                {
+                  "v": 24.0
+                },
+                {
+                  "v": 0.36923076923076925,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 141600.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Custom Letterhead",
+                {
+                  "v": 620,
+                  "fmt": "number"
+                },
+                {
+                  "v": 130200
+                },
+                {
+                  "v": 210
+                },
+                {
+                  "v": 95.0
+                },
+                {
+                  "v": 115.0
+                },
+                {
+                  "v": 0.5476190476190477,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 71300.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Desktop Printer (unit)",
+                {
+                  "v": 900,
+                  "fmt": "number"
+                },
+                {
+                  "v": 306000
+                },
+                {
+                  "v": 340
+                },
+                {
+                  "v": 286.0
+                },
+                {
+                  "v": 54.0
+                },
+                {
+                  "v": 0.1588235294117647,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 48600.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Value Copy Paper (case)",
+                {
+                  "v": 6100,
+                  "fmt": "number"
+                },
+                {
+                  "v": 158600
+                },
+                {
+                  "v": 26
+                },
+                {
+                  "v": 29.0
+                },
+                {
+                  "v": -3.0
+                },
+                {
+                  "v": -0.11538461538461539,
+                  "fmt": "percent"
+                },
+                {
+                  "v": -18300.0
+                }
+              ]
+            },
+            {
+              "cells": [
+                "Other items (11)",
+                null,
+                {
+                  "v": 9100
+                },
+                null,
+                null,
+                null,
+                null,
+                {
+                  "v": 3500
+                }
+              ]
+            },
+            {
+              "total": true,
+              "cells": [
+                "Total",
+                null,
+                {
+                  "v": 4205000
+                },
+                null,
+                null,
+                null,
+                {
+                  "v": 0.3460166468489893,
+                  "fmt": "percent"
+                },
+                {
+                  "v": 1455000.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "donut",
+          "title": "Revenue mix",
+          "fmt": "currency",
+          "note": "Share of FY 2026 revenue by product.",
+          "items": [
+            {
+              "label": "20lb Copy Paper (case)",
+              "value": 1272000
+            },
+            {
+              "label": "24lb Premium Paper (case)",
+              "value": 806400
+            },
+            {
+              "label": "Manila Folders (box)",
+              "value": 569600
+            },
+            {
+              "label": "Toner Cartridge",
+              "value": 569600
+            },
+            {
+              "label": "Cardstock (case)",
+              "value": 383500
+            },
+            {
+              "label": "Desktop Printer (unit)",
+              "value": 306000
+            },
+            {
+              "label": "Value Copy Paper (case)",
+              "value": 158600
+            },
+            {
+              "label": "Custom Letterhead",
+              "value": 130200
+            },
+            {
+              "label": "Other items (11)",
+              "value": 9100,
+              "color": "#d2d2d8"
+            }
+          ]
+        },
+        {
+          "type": "hbars",
+          "title": "Top customers by revenue",
+          "fmt": "currency",
+          "items": [
+            {
+              "label": "Blue Ridge Health",
+              "value": 756900
+            },
+            {
+              "label": "Lakeland County",
+              "value": 588700
+            },
+            {
+              "label": "Apex Technology",
+              "value": 336400
+            },
+            {
+              "label": "Dunmore Schools",
+              "value": 210250
+            },
+            {
+              "label": "Harper & Sons",
+              "value": 168200
+            },
+            {
+              "label": "Stone Suit Warehouse",
+              "value": 126150
+            },
+            {
+              "label": "Whitepages Directory",
+              "value": 126150
+            },
+            {
+              "label": "Vance Refrigeration",
+              "value": 84100
+            },
+            {
+              "label": "W.B. Jones Heating",
+              "value": 84100
+            },
+            {
+              "label": "43 others",
+              "value": 1724050,
+              "color": "#d2d2d8"
+            }
+          ]
+        },
+        {
+          "type": "hbars",
+          "title": "Top vendors by spend",
+          "fmt": "currency",
+          "note": "Excludes payroll.",
+          "items": [
+            {
+              "label": "Hammermill Paper Supply",
+              "value": 1520000
+            },
+            {
+              "label": "Georgia Pine Paper",
+              "value": 610000
+            },
+            {
+              "label": "Overland Freight",
+              "value": 186000
+            },
+            {
+              "label": "Metro Office Supply",
+              "value": 148000
+            },
+            {
+              "label": "Riverside Business Park",
+              "value": 108000
+            },
+            {
+              "label": "PPL Utilities",
+              "value": 96000
+            },
+            {
+              "label": "Northgate Insurance",
+              "value": 62000
+            },
+            {
+              "label": "Sabre Systems",
+              "value": 48000
+            },
+            {
+              "label": "Vance Refrigeration",
+              "value": 34000
+            },
+            {
+              "label": "58 others",
+              "value": 375000.0,
+              "color": "#d2d2d8"
+            }
+          ]
+        },
+        {
+          "type": "hbars",
+          "title": "Money owed to you",
+          "fmt": "currency",
+          "span": "half",
+          "note": "Unpaid invoices, $184,300 total. $61,200 is past due.",
+          "items": [
+            {
+              "label": "Current",
+              "value": 123100,
+              "color": "posbar"
+            },
+            {
+              "label": "1-30 days late",
+              "value": 34600,
+              "color": "cmut"
+            },
+            {
+              "label": "31-60 days late",
+              "value": 14200,
+              "color": "cmut"
+            },
+            {
+              "label": "61-90 days late",
+              "value": 5900,
+              "color": "cmut"
+            },
+            {
+              "label": "Over 90 days late",
+              "value": 6500,
+              "color": "negbar"
+            }
+          ]
+        },
+        {
+          "type": "hbars",
+          "title": "Money you owe",
+          "fmt": "currency",
+          "span": "half",
+          "note": "Unpaid bills, $97,400 total. $12,800 is past due.",
+          "items": [
+            {
+              "label": "Current",
+              "value": 84600,
+              "color": "posbar"
+            },
+            {
+              "label": "1-30 days late",
+              "value": 9300,
+              "color": "cmut"
+            },
+            {
+              "label": "31-60 days late",
+              "value": 2400,
+              "color": "cmut"
+            },
+            {
+              "label": "61-90 days late",
+              "value": 1100,
+              "color": "cmut"
+            },
+            {
+              "label": "Over 90 days late",
+              "value": 0,
+              "color": "cmut"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "footnote": "Accrual basis, FY 2026 against FY 2025, closed through December 2026. Location tagging covers 99.1% of revenue and untagged activity is its own row, so every share uses the real denominator. Location profit is revenue less costs tagged to the location, before $235,600 of unallocated overhead and re-sums with it to operating income of $118,000. Vendor shares use a $3,187,000 non-payroll base. Illustrative data. Review by a qualified professional before this reaches an owner, board, or lender."
+}

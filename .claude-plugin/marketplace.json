@@ -1,0 +1,27 @@
+{
+  "name": "agent-builder-club",
+  "owner": {
+    "name": "Kick",
+    "email": "support@kick.co",
+    "url": "https://kick.co"
+  },
+  "description": "Accountant agents from Agent Builder Club, installable as Claude plugins",
+  "plugins": [
+    {
+      "name": "kick-abc",
+      "source": "./plugins/kick-abc",
+      "description": "The Kick accounting suite: sidekick plans and runs the right skills at the right scope, action skills do the close and advisory work, brand keeps every artifact on one visual standard, and skill-writer turns your own workflows into new skills",
+      "version": "1.0.0",
+      "author": {
+        "name": "Kick",
+        "email": "support@kick.co",
+        "url": "https://kick.co"
+      },
+      "homepage": "https://agentbuilder.club",
+      "repository": "https://github.com/KickApp/agent-builder-club-marketplace",
+      "license": "Apache-2.0",
+      "category": "accounting",
+      "strict": true
+    }
+  ]
+}

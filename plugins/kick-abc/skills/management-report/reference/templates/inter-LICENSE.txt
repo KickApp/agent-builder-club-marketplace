@@ -1,0 +1,14 @@
+Inter
+Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+
+Licensed under the SIL Open Font License, Version 1.1.
+Full license text: https://scripts.sil.org/OFL
+
+inter-latin.woff2 in this directory is a subset of Inter (variable weight
+100-900, Latin characters plus the punctuation and currency marks a financial
+report uses). It is embedded into generated reports as a base64 data URL by
+theme.py, so the report renders in Kick's typeface with no network connection.
+
+The OFL permits embedding. It does not permit selling the font on its own, and
+it requires this notice to travel with the font, which is why this file ships
+next to it.

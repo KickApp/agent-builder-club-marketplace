@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<!--
+  Advisory report template.
+
+  Self-contained: no CDN, no external fonts, no network. Charts are inline SVG so they
+  stay sharp when the reader prints to PDF (canvas charts print fuzzy or blank).
+
+  Do not hand-edit this file. Write a JSON data file and run:
+      python3 build_report.py data.json out.html
+  which validates the JSON and drops it into the block below.
+
+  The data that ships in this file is a worked example. Open it in a browser to see the
+  full component set rendered.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Advisory report</title>
+<style>
+  :root{
+    --bg:#f7f7f9; --card:#fff;
+    --line:#ebebef; --line2:#f2f2f5;
+    --ink:#2f2f36; --ink2:#4a4a53; --mut:#8c8c96; --mut2:#a8a8b2;
+    --tint:#eeeefa; --tintline:#dedef3;
+    --accent:#6f66e3; --prior:#bcb8ee;
+    /* posbar and negbar are a matched pair: a favorable bar and an adverse one carry the
+       same visual weight, so the chart does not argue for one direction by shouting. */
+    --neg:#c07f7e; --posbar:#9ab8d4; --negbar:#dd9d9c; --negbg:#f9eded;
+    /* seven categorical hues; grey is deliberately NOT among them so it can mean
+       "unassigned / other" without colliding with a real member */
+    /* Unbranded defaults, same pastel character as any brand should use: light, moderate
+       chroma, nothing in the red range that negbar owns. An unbranded file is an unfinished
+       one, but it should not look harsher than the finished version. */
+    --c1:#7ab8c9; --c2:#84c9a8; --c3:#a9a2ea; --c4:#e8b58c;
+    --c5:#c3a2df; --c6:#efd085; --c7:#9db4e6;
+    --cmut:#d2d2d8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:400 14px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; letter-spacing:-.003em;
+  }
+  .page{max-width:960px;margin:0 auto;padding:26px 24px 56px}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ---------- header ---------- */
+  .hd{display:flex;justify-content:space-between;align-items:center;gap:20px 28px;flex-wrap:wrap;
+      padding-bottom:17px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:11px;min-width:0;flex:1 1 260px}
+  .mark{width:34px;height:34px;border-radius:9px;background:#3068ed;color:#fff;flex:none;
+        display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:500;letter-spacing:.01em}
+  /* the name column must be allowed to shrink, or a long entity runs under the metadata */
+  .btxt{min-width:0}
+  .ent,.ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ent{font-size:11px;color:var(--mut);line-height:1.35}
+  .ttl{font-size:17px;font-weight:500;color:var(--ink);letter-spacing:-.012em;line-height:1.35}
+  .k-sp{display:block;width:100%;height:26px;margin-top:9px}
+  .hmeta{display:flex;gap:12px 28px;flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end}
+  .hmeta>div{text-align:right;min-width:0}
+  .hm-l{font-size:11px;color:var(--mut2);margin-bottom:3px;line-height:1.3}
+  .hm-v{font-size:12.5px;color:var(--ink2);line-height:1.3}
+
+  /* ---------- tabs ---------- */
+  /* Tab labels name a measure rather than a question word, so they run long. They keep their
+     full label and wrap to a second row on a narrow screen, rather than shrinking until the
+     text breaks inside the button and the underline stops matching the word above it. */
+  .tabs{display:flex;flex-wrap:wrap;row-gap:2px;margin:15px 0 20px}
+  .tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+       font:inherit;font-size:13.5px;color:var(--mut);padding:7px 3px;margin-right:22px;
+       cursor:pointer;flex:none;white-space:nowrap}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+  .vlabel{display:none;font-size:13px;font-weight:500;color:var(--ink);margin:0 0 14px}
+
+  /* ---------- segmented control ---------- */
+  /* Entity filter. A pill that opens a checklist, shown only when the engagement covers
+     more than one entity, so a single-entity report never carries a control with one option. */
+  .ents{position:relative;flex:none}
+  .ents>button{display:inline-flex;align-items:center;gap:7px;appearance:none;cursor:pointer;
+       background:var(--card);border:1px solid var(--line);border-radius:9px;padding:5px 10px;
+       font:inherit;font-size:12px;color:var(--ink)}
+  .ents>button:hover{border-color:var(--line);background:var(--bg)}
+  .ents .chips{display:inline-flex;gap:-2px}
+  .ents .chip{width:17px;height:17px;border-radius:5px;display:inline-flex;align-items:center;
+       justify-content:center;font-size:9.5px;font-weight:500;color:#fff;border:1.5px solid var(--card)}
+  .ents .chip+.chip{margin-left:-5px}
+  .ents .menu{position:absolute;right:0;top:calc(100% + 5px);z-index:40;min-width:196px;
+       background:var(--card);border:1px solid var(--line);border-radius:11px;padding:5px;
+       box-shadow:0 10px 28px rgba(83,100,126,.14);display:none}
+  .ents.open .menu{display:block}
+  .ents .menu label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;
+       font-size:12.5px;cursor:pointer}
+  .ents .menu label:hover{background:var(--bg)}
+  .ents .menu input{margin:0 0 0 auto;accent-color:var(--accent)}
+  .seg{display:inline-flex;background:#f1f1f5;border-radius:8px;padding:2px;gap:2px;flex:none}
+  .seg button{appearance:none;border:0;background:none;font:inherit;font-size:12px;color:var(--mut);
+              padding:5px 13px;border-radius:6px;cursor:pointer;white-space:nowrap}
+  .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(24,24,45,.09)}
+
+  /* ---------- narrative ---------- */
+  .headline{font-size:16.5px;line-height:1.55;color:var(--ink);margin:0 0 18px;max-width:74ch}
+  .callout{background:var(--tint);border:1px solid var(--tintline);border-radius:12px;
+           padding:16px 18px;margin:0 0 18px}
+  .callout.neg{background:var(--negbg);border-color:#f0dcdc}
+  .co-l{font-size:11px;color:var(--mut);margin-bottom:6px}
+  .co-v{font-size:15px;font-weight:500;line-height:1.45;color:var(--ink)}
+  .co-b{font-size:13px;line-height:1.55;color:var(--ink2);margin-top:7px}
+
+  /* ---------- layout ---------- */
+  .row{margin-bottom:16px}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  @media(max-width:780px){.grid2{grid-template-columns:1fr}}
+
+  /* ---------- cards ---------- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .ch{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 18px 0}
+  .ct{font-size:14px;font-weight:500;color:var(--ink)}
+  .cn{font-size:11.5px;color:var(--mut2);text-align:right;flex:none}
+
+  /* ---------- kpi tiles ---------- */
+  /* No selected/tinted tile variant. A tinted tile on a page with filters reads as an
+     active selection, and a reader who takes it for one misreads the whole page. */
+  .kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px 16px}
+  /* Four tiles or fewer is the hero row, and it carries the page: bigger figures, more air. */
+  .kpis.k4 .kpi{padding:19px 21px 20px}
+  .kpis.k4 .k-v{font-size:33px}
+  .k-l{font-size:11.5px;color:var(--mut);margin-bottom:8px;line-height:1.3}
+  .k-v{font-size:26px;font-weight:500;letter-spacing:-.022em;line-height:1.12;color:var(--ink);white-space:nowrap}
+  .k-s{font-size:11.5px;color:var(--mut);margin-top:8px;line-height:1.35}
+  .k-d.up{color:var(--ink2)}
+  .k-d.dn{color:var(--neg)}
+
+  /* ---------- charts ---------- */
+  .plot{padding:14px 16px 0}
+  .plot svg{display:block;width:100%;height:auto;overflow:visible}
+  .lgd{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:8px 18px 15px;
+       font-size:11.5px;color:var(--mut)}
+  .lgd span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .ring{width:10px;height:10px;border-radius:50%;border:1.5px solid #c9c9d2;flex:none}
+  .ring.on{border-color:var(--accent);box-shadow:inset 0 0 0 1.5px #fff,inset 0 0 0 5px var(--accent)}
+
+  /* ---------- tables ---------- */
+  table{width:100%;border-collapse:collapse}
+  th{font-size:11.5px;font-weight:400;color:var(--mut2);text-align:right;padding:11px 18px;
+     border-bottom:1px solid var(--line)}
+  th:first-child{text-align:left}
+  td{font-size:13px;color:var(--ink2);text-align:right;padding:13px 18px;
+     border-bottom:1px solid var(--line2);font-variant-numeric:tabular-nums}
+  td:first-child{text-align:left;color:var(--ink)}
+  tbody tr:last-child td{border-bottom:0}
+  tr.tot td{color:var(--ink);font-weight:500;border-top:1px solid var(--line);border-bottom:0}
+  td.neg{color:var(--neg)}
+  /* ---------- hover tooltip ---------- */
+  /* One floating element for the whole page. The charts are hand-built inline SVG rather
+     than a charting library, so each hoverable shape carries its own data-tip string and
+     this only has to place it. Never printed, and never a hit target itself. */
+  .tip{position:fixed;z-index:60;pointer-events:none;opacity:0;transition:opacity .08s ease;
+       background:var(--card);color:var(--ink);border:1px solid var(--line);
+       border-radius:10px;padding:9px 11px;min-width:170px;max-width:300px;
+       font-size:12px;line-height:1.45;box-shadow:0 8px 24px rgba(83,100,126,.14)}
+  .tip.on{opacity:1}
+  .tip .t-l{font-weight:500;display:flex;align-items:center;gap:6px}
+  .tip .t-d{width:8px;height:8px;border-radius:50%;flex:none}
+  .tip .t-s{color:var(--mut);margin:1px 0 2px;font-size:11.5px}
+  /* label left, figure right, so several rows line up into a column of numbers */
+  .tip .t-r,.tip .t-t{display:flex;justify-content:space-between;gap:20px;margin-top:4px}
+  .tip .t-r>b,.tip .t-t>b{font-weight:500;font-variant-numeric:tabular-nums}
+  .tip .t-t{margin-top:6px;padding-top:5px;border-top:1px solid var(--line)}
+  .tip .t-v{color:var(--mut);font-variant-numeric:tabular-nums}
+  [data-tip]{cursor:default}
+  /* the vertical guide on a line chart is pure CSS, shown only while its band is hovered */
+  .hb .gl{opacity:0}
+  .hb:hover .gl{opacity:.85}
+  @media print{.tip{display:none}}
+  /* Sortable columns. The caret slot is reserved on every header so sorting a column
+     does not shift the row underneath it. */
+  table.srt th{cursor:pointer;user-select:none;white-space:nowrap}
+  table.srt th:hover{color:var(--mut)}
+  table.srt th:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px}
+  table.srt th::after{content:"";display:inline-block;width:0;height:0;margin-left:5px;
+     border:3px solid transparent;vertical-align:middle}
+  /* An unsorted header hints its caret on hover, so the reader finds sorting without
+     the report having to spend a sentence telling them it exists. */
+  table.srt th:not([aria-sort]):hover::after{border-top-color:var(--line);margin-bottom:-3px}
+  table.srt th[aria-sort="descending"]::after{border-top-color:currentColor;margin-bottom:-3px}
+  table.srt th[aria-sort="ascending"]::after{border-bottom-color:currentColor;margin-top:-3px}
+  @media print{table.srt th{cursor:auto}}
+  /* ---------- evidence drawers ---------- */
+  /* A cell or bar that carries transactions announces it with a dotted underline, the
+     quietest affordance that still reads as "this opens". The drawer is a bordered
+     mini-table so it reads as detail under a number, never as another section. */
+  [data-ev]{cursor:pointer}
+  td[data-ev]{text-decoration:underline dotted;text-decoration-color:rgba(83,83,100,.4);
+              text-underline-offset:3px}
+  tr.evd>td{background:transparent;padding:4px 14px 14px;text-align:left}
+  .evp{padding:2px 18px 16px}
+  .ev{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+  .ev-h{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 16px;
+        padding:10px 14px;font-size:12px;color:var(--mut);
+        border-bottom:1px solid var(--line2);background:#fbfbfc}
+  .ev-h b{font-weight:500;color:var(--ink2)}
+  .ev table{width:100%}
+  .ev th{padding:8px 14px;text-align:left}
+  .ev td{padding:8px 14px;font-size:12px;text-align:left;border-bottom:1px solid var(--line2)}
+  .ev tr:last-child td{border-bottom:0}
+  .ev th:last-child,.ev td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  .ev td.m{color:var(--mut)}
+  .ev-m{padding:9px 14px;font-size:11.5px;color:var(--mut2);border-top:1px solid var(--line2)}
+  /* ---------- cross-highlight ---------- */
+  /* Hovering a row or bar lights up the same account everywhere else on the page. Keyed
+     by label, wired at the DOM, and only fires when the label appears more than once. */
+  tr.xhl>td{background:#f5f5f9}
+  g.xhl rect[rx]{stroke:rgba(52,52,64,.5);stroke-width:1.25}
+  /* ---------- table search ---------- */
+  .tsr{padding:0 18px 12px}
+  .tsr input{width:250px;max-width:100%;border:1px solid var(--line);border-radius:9px;
+             padding:7px 11px;font:inherit;font-size:12.5px;color:var(--ink);
+             background:var(--card);outline:none}
+  .tsr input::placeholder{color:var(--mut2)}
+  .tsr input:focus{border-color:var(--accent)}
+  @media print{.tsr{display:none}}
+  .nm{display:inline-flex;align-items:center;gap:9px}
+  .sb{width:118px;height:6px;border-radius:3px;background:#f0f0f4;display:inline-block;
+      vertical-align:middle;overflow:hidden}
+  .sb i{display:block;height:100%;border-radius:3px}
+
+  /* ---------- matrix ---------- */
+  /* Members down, periods across. The wash is a single accent tint scaled by magnitude
+     so the eye lands on the big cells; it is emphasis, never a red/green score. */
+  .mx{overflow-x:auto}
+  .mx table{min-width:100%}
+  /* Group header and subtotal. The band separates blocks; the rule closes one. */
+  tr.mgrp td{background:var(--bg);font-weight:500;color:var(--ink);
+       padding-top:9px;padding-bottom:9px;letter-spacing:-.005em}
+  tr.msub td{font-weight:500;border-top:1px solid var(--line)}
+  .mx td.c{padding:11px 14px;box-shadow:inset 1px 0 0 var(--card)}
+  .mx th.c{padding:11px 14px}
+  .mx td.rt{color:var(--ink);font-weight:500;border-left:1px solid var(--line)}
+  .mx th.rt{border-left:1px solid var(--line)}
+  .mx .sb{width:70px}
+
+  /* ---------- p&l ---------- */
+  .pl-r{display:flex;justify-content:space-between;gap:16px;padding:11px 18px;
+        border-bottom:1px solid var(--line2);font-size:13px}
+  .pl-r:last-child{border-bottom:0}
+  .pl-r .l{color:var(--ink2)}
+  .pl-r .v{font-variant-numeric:tabular-nums;color:var(--ink2);flex:none}
+  .pl-r.sub .l{padding-left:16px;color:var(--mut)}
+  .pl-r.tot{border-top:1px solid var(--line);border-bottom:0;background:#fbfbfc}
+  .pl-r.tot .l,.pl-r.tot .v{color:var(--ink);font-weight:500}
+  .pl-r .v.neg{color:var(--neg)}
+
+  /* ---------- budgets ---------- */
+  .b-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:16px 18px 0}
+  .b-nm{font-size:14px;color:var(--ink);display:flex;align-items:center;gap:9px}
+  .b-sub{font-size:11.5px;color:var(--mut2);margin-top:5px}
+  .b-tot{font-size:19px;font-weight:500;color:var(--ink);text-align:right;
+         font-variant-numeric:tabular-nums;line-height:1.2}
+  .b-totl{font-size:11px;color:var(--mut2);text-align:right;margin-top:3px}
+  .b-util{padding:15px 18px 16px}
+  .b-ur{display:flex;justify-content:space-between;gap:16px;font-size:11.5px;color:var(--mut);margin-bottom:8px}
+  .b-ur b{font-weight:500;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .bar{height:7px;border-radius:4px;background:#ebebf0;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:4px;background:var(--accent)}
+  .bar.over i{background:var(--negbar)}
+  .b-l{display:flex;justify-content:space-between;gap:14px;align-items:baseline;
+       padding:11px 18px;border-top:1px solid var(--line2);font-size:13px}
+  .b-l .l{color:var(--ink2);flex:1;min-width:0}
+  .b-l .v{color:var(--ink2);font-variant-numeric:tabular-nums;flex:none}
+  .b-l .p{color:var(--mut2);font-variant-numeric:tabular-nums;width:46px;text-align:right;flex:none;font-size:12px}
+  .b-prot{margin:12px 12px 0;background:var(--tint);border-radius:9px;padding:12px 15px;
+          display:flex;justify-content:space-between;gap:16px;font-size:13px;color:var(--ink)}
+  .b-prot .v{font-variant-numeric:tabular-nums}
+  .b-note{padding:13px 18px 15px;font-size:11.5px;color:var(--mut2);line-height:1.5}
+
+  /* ---------- findings ---------- */
+  ol.fnd{list-style:none;counter-reset:f;margin:0;padding:0}
+  ol.fnd li{counter-increment:f;background:var(--card);border:1px solid var(--line);border-radius:12px;
+            padding:14px 18px 15px 50px;position:relative;margin-bottom:8px}
+  ol.fnd li:last-child{margin-bottom:0}
+  ol.fnd li:before{content:counter(f);position:absolute;left:17px;top:15px;width:21px;height:21px;
+    border-radius:6px;background:#f1f1f5;color:var(--mut);font-size:11.5px;
+    display:flex;align-items:center;justify-content:center}
+  .f-t{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+  .f-t .l{font-size:13.5px;font-weight:500;color:var(--ink)}
+  .f-t .v{font-size:13.5px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;flex:none}
+  .f-t .v.neg{color:var(--neg)}
+  .f-b{font-size:13px;line-height:1.55;color:var(--ink2);margin-top:6px}
+
+  /* heading for sections that bring their own containers (kpi, findings, budgets) */
+  .shd{font-size:13px;font-weight:500;color:var(--ink);margin:0 0 4px}
+  .snote{font-size:12.5px;color:var(--mut);margin:0 0 13px;max-width:80ch;line-height:1.5}
+
+  .prose{font-size:14px;line-height:1.6;color:var(--ink2);max-width:76ch;white-space:pre-line}
+  footer{margin-top:26px;padding-top:15px;border-top:1px solid var(--line);
+         font-size:11.5px;color:var(--mut2);line-height:1.6}
+
+  @media print{
+    body{background:#fff}
+    .page{max-width:none;padding:0}
+    .tabs,.seg,.ents{display:none}
+    .view{display:block!important}
+    .view+.view{break-before:page}
+    .vlabel{display:block}
+    .card,.kpi,ol.fnd li,.callout{break-inside:avoid}
+    /* one column on paper: a side-by-side pair cannot split across a page, so it
+       leaves half a page blank rather than flowing */
+    .grid2{grid-template-columns:1fr}
+    /* keep the tile band on one row so the first chart still fits on page one */
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(98px,1fr));gap:8px}
+    .kpi{padding:11px 12px 12px}
+    .k-v{font-size:17px !important}   /* beats any size the fit pass set on screen */
+    .k-l,.k-s{font-size:9.5px}
+    .k-l{margin-bottom:5px}
+    .k-s{margin-top:5px}
+    /* a scroll container clips on paper: tighten the matrix instead so a wide period
+       grid fits the page rather than losing its last columns at the fold */
+    .mx{overflow-x:visible}
+    .mx td.c,.mx th.c{padding-left:8px;padding-right:8px;font-size:11.5px}
+    .mx td:first-child,.mx th:first-child{padding-right:8px}
+    .mx .sb{width:44px}
+  }
+</style>
+</head>
+<body>
+<div class="page" id="app"></div>
+
+<!-- ======================= DATA =======================
+     Replaced wholesale by build_report.py. Pure JSON: no comments, no trailing
+     commas, no functions. Pass raw numbers (410220, 0.262), never strings like
+     "$410,220". The renderer formats everything.
+     ==================================================== -->
+<script id="data" type="application/json">
+{
+  "meta": {
+    "entity": "Brightpath Services Co.",
+    "title": "Financial performance",
+    "mark": "BP",
+    "period": "Jul 2026",
+    "source": "Kick · accrual",
+    "closedThrough": "July 2026"
+  },
+
+  "headline": "Revenue is up 26% on the same month last year and July was the most profitable month on record, but the Projects program has now spent more than its full-year budget with five months still to run.",
+
+  "callout": {
+    "label": "The one thing to look at first",
+    "value": "Projects has spent $818,400 against a $784,000 annual budget, 104% of the year, in seven months.",
+    "body": "The overrun is $34,400 today and the program is running at roughly $117,000 a month. Left alone, Projects finishes the year about $550,000 over, which is more than the $196,000 margin the program was meant to protect."
+  },
+
+  "views": [
+    {
+      "name": "Performance",
+      "sections": [
+        {
+          "type": "kpi",
+          "items": [
+            { "label": "Revenue", "value": 410220, "fmt": "currency",
+              "delta": { "value": 0.262 }, "sub": "vs last year" },
+            { "label": "Net income", "value": 58140, "fmt": "currency",
+              "delta": { "value": 1.236 }, "sub": "vs last year" },
+            { "label": "Cash on hand", "value": 915400, "fmt": "currency",
+              "sub": "$840k operating · $75k reserve" },
+            { "label": "Burn rate", "value": 352080, "fmt": "currency",
+              "sub": "average monthly spend, last 3 months" },
+            { "label": "Cash cushion", "value": "2.6 months", "fmt": "text",
+              "sub": "cash ÷ spend · cash-flow positive" }
+          ]
+        },
+        {
+          "type": "yoy", "span": "half", "title": "Revenue · this year vs last", "fmt": "currency",
+          "labels": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+          "prior":   { "name": "2025", "values": [262000,271000,288000,295000,302000,318000,325000,331000,340000,352000,358000,371000] },
+          "current": { "name": "2026", "values": [298400,312100,341600,355200,368900,392400,410220,null,null,null,null,null] }
+        },
+        {
+          "type": "yoy", "span": "half", "title": "Net profit · this year vs last", "fmt": "currency",
+          "labels": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+          "prior":   { "name": "2025", "values": [14200,16100,19400,18300,21200,24600,26000,25400,28100,30200,29400,33100] },
+          "current": { "name": "2026", "values": [22300,28400,35100,31200,44600,51300,58140,null,null,null,null,null] }
+        },
+        {
+          "type": "hbars", "span": "half", "title": "Revenue by business line",
+          "note": "top 2 = 81.8% of revenue", "fmt": "currency",
+          "items": [
+            { "label": "Recurring services", "value": 214000 },
+            { "label": "Projects", "value": 121500 },
+            { "label": "Products", "value": 52720 },
+            { "label": "Unclassified", "value": 22000 }
+          ]
+        },
+        {
+          "type": "donut", "span": "half", "title": "Revenue mix", "note": "selected period",
+          "fmt": "currency",
+          "items": [
+            { "label": "Recurring services", "value": 214000 },
+            { "label": "Projects", "value": 121500 },
+            { "label": "Products", "value": 52720 },
+            { "label": "Unclassified", "value": 22000 }
+          ]
+        },
+        {
+          "type": "share", "title": "Revenue by business line", "note": "selected period",
+          "columns": ["Business line", "Revenue", "Share of revenue"], "fmt": "currency",
+          "items": [
+            { "label": "Recurring services", "value": 214000 },
+            { "label": "Projects", "value": 121500 },
+            { "label": "Products", "value": 52720 },
+            { "label": "Unclassified", "value": 22000 }
+          ]
+        },
+        {
+          "type": "pnl", "title": "Profit and loss", "note": "Jul 2026 · accrual",
+          "rows": [
+            { "label": "Revenue", "value": 410220 },
+            { "label": "Cost of revenue", "value": -168190 },
+            { "label": "Gross profit", "value": 242030, "total": true, "sub": "59.0% margin" },
+            { "label": "Payroll", "value": -118400, "indent": true },
+            { "label": "Operating expense", "value": -62340, "indent": true },
+            { "label": "Total operating expense", "value": -180740, "total": true },
+            { "label": "Operating income", "value": 61290, "total": true },
+            { "label": "Other income and expense", "value": -3150, "indent": true },
+            { "label": "Net income", "value": 58140, "total": true, "sub": "14.2% of revenue" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Budget",
+      "sections": [
+        {
+          "type": "kpi",
+          "items": [
+            { "label": "Total budget", "value": 2720000, "fmt": "currency",
+              "sub": "2 programs · annual · incl. margin" },
+            { "label": "Spent to date", "value": 1560580, "fmt": "currency",
+              "sub": "57.4% of budget · 2026 YTD" },
+            { "label": "Remaining", "value": 1159420, "fmt": "currency",
+              "sub": "budget less classified spend" },
+            { "label": "Protected margin", "value": 556000, "fmt": "currency",
+              "sub": "target profit, not spendable" }
+          ]
+        },
+        {
+          "type": "budgets",
+          "items": [
+            {
+              "name": "Recurring services",
+              "subtitle": "annual budget · 12 months",
+              "total": 1740000,
+              "spent": 742180,
+              "budget": 1380000,
+              "lines": [
+                { "label": "Payroll and benefits", "value": 612000 },
+                { "label": "Contractors", "value": 264000 },
+                { "label": "Software and infrastructure", "value": 168000 },
+                { "label": "Marketing", "value": 132000 },
+                { "label": "Facilities", "value": 96000 },
+                { "label": "Travel and client meetings", "value": 48000 },
+                { "label": "Legal and insurance", "value": 36000 },
+                { "label": "Contingency", "value": 24000 }
+              ],
+              "protected": { "label": "Target margin · protected", "value": 360000 },
+              "note": "Tracking to plan at 53.8% of the spend budget with 58% of the year elapsed."
+            },
+            {
+              "name": "Projects",
+              "subtitle": "annual budget · 12 months",
+              "total": 980000,
+              "spent": 818400,
+              "budget": 784000,
+              "lines": [
+                { "label": "Project payroll", "value": 292000 },
+                { "label": "Subcontractors", "value": 214000 },
+                { "label": "Materials and pass-through", "value": 118000 },
+                { "label": "Software and tooling", "value": 62000 },
+                { "label": "Travel and per diem", "value": 44000 },
+                { "label": "Legal and insurance", "value": 28000 },
+                { "label": "Contingency", "value": 26000 }
+              ],
+              "protected": { "label": "Target margin · protected", "value": 196000 },
+              "note": "Over the annual spend budget by $34,400 in month seven. Subcontractors are the largest single line and the place to look first."
+            }
+          ]
+        },
+        {
+          "type": "findings",
+          "title": "Where the budget is moving",
+          "note": "Ranked by dollars at stake. Each one is a question for your accountant, not an instruction.",
+          "items": [
+            { "title": "Projects is tracking to finish roughly $550,000 over budget", "value": -550000, "fmt": "currency",
+              "body": "Seven months of spend at $116,914 a month against a $784,000 annual budget. Five months at the same rate adds $584,570, for a full-year total near $1.4M. Worth confirming whether scope grew with it before treating this as an overrun." },
+            { "title": "Subcontractors on Projects are 27% of spend to date", "value": -221000, "fmt": "currency",
+              "body": "Budgeted at $214,000 for the year and already at $221,000. Either the mix shifted from employees to subcontractors, or project volume ran ahead of plan. The two have very different answers." },
+            { "title": "Recurring services is running under plan", "value": 62820, "fmt": "currency",
+              "body": "53.8% of the spend budget used against 58% of the year elapsed, about $62,820 of favorable timing. Some of this is likely timing rather than saving; confirm before reallocating it to Projects." }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "footnote": "Confidential · prepared for the owners of Brightpath Services Co. from the general ledger through July 2026 (closed and reconciled). Read-only: nothing in the accounting system was changed. A discussion aid for review with a qualified professional, not financial, tax, or lending advice."
+}
+</script>
+
+<script>
+/* ============================================================================
+   RENDERER. Do not edit.
+   ============================================================================ */
+(function () {
+  "use strict";
+
+  var DATA;
+  try {
+    DATA = JSON.parse(document.getElementById("data").textContent);
+  } catch (e) {
+    document.getElementById("app").innerHTML =
+      '<p class="headline">Failed to load the report. Please rebuild it from the source data. ' + String(e.message) + "</p>";
+    return;
+  }
+
+  var PALETTE = ["--c1","--c2","--c3","--c4","--c5","--c6","--c7"].map(function (v) {
+    return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  });
+  var ACCENT = cssv("--accent"), PRIOR = cssv("--prior"), MUT2 = cssv("--mut2"), GRID = "#f0f0f4";
+  function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+  /* Keep an axis label inside the viewBox. The first and last ticks sit at the plot
+     edges, so a centered label hangs past the frame and the containment pass clips it
+     to an ellipsis. Anchoring the edge ticks inward keeps the number readable. */
+  function tickAnchor(cx, text, W){
+    var w = String(text).length * 5.9;
+    if (cx - w / 2 < 1) return "start";
+    if (cx + w / 2 > W - 1) return "end";
+    return "middle";
+  }
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  /* ---- hover tooltip -------------------------------------------------------
+     data-tip carries a label on the first line and detail lines after it, newline
+     separated. Charts show a rounded axis value and a truncated label by necessity;
+     the tooltip is where the exact figure and the full name live. */
+  var tipEl = null;
+  function tipNode(){
+    if (!tipEl) {
+      tipEl = document.createElement("div");
+      tipEl.className = "tip";
+      tipEl.setAttribute("role", "tooltip");
+      document.body.appendChild(tipEl);
+    }
+    return tipEl;
+  }
+  function tipShow(el, e){
+    var raw = el.getAttribute("data-tip");
+    if (!raw) return;
+    var parts = String(raw).split("\n");
+    var dot = el.getAttribute("data-tip-dot");
+    var t = tipNode();
+    /* Four line shapes, so one attribute can carry the whole card. A tab splits a row into
+       label and figure; "~" marks the period line under the title; "=" marks the total,
+       which gets a rule above it. Anything else stays a plain muted line. */
+    t.innerHTML =
+      '<div class="t-l">' + (dot ? '<i class="t-d" style="background:' + esc(dot) + '"></i>' : "") +
+        esc(parts[0]) + "</div>" +
+      parts.slice(1).map(function (p){
+        if (!p) return "";
+        var total = p.charAt(0) === "=";
+        if (total) p = p.slice(1);
+        var i = p.indexOf("\t");
+        if (i < 0) {
+          return p.charAt(0) === "~"
+            ? '<div class="t-s">' + esc(p.slice(1).trim()) + "</div>"
+            : '<div class="t-v">' + esc(p) + "</div>";
+        }
+        return '<div class="' + (total ? "t-t" : "t-r") + '"><span>' + esc(p.slice(0, i)) +
+               "</span><b>" + esc(p.slice(i + 1)) + "</b></div>";
+      }).join("");
+    t.className = "tip on";
+    tipMove(e);
+  }
+  function tipMove(e){
+    if (!tipEl) return;
+    /* measured after the text is in, so a two-line tip flips at the right point */
+    var pad = 14, w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    var x = e.clientX + pad, y = e.clientY + pad;
+    if (x + w > window.innerWidth - 8) x = e.clientX - w - pad;
+    if (y + h > window.innerHeight - 8) y = e.clientY - h - pad;
+    tipEl.style.left = Math.max(8, x) + "px";
+    tipEl.style.top = Math.max(8, y) + "px";
+  }
+  function tipHide(){ if (tipEl) tipEl.className = "tip"; }
+  function tipTarget(e){
+    return (e.target && e.target.closest) ? e.target.closest("[data-tip]") : null;
+  }
+  document.addEventListener("mouseover", function (e){
+    var t = tipTarget(e);
+    if (t) tipShow(t, e);
+  });
+  document.addEventListener("mousemove", function (e){
+    if (!tipEl || tipEl.className.indexOf("on") < 0) return;
+    if (tipTarget(e)) tipMove(e); else tipHide();
+  });
+  document.addEventListener("mouseout", function (e){
+    if (tipTarget(e)) tipHide();
+  });
+  /* a tip pinned to viewport coordinates goes stale the moment the page moves */
+  window.addEventListener("scroll", tipHide, true);
+  window.addEventListener("blur", tipHide);
+
+  /* label first, then detail lines; empties drop out */
+  function tipStr(label){
+    var out = [String(label == null ? "" : label)];
+    for (var i = 1; i < arguments.length; i++) if (arguments[i]) out.push(arguments[i]);
+    return out.join("\n");
+  }
+  function tipAttr(str, dot){
+    return ' data-tip="' + esc(str) + '"' + (dot ? ' data-tip-dot="' + esc(dot) + '"' : "");
+  }
+  /* the row shapes tipShow understands, so callers never hand-build the encoding */
+  function tipSub(s){ return s ? "~" + s : ""; }
+  function tipRow(label, value){ return label + "\t" + value; }
+  function tipTotal(label, value){ return "=" + label + "\t" + value; }
+
+  /* ---- cross-highlight key --------------------------------------------------
+     The same account name appears on a bridge bar, a matrix row, and a table row.
+     data-key carries the normalized label so hovering one can light up the others. */
+  function keyAttr(label){
+    var k = String(label == null ? "" : label).toLowerCase().replace(/\s+/g, " ").trim();
+    return k ? ' data-key="' + esc(k) + '"' : "";
+  }
+
+  /* ---- evidence attributes ---------------------------------------------------
+     Evidence is embedded at generation time. The transactions ride on the element as
+     JSON, so the drawer needs no query and the file still opens with no network. */
+  function evAttr(ev, title, f){
+    if (!ev || !ev.txns || !ev.txns.length) return "";
+    var payload = { txns: ev.txns, more: ev.more, moreValue: ev.moreValue, fmt: ev.fmt || f };
+    return ' data-ev="' + esc(JSON.stringify(payload)) + '" data-ev-t="' + esc(title) + '"';
+  }
+  function shareTxt(part, total){
+    if (!total) return "";
+    return (Math.abs(part) / Math.abs(total) * 100).toFixed(1) + "% of total";
+  }
+
+  /* Always exact to the dollar. The report's claim is that it ties to the books, and
+     "$2.72M" does not tie to anything. Abbreviation is for chart axes only.
+     Statement convention throughout: a negative currency figure renders in parentheses,
+     never with a minus sign. "-$68" is what a spreadsheet prints; "($68)" is what a
+     statement prints, and it is the first thing a finance reader checks for. */
+  function money(n){
+    var s = "$" + Math.round(Math.abs(n)).toLocaleString("en-US");
+    return n < 0 ? "(" + s + ")" : s;
+  }
+  function moneyShort(n){
+    var a = Math.abs(n), s;
+    if (a >= 1e6) s = "$" + +(a / 1e6).toFixed(1) + "M";
+    else if (a >= 1e3) s = "$" + Math.round(a / 1e3) + "k";
+    else s = "$" + Math.round(a);
+    return n < 0 ? "(" + s + ")" : s;
+  }
+  /* Kept as an alias: money() itself now carries the statement convention. */
+  function moneyParen(n){ return money(n); }
+  function fmt(v, f){
+    if (v == null || v === "") return "";
+    if (f === "text" || typeof v === "string") return String(v);
+    if (f === "currency") return money(v);
+    if (f === "currency-short") return moneyShort(v);
+    if (f === "percent") return (v * 100).toFixed(1) + "%";
+    if (f === "x") return v.toFixed(2) + "x";
+    return v.toLocaleString("en-US", { maximumFractionDigits: 1 });
+  }
+  /* "Unassigned" and "Other" are leftovers, not headline segments. Give them the neutral
+     grey automatically so a positional palette can never hand the catch-all a vivid color
+     while a real member gets the grey. An explicit `color` still wins. */
+  var CMUT = cssv("--cmut"), NEGBAR = cssv("--negbar"), POSBAR = cssv("--posbar");
+  var CATCHALL = new RegExp("^(un(assigned|allocated|tagged|categoriz|categoriz|classified|" +
+    "known|specified|mapped|attributed)|other|misc|none\\b|no |n/a|" +
+    "\\d[\\d,]*\\s+other)", "i");   // also the "43 others" form the ranking rules use
+  function fmtLabel(s){ return s && s.valueLabel ? s.valueLabel : "Amount"; }
+
+  function colorOf(item, i){
+    if (item && item.color){
+      /* a bare token name ("negbar", "cmut") resolves through the applied theme, so a
+         semantic color survives any brand pass; a literal hex passes through untouched */
+      if (/^[a-z][a-z0-9]*$/i.test(item.color)){
+        var tok = cssv("--" + item.color);
+        if (tok) return tok;
+      }
+      return item.color;
+    }
+    var label = item && (item.label || item.name);
+    if (label && CATCHALL.test(String(label).trim())) return CMUT;
+    return PALETTE[i % PALETTE.length];
+  }
+
+  /* One unit for the whole axis. Mixing "$500k" and "$1M" on the same scale makes the
+     reader re-anchor at every gridline. */
+  function axisFmtFor(maxAbs, f){
+    if (f !== "currency") return function (v){ return fmt(v, f); };
+    /* Zero is never abbreviated. "$0k" on the zero line of a diverging chart reads as a
+       rounded-off number rather than the origin. */
+    if (maxAbs >= 1e7) return function (v){
+      var t = "$" + (+(Math.abs(v) / 1e6).toFixed(1)) + "M";
+      return v === 0 ? "$0" : (v < 0 ? "(" + t + ")" : t); };
+    if (maxAbs >= 1e4) return function (v){
+      var t = "$" + Math.round(Math.abs(v) / 1e3) + "k";
+      return v === 0 ? "$0" : (v < 0 ? "(" + t + ")" : t); };
+    return function (v){ return money(v); };
+  }
+  function pctTxt(x){ return (x * 100).toFixed(1) + "%"; }
+
+  /* nice axis: round steps so labels read $200k, $400k rather than $187k */
+  function niceScale(lo, hi, n){
+    if (!isFinite(lo) || !isFinite(hi)) return { min:0, max:1, step:1 };
+    if (hi === lo) hi = lo + Math.abs(lo || 1);
+    var raw = (hi - lo) / Math.max(1, n);
+    var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var norm = raw / mag;
+    var mult = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10;
+    var step = mult * mag;
+    return { min: Math.floor(lo / step) * step, max: Math.ceil(hi / step) * step, step: step };
+  }
+
+  /* Catmull-Rom to cubic bezier, a soft curve without the overshoot of a loose spline */
+  function smooth(pts){
+    if (!pts.length) return "";
+    if (pts.length < 3) return "M" + pts.map(function (p){ return p.x + "," + p.y; }).join(" L");
+    var d = "M" + pts[0].x + "," + pts[0].y, t = 0.2;
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += " C" + (p1.x + (p2.x - p0.x) * t) + "," + (p1.y + (p2.y - p0.y) * t) +
+           " " + (p2.x - (p3.x - p1.x) * t) + "," + (p2.y - (p3.y - p1.y) * t) +
+           " " + p2.x + "," + p2.y;
+    }
+    return d;
+  }
+
+  /* ---------------------------------------------------------------- sections */
+
+  /* Tile sparkline. Twelve points of shape, no axis and no labels: it exists to say
+     "here is the trend behind this number", and anything more competes with the number. */
+  function spark(vals){
+    var v = (vals || []).filter(function (x){ return x != null && isFinite(x); });
+    if (v.length < 3) return "";
+    var W = 116, H = 26, P = 3;
+    var lo = Math.min.apply(null, v), hi = Math.max.apply(null, v);
+    var span = (hi - lo) || Math.abs(hi) || 1;
+    var x = function (i){ return P + (i / (v.length - 1)) * (W - 2 * P); };
+    var y = function (n){ return H - P - ((n - lo) / span) * (H - 2 * P); };
+    var d = "M" + v.map(function (n, i){ return x(i) + "," + y(n); }).join(" L");
+    var lx = x(v.length - 1), ly = y(v[v.length - 1]);
+    return '<svg class="k-sp" viewBox="0 0 ' + W + " " + H +
+      '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<path d="' + d + " L" + lx + "," + (H - P) + " L" + x(0) + "," + (H - P) +
+      ' Z" fill="' + ACCENT + '" fill-opacity=".08"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + ACCENT +
+      '" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '<circle cx="' + lx + '" cy="' + ly + '" r="2" fill="' + ACCENT + '"/></svg>';
+  }
+
+  function kpiTile(t){
+    var sub = "";
+    if (t.delta && t.delta.value != null) {
+      var up = t.delta.value >= 0;
+      sub = '<span class="k-d ' + (up ? "up" : "dn") + '">' + (up ? "▲" : "▼") + " " +
+            esc(fmt(Math.abs(t.delta.value), t.delta.fmt || "percent")) + "</span>" +
+            (t.sub ? " " + esc(t.sub) : "");
+    } else if (t.sub) {
+      sub = esc(t.sub);
+    }
+    /* `highlight` is accepted and ignored: the tinted tile read as an active selection. */
+    return '<div class="kpi">' +
+             '<div class="k-l">' + esc(t.label) + "</div>" +
+             '<div class="k-v num">' + esc(fmt(t.value, t.fmt)) + "</div>" +
+             (sub ? '<div class="k-s">' + sub + "</div>" : "") +
+             spark(t.spark) +
+           "</div>";
+  }
+
+  /* Four or fewer tiles render at hero size. On a single-page dashboard only the top
+     row is the hero. A dimensional strip lower down sets compact:true to stay small,
+     so the page keeps one focal point instead of four rows all shouting. */
+  function kpi(s){
+    var items = s.items || [];
+    var hero = items.length <= 4 && s.compact !== true;
+    return '<div class="kpis' + (hero ? " k4" : "") + '">' +
+           items.map(kpiTile).join("") + "</div>";
+  }
+
+  /* Line/area chart. Two entry points share it:
+       yoy: this year vs last, with a live cumulative/monthly toggle
+       trend: any labeled series over time, optionally with a threshold line
+     `null` in a series means "not closed yet" and the line simply stops there. */
+  function seriesOf(s){
+    if (s.series && s.series.length) {
+      /* first series is the primary read (accent, filled); the rest cycle through the
+         saturated end of the palette so a comparison line is never near-invisible */
+      var alt = [PALETTE[0], PALETTE[3], PALETTE[1], PALETTE[4], PALETTE[6], PALETTE[5]];
+      return s.series.map(function (x, i){
+        return {
+          name: x.name || "", values: x.values || [],
+          color: x.color || (i === 0 ? ACCENT : alt[(i - 1) % alt.length]),
+          fill: x.fill !== false && i === 0,
+          dash: x.dash || null
+        };
+      });
+    }
+    /* prior first so the current year draws on top of it */
+    return [
+      { name: (s.prior || {}).name || "Last year", values: (s.prior || {}).values || [],
+        color: PRIOR, fill: false },
+      { name: (s.current || {}).name || "This year", values: (s.current || {}).values || [],
+        color: ACCENT, fill: true }
+    ];
+  }
+
+  var chartId = 0;
+  function lineSection(s){
+    var id = "ch" + (++chartId);
+    var isYoy = s.type === "yoy" || (!s.series && (s.current || s.prior));
+    var toggle = isYoy || s.toggle === true;
+    var ser = seriesOf(s);
+
+    var legend = '<div class="lgd">' + ser.map(function (x, i){
+      var swatch = isYoy
+        ? '<i class="ring' + (i === ser.length - 1 ? " on" : "") + '"></i>'
+        : '<i class="dot" style="background:' + esc(x.color) + '"></i>';
+      return x.name ? "<span>" + swatch + esc(x.name) + "</span>" : "";
+    }).join("") + "</div>";
+
+    var seg = toggle
+      ? '<div class="seg" id="' + id + '-seg">' +
+        '<button type="button" data-m="cum" aria-pressed="true">Cumulative</button>' +
+        '<button type="button" data-m="mon" aria-pressed="false">Monthly</button></div>'
+      : (s.note ? '<div class="cn">' + esc(s.note) + "</div>" : "");
+
+    setTimeout(function (){ wireLine(id, s, ser, toggle); }, 0);
+
+    return '<div class="card">' +
+      '<div class="ch"><div class="ct">' + esc(s.title || "") + "</div>" + seg + "</div>" +
+      '<div class="plot" id="' + id + '"></div>' + legend + "</div>";
+  }
+
+  function wireLine(id, s, ser, toggle){
+    var host = document.getElementById(id);
+    if (!host) return;
+    function draw(mode){
+      host.innerHTML = lineSvg(s, ser, mode);
+      var seg = document.getElementById(id + "-seg");
+      if (seg) Array.prototype.forEach.call(seg.querySelectorAll("button"), function (b){
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-m") === mode));
+      });
+    }
+    if (toggle) {
+      var seg = document.getElementById(id + "-seg");
+      if (seg) seg.addEventListener("click", function (e){
+        var b = e.target.closest("button");
+        if (b) draw(b.getAttribute("data-m"));
+      });
+    }
+    draw(toggle ? "cum" : "raw");
+  }
+
+  function lineSvg(s, ser, mode){
+    var half = s.span === "half";
+    var W = half ? 470 : 900, H = half ? 232 : 300, L = 56, R = 10, T = 10, B = 30;
+    var labels = s.labels || [];
+    var th = s.threshold && s.threshold.value != null ? Number(s.threshold.value) : null;
+
+    var data = ser.map(function (x){
+      var out = [], run = 0;
+      for (var i = 0; i < labels.length; i++) {
+        var v = x.values[i];
+        if (v == null) { out.push(null); continue; }
+        run += Number(v);
+        out.push(mode === "cum" ? run : Number(v));
+      }
+      return out;
+    });
+
+    var all = [];
+    data.forEach(function (d){ d.forEach(function (v){ if (v != null) all.push(v); }); });
+    if (th != null) all.push(th);
+    if (!all.length) return "";
+    var sc = niceScale(Math.min(0, Math.min.apply(null, all)), Math.max.apply(null, all), half ? 8 : 6);
+
+    var iw = W - L - R, ih = H - T - B;
+    var x = function (i){ return L + (labels.length < 2 ? iw / 2 : (iw * i) / (labels.length - 1)); };
+    var y = function (v){ return T + ih - ((v - sc.min) / (sc.max - sc.min)) * ih; };
+    var af = axisFmtFor(Math.max(Math.abs(sc.min), Math.abs(sc.max)), s.fmt);
+
+    var g = "";
+    for (var v = sc.min; v <= sc.max + sc.step / 2; v += sc.step) {
+      var yy = y(v);
+      g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yy + '" y2="' + yy +
+           '" stroke="' + GRID + '" stroke-width="1"/>' +
+           '<text x="' + (L - 8) + '" y="' + (yy + 3.5) + '" text-anchor="end" font-size="10.5" fill="' +
+           MUT2 + '">' + esc(af(v)) + "</text>";
+    }
+    /* label every point when there is room, otherwise every other one */
+    var every = labels.length > (half ? 14 : 20) ? 2 : 1;
+    labels.forEach(function (lb, i){
+      if (i % every) return;
+      g += '<text x="' + x(i) + '" y="' + (H - 11) + '" text-anchor="' + tickAnchor(x(i), lb, W) +
+           '" font-size="10.5" fill="' + MUT2 + '">' + esc(lb) + "</text>";
+    });
+
+    if (th != null) {
+      g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(th) + '" y2="' + y(th) +
+           '" stroke="' + cssv("--negbar") + '" stroke-width="1.4" stroke-dasharray="5 4"/>' +
+           '<text x="' + (W - R) + '" y="' + (y(th) - 6) + '" text-anchor="end" font-size="10.5" fill="' +
+           cssv("--neg") + '">' + esc(s.threshold.label || af(th)) + "</text>";
+    }
+
+    var base = y(Math.max(sc.min, 0));
+    ser.forEach(function (x_, si){
+      var pts = [];
+      data[si].forEach(function (v, i){ if (v != null) pts.push({ x: x(i), y: y(v) }); });
+      if (!pts.length) return;
+      var d = smooth(pts);
+      if (x_.fill) {
+        g += '<path d="' + d + " L" + pts[pts.length - 1].x + "," + base + " L" + pts[0].x + "," + base +
+             ' Z" fill="' + esc(x_.color) + '" fill-opacity=".10" stroke="none"/>';
+      }
+      g += '<path d="' + d + '" fill="none" stroke="' + esc(x_.color) + '" stroke-width="' +
+           (x_.fill ? 2 : 1.6) + '" stroke-linecap="round"' +
+           (x_.dash ? ' stroke-dasharray="5 4"' : "") + "/>";
+    });
+
+    /* Hit bands, one per period, spanning the full plot height. Without them the reader
+       has to land on a 2px stroke to see a value, which nobody can do. The band also
+       reveals a vertical guide, so the eye can read across series at that period. */
+    var bw = labels.length > 1 ? iw / (labels.length - 1) : iw;
+    labels.forEach(function (lb, i){
+      var lines = [];
+      ser.forEach(function (x_, si){
+        var v = data[si][i];
+        if (v == null) return;
+        lines.push((x_.name ? x_.name + ": " : "") + fmt(v, s.fmt || "currency"));
+      });
+      if (!lines.length) return;
+      /* Clamp both edges, not just the right. A first band left at full width would
+         reach into the second period and answer for it on hover. */
+      var bl = Math.max(L, x(i) - bw / 2), br = Math.min(W - R, x(i) + bw / 2);
+      g += '<g class="hb"' + tipAttr(tipStr(lb).concat("\n" + lines.join("\n"))) + ">" +
+           '<line class="gl" x1="' + x(i) + '" x2="' + x(i) + '" y1="' + T + '" y2="' + (T + ih) +
+           '" stroke="#c9c9d4" stroke-width="1"/>' +
+           '<rect x="' + bl + '" y="' + T + '" width="' + Math.max(0, br - bl) +
+           '" height="' + ih + '" fill="transparent"/></g>';
+    });
+
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' +
+           esc(s.title || "chart") + '">' + g + "</svg>";
+  }
+
+  /* horizontal bars with labels outside the plot, like the mix view */
+  /* viewBox is sized near the rendered width so bars and labels land at their
+     intended pixel size instead of being scaled down inside a half-width card. */
+  /* Ranked bars. Diverging when any value is negative, because a loss-making member is
+     usually the finding. Clamping the axis at zero would render it as an invisible stub.
+     All-positive data keeps the original zero-based axis, so existing charts do not shift. */
+  function hbars(s){
+    var items = s.items || [];
+    var half = s.span === "half";
+    var L = half ? 108 : 132, R = 12, T = 8, B = 28, rowH = 42, barH = 23;
+    var W = half ? 470 : 900, H = T + rowH * items.length + B;
+    var vals = items.map(function (i){ return Number(i.value) || 0; });
+    var lo = Math.min.apply(null, vals.concat([0]));
+    var hi = Math.max.apply(null, vals.concat([lo < 0 ? 0 : 1]));
+    var sc = niceScale(lo, hi, half ? 5 : 9);
+    var iw = W - L - R;
+    var span = (sc.max - sc.min) || 1;
+    var x = function (v){ return L + ((v - sc.min) / span) * iw; };
+    var af = axisFmtFor(Math.max(Math.abs(sc.max), Math.abs(sc.min)), s.fmt);
+    var x0 = x(0), plotB = T + rowH * items.length;
+
+    var g = "";
+    for (var v = sc.min; v <= sc.max + sc.step / 2; v += sc.step) {
+      var lbl = af(v);
+      g += '<line x1="' + x(v) + '" x2="' + x(v) + '" y1="' + T + '" y2="' + plotB +
+           '" stroke="' + GRID + '" stroke-width="1"/>' +
+           '<text x="' + x(v) + '" y="' + (H - 8) + '" text-anchor="' + tickAnchor(x(v), lbl, W) +
+           '" font-size="10.5" fill="' + MUT2 + '">' + esc(lbl) + "</text>";
+    }
+    /* the zero line has to read stronger than a gridline once bars cross it */
+    if (sc.min < 0) {
+      g += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + T + '" y2="' + plotB +
+           '" stroke="#dcdce4" stroke-width="1.4"/>';
+    }
+    /* share only reads where everything points the same way; a percentage of a mix
+       containing negatives is not a share of anything */
+    var allPos = vals.every(function (v){ return v >= 0; });
+    var sum = vals.reduce(function (a, b){ return a + b; }, 0);
+    items.forEach(function (it, i){
+      var val = Number(it.value) || 0;
+      var cy = T + rowH * i + rowH / 2;
+      var xv = x(val);
+      var w = Math.max(2, Math.abs(xv - x0));
+      var base = colorOf(it, i);
+      var fill = (val < 0 && !it.color && base !== CMUT) ? NEGBAR : base;
+      /* the group carries the tip so the label reads too, which matters most when the
+         gutter has truncated it */
+      var tip = tipStr(it.label, fmt(val, s.fmt || "currency"),
+                       allPos ? shareTxt(val, sum) : "");
+      g += "<g" + tipAttr(tip) + ">" +
+           '<rect x="0" y="' + (cy - rowH / 2) + '" width="' + W + '" height="' + rowH +
+           '" fill="transparent"/>' +
+           '<text x="' + (L - 10) + '" y="' + (cy + 3.5) + '" text-anchor="end" font-size="10.5" fill="' +
+           MUT2 + '">' + esc(it.label) + "</text>" +
+           '<rect x="' + (val < 0 ? x0 - w : x0) + '" y="' + (cy - barH / 2) + '" width="' + w +
+           '" height="' + barH + '" rx="3" fill="' + esc(fill) + '"/></g>';
+    });
+    return card(s, '<div class="plot" style="padding-bottom:14px"><svg viewBox="0 0 ' + W + " " + H +
+      '" role="img" aria-label="' + esc(s.title || "chart") + '">' + g + "</svg></div>");
+  }
+
+  /* Bridge. Bars marked total:true are anchors drawn from zero; every other bar floats from
+     the running balance, so the deltas visibly reconcile one anchor to the next. That
+     reconciliation is the coverage proof. A bridge that does not close is missing a driver,
+     and the reader sees it without being told. */
+  function waterfall(s){
+    var items = (s.items || []).filter(function (i){ return i && i.label != null; });
+    if (!items.length) return "";
+    var half = s.span === "half";
+    var W = half ? 470 : 900, L = 56, R = 16, T = 30, B = 54;
+    var H = half ? 272 : 322;
+
+    var run = 0, segs = [], lo = 0, hi = 0;
+    items.forEach(function (it){
+      var v = Number(it.value) || 0, a, b;
+      if (it.total) { a = 0; b = v; run = v; } else { a = run; b = run + v; run = b; }
+      lo = Math.min(lo, a, b); hi = Math.max(hi, a, b);
+      segs.push({ it: it, v: v, a: a, b: b });
+    });
+
+    var sc = niceScale(lo, hi, 5);
+    var iw = W - L - R, ih = H - T - B, span = (sc.max - sc.min) || 1;
+    var y = function (v){ return T + ih - ((v - sc.min) / span) * ih; };
+    var f = s.fmt || "currency";
+    var af = axisFmtFor(Math.max(Math.abs(sc.max), Math.abs(sc.min)), f);
+    var slot = iw / segs.length, barW = Math.min(58, slot * 0.58);
+
+    var g = "";
+    for (var v = sc.min; v <= sc.max + sc.step / 2; v += sc.step) {
+      g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) +
+           '" stroke="' + GRID + '" stroke-width="1"/>' +
+           '<text x="' + (L - 8) + '" y="' + (y(v) + 3.5) + '" text-anchor="end" font-size="10.5" fill="' +
+           MUT2 + '">' + esc(af(v)) + "</text>";
+    }
+    if (sc.min < 0) {
+      g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(0) + '" y2="' + y(0) +
+           '" stroke="#dcdce4" stroke-width="1.4"/>';
+    }
+
+    segs.forEach(function (sg, i){
+      var cx = L + slot * i + slot / 2;
+      var yTop = y(Math.max(sg.a, sg.b)), h = Math.max(2, y(Math.min(sg.a, sg.b)) - yTop);
+      /* direction is not the same as good or bad: a fall in spend is a negative delta and a
+         favorable one, so tone:"plain" opts a bar out of the adverse color. */
+      var fill = sg.it.color ? sg.it.color
+        : sg.it.total ? CMUT
+        : sg.it.tone === "neg" || (sg.v < 0 && sg.it.tone !== "plain") ? NEGBAR
+        : POSBAR;
+      /* aria-label rather than <title>: <title> would raise a second, native tooltip
+         on top of ours after the browser's own delay */
+      var wtip = tipStr(sg.it.label,
+        sg.it.total ? fmt(sg.v, f) : (sg.v > 0 ? "+" : "") + fmt(sg.v, f),
+        sg.it.total ? "" : "running total " + fmt(sg.b, f),
+        sg.it.evidence && sg.it.evidence.txns && sg.it.evidence.txns.length
+          ? "click for the transactions behind it" : "");
+      /* the group carries the highlight key so the visible bar can take the stroke
+         while the transparent hit rect keeps taking the hover */
+      g += "<g" + keyAttr(sg.it.label) + ">" +
+           '<rect x="' + (cx - barW / 2) + '" y="' + T + '" width="' + barW + '" height="' + ih +
+           '" fill="transparent"' + tipAttr(wtip) + evAttr(sg.it.evidence, sg.it.label, f) + "/>" +
+           '<rect x="' + (cx - barW / 2) + '" y="' + yTop + '" width="' + barW + '" height="' + h +
+           '" rx="3" fill="' + esc(fill) + '" aria-label="' + esc(sg.it.label) + ": " +
+           esc(fmt(sg.v, f)) + '" pointer-events="none"/>' +
+           '<text x="' + cx + '" y="' + (yTop - 7) + '" text-anchor="middle" font-size="10.5" fill="' +
+           MUT2 + '">' + esc(sg.it.total ? af(sg.v) : (sg.v > 0 ? "+" : "") + af(sg.v)) + "</text></g>";
+
+      if (i < segs.length - 1 && !segs[i + 1].it.total) {
+        var yr = y(sg.b);
+        g += '<line x1="' + (cx + barW / 2) + '" x2="' + (L + slot * (i + 1) + slot / 2 - barW / 2) +
+             '" y1="' + yr + '" y2="' + yr + '" stroke="#dcdce4" stroke-width="1" stroke-dasharray="3 3"/>';
+      }
+
+      /* two lines of label rather than one line that collides with the next bar */
+      var lim = Math.max(9, Math.floor(slot / 5.9)), rest = String(sg.it.label), lines = [];
+      while (rest && lines.length < 2) {
+        if (rest.length <= lim) { lines.push(rest); rest = ""; break; }
+        var cut = rest.lastIndexOf(" ", lim);
+        if (cut <= 0) cut = lim;
+        lines.push(rest.slice(0, cut));
+        rest = rest.slice(cut).replace(/^\s+/, "");
+      }
+      if (rest) lines[1] = lines[1].slice(0, Math.max(1, lim - 1)) + "\u2026";
+      lines.forEach(function (ln, li){
+        g += '<text x="' + cx + '" y="' + (T + ih + 18 + li * 13) + '" text-anchor="' +
+             tickAnchor(cx, ln, W) + '" font-size="10.5" fill="' + MUT2 + '">' + esc(ln) + "</text>";
+      });
+    });
+
+    /* one drawer per bridge, filled on click; absent entirely when no bar has evidence */
+    var hasEv = items.some(function (it){
+      return it.evidence && it.evidence.txns && it.evidence.txns.length;
+    });
+    return card(s, '<div class="plot" style="padding-bottom:14px"><svg viewBox="0 0 ' + W + " " + H +
+      '" role="img" aria-label="' + esc(s.title || "bridge") + '">' + g + "</svg></div>" +
+      (hasEv ? '<div class="evp" hidden></div>' : ""));
+  }
+
+  /* Stacked columns by period: money in above the zero line, money out below it. This is
+     the one chart that answers "what made up this month" and "how did the months compare"
+     at the same time, which is why it earns the space at the top of a cash view.
+
+     Bands are separated by a sliver of paper rather than a stroke. At one lightness across
+     the ramp, two neighbouring pastels merge exactly where they meet, and an outline heavy
+     enough to fix that would out-shout the fills it is separating. */
+  function stack(s){
+    var cols = s.columns || [], series = s.series || [], f = s.fmt || "currency";
+    if (!cols.length || !series.length) return "";
+    var val = function (se, ci){ return Number((se.values || [])[ci]) || 0; };
+
+    var up = cols.map(function (_, ci){
+      return series.reduce(function (a, se){ var v = val(se, ci); return a + (v > 0 ? v : 0); }, 0);
+    });
+    var dn = cols.map(function (_, ci){
+      return series.reduce(function (a, se){ var v = val(se, ci); return a + (v < 0 ? v : 0); }, 0);
+    });
+    var hi = Math.max.apply(null, up.concat([0]));
+    var lo = Math.min.apply(null, dn.concat([0]));
+    if (hi === 0 && lo === 0) return "";
+
+    var W = 780, H = 250, padL = 54, padR = 8, padB = 26, padT = 10;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var span = (hi - lo) || 1;
+    var y0 = padT + (hi / span) * plotH;                       /* the zero line */
+    var yOf = function (v){ return padT + ((hi - v) / span) * plotH; };
+    var step = plotW / cols.length;
+    var bw = Math.min(46, step * 0.62), gap = 2;
+
+    /* gridlines at the extremes and zero, labelled, so a column can be read without a tooltip */
+    var ticks = [hi, 0, lo].filter(function (v, i, a){ return a.indexOf(v) === i; });
+    var ax = axisFmtFor(Math.max(Math.abs(hi), Math.abs(lo)), f);
+    var grid = ticks.map(function (v){
+      var y = yOf(v);
+      return '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) +
+             '" stroke="' + (v === 0 ? cssv("--line") : cssv("--line2")) + '" stroke-width="1"/>' +
+             '<text x="' + (padL - 8) + '" y="' + (y + 3.5).toFixed(1) + '" text-anchor="end" ' +
+             'font-size="10.5" fill="' + cssv("--mut") + '">' + esc(ax(v)) + "</text>";
+    }).join("");
+
+    var bars = "", labels = "";
+    cols.forEach(function (cname, ci){
+      var cx = padL + step * ci + step / 2;
+      var net = up[ci] + dn[ci];
+      var posY = y0, negY = y0;
+      series.forEach(function (se, si){
+        var v = val(se, ci);
+        if (!v) return;
+        var color = colorOf(se, si);
+        var h = Math.abs(v) / span * plotH;
+        var yTop = v > 0 ? posY - h : negY;
+        if (v > 0) posY -= h; else negY += h;
+        /* the gap is taken off the band, never added, so the stack still sums to the total */
+        var drawH = Math.max(h - gap, Math.min(h, 1));
+        var tip = tipStr(se.label,
+                         tipSub(cname),
+                         tipRow(fmtLabel(s), fmt(v, f)),
+                         tipTotal("Total", fmt(net, f)));
+        bars += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + (v > 0 ? yTop : yTop + gap).toFixed(1) +
+                '" width="' + bw.toFixed(1) + '" height="' + drawH.toFixed(1) + '" rx="1.5" fill="' +
+                esc(color) + '"' + tipAttr(tip, color) + "/>";
+      });
+      labels += '<text x="' + cx.toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10.5" fill="' +
+                cssv("--mut") + '">' + esc(cname) + "</text>";
+    });
+
+    var legend = '<div class="lgd">' + series.map(function (se, si){
+      var tot = cols.reduce(function (a, _, ci){ return a + val(se, ci); }, 0);
+      return "<span" + tipAttr(tipStr(se.label, tipRow("All periods", fmt(tot, f))), colorOf(se, si)) +
+             '><i class="dot" style="background:' + esc(colorOf(se, si)) + '"></i>' + esc(se.label) + "</span>";
+    }).join("") + "</div>";
+
+    return card(s, '<div class="plot"><svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' +
+      esc(s.title || "by period") + '">' + grid + bars + labels + "</svg></div>" + legend);
+  }
+
+  function donut(s){
+    var items = (s.items || []).filter(function (i){ return Number(i.value) > 0; });
+    var total = items.reduce(function (a, b){ return a + Number(b.value); }, 0) || 1;
+    var S = 230, r = 78, sw = 26, cx = S / 2, cy = S / 2, circ = 2 * Math.PI * r;
+    var off = 0;
+    /* The track shows only through the gaps between arcs, so it is the card colour: the
+       separator has to read as paper, and a brand that changes its card changes this too. */
+    var g = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' +
+            cssv("--card") + '" stroke-width="' + sw + '"/>';
+    /* A slice thinner than the gap would render as nothing at all, so the gap closes up
+       rather than inverting the arc. */
+    var gap = 2.5;
+    items.forEach(function (it, i){
+      var frac = Number(it.value) / total, len = frac * circ;
+      var draw = items.length > 1 ? Math.max(len - gap, Math.min(len, 0.6)) : len;
+      g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + esc(colorOf(it, i)) +
+           '" stroke-width="' + sw + '" stroke-dasharray="' + draw + " " + (circ - draw) +
+           '" stroke-dashoffset="' + (-off) + '" transform="rotate(-90 ' + cx + " " + cy + ')"' +
+           tipAttr(tipStr(it.label,
+                          tipRow(fmtLabel(s), fmt(it.value, s.fmt || "currency")),
+                          tipRow("Share", (frac * 100).toFixed(1) + "%")),
+                   colorOf(it, i)) + "/>";
+      off += len;
+    });
+    var legend = '<div class="lgd">' + items.map(function (it, i){
+      var t = tipStr(it.label, fmt(it.value, s.fmt || "currency"),
+                     (Number(it.value) / total * 100).toFixed(1) + "% of total");
+      return "<span" + tipAttr(t) + '><i class="dot" style="background:' +
+             esc(colorOf(it, i)) + '"></i>' + esc(it.label) + "</span>";
+    }).join("") + "</div>";
+    return card(s,
+      '<div class="plot" style="display:flex;justify-content:center"><svg viewBox="0 0 ' + S + " " + S +
+      '" style="max-width:230px" role="img" aria-label="' + esc(s.title || "mix") + '">' + g + "</svg></div>" + legend);
+  }
+
+  /* table with a color dot and a share-of-total bar */
+  function share(s){
+    var items = s.items || [];
+    var total = items.reduce(function (a, b){ return a + Number(b.value || 0); }, 0) || 1;
+    var max = Math.max.apply(null, items.map(function (i){ return Number(i.value) || 0; }).concat([1]));
+    var cols = s.columns || ["Item", "Value", "Share"];
+    var head = "<tr>" + cols.map(function (c){ return "<th>" + esc(c) + "</th>"; }).join("") + "</tr>";
+    var body = items.map(function (it, i){
+      var c = colorOf(it, i), frac = Number(it.value || 0) / max;
+      var t = tipStr(it.label, fmt(it.value, s.fmt || "currency"),
+                     shareTxt(Number(it.value || 0), total));
+      return "<tr" + tipAttr(t) + ">" +
+        '<td><span class="nm"><i class="dot" style="background:' + esc(c) + '"></i>' + esc(it.label) + "</span></td>" +
+        "<td>" + esc(fmt(it.value, s.fmt || "currency")) + "</td>" +
+        '<td><span class="sb"><i style="width:' + (frac * 100).toFixed(1) + "%;background:" + esc(c) +
+        '"></i></span></td>' +
+      "</tr>";
+    }).join("");
+    var tot = '<tr class="tot"><td>Total</td><td>' + esc(fmt(total, s.fmt || "currency")) + "</td><td></td></tr>";
+    return card(s, "<table><thead>" + head + "</thead><tbody>" + body + tot + "</tbody></table>", true);
+  }
+
+  /* A cost is not bad news. Pastel red here is opt-in via tone:"neg". Reserve it for a
+     loss or an overrun, never for ordinary expense lines. */
+  function pnl(s){
+    var rows = (s.rows || []).map(function (r){
+      var cls = "pl-r" + (r.total ? " tot" : "") + (r.indent ? " sub" : "");
+      var neg = r.tone === "neg" ? " neg" : "";
+      var v = typeof r.value === "number" ? moneyParen(r.value) : fmt(r.value, s.fmt || "currency");
+      return '<div class="' + cls + '"><div class="l">' + esc(r.label) +
+             (r.sub ? ' <span style="color:var(--mut2);font-size:11.5px">· ' + esc(r.sub) + "</span>" : "") +
+             '</div><div class="v' + neg + '">' + esc(v) + "</div></div>";
+    }).join("");
+    return card(s, '<div style="margin-top:14px">' + rows + "</div>", true);
+  }
+
+  function budgets(s){
+    return (s.items || []).map(function (b, bi){
+      var spendBudget = Number(b.budget != null ? b.budget : b.total) || 1;
+      var spent = Number(b.spent) || 0;
+      var used = spent / spendBudget;
+      var over = used > 1;
+      var lineTotal = (b.lines || []).reduce(function (a, l){ return a + Number(l.value || 0); }, 0);
+      var denom = Number(b.total) || lineTotal || 1;
+
+      var lines = (b.lines || []).map(function (l){
+        return '<div class="b-l"><div class="l">' + esc(l.label) + "</div>" +
+               '<div class="v">' + esc(fmt(l.value, "currency")) + "</div>" +
+               '<div class="p">' + (l.pct != null ? pctTxt(l.pct) : pctTxt(Number(l.value || 0) / denom)) +
+               "</div></div>";
+      }).join("");
+
+      var prot = b.protected
+        ? '<div class="b-prot"><div>' + esc(b.protected.label || "Protected margin") + "</div>" +
+          '<div class="v">' + esc(fmt(b.protected.value, "currency")) + "</div></div>"
+        : "";
+
+      return '<div class="card" style="margin-bottom:' + (bi === (s.items.length - 1) ? 0 : 16) + 'px">' +
+        '<div class="b-hd"><div><div class="b-nm"><i class="dot" style="background:' +
+          esc(colorOf(b, bi)) + '"></i>' + esc(b.name) + "</div>" +
+          (b.subtitle ? '<div class="b-sub">' + esc(b.subtitle) + "</div>" : "") + "</div>" +
+        '<div><div class="b-tot">' + esc(fmt(b.total, "currency")) + "</div>" +
+          '<div class="b-totl">total budget</div></div></div>' +
+        '<div class="b-util"><div class="b-ur">' +
+          "<div>Spent to date <b>" + esc(fmt(spent, "currency")) + "</b>" +
+            (over ? ' <span style="color:var(--neg)">· over by ' + esc(money(spent - spendBudget)) + "</span>" : "") +
+          "</div>" +
+          "<div>Spend budget <b>" + esc(fmt(spendBudget, "currency")) + "</b></div></div>" +
+          '<div class="bar' + (over ? " over" : "") + '"' +
+            tipAttr(tipStr(b.name, fmt(spent, "currency") + " of " +
+                    fmt(spendBudget, "currency"),
+                    (used * 100).toFixed(1) + "% used")) + '><i style="width:' +
+            Math.min(100, used * 100).toFixed(1) + '%"></i></div></div>' +
+        lines + prot +
+        (b.note ? '<div class="b-note">' + esc(b.note) + "</div>" : "") +
+      "</div>";
+    }).join("");
+  }
+
+  function findings(s){
+    return '<ol class="fnd">' + (s.items || []).map(function (it){
+      var neg = Number(it.value) < 0 ? " neg" : "";
+      return "<li>" +
+        '<div class="f-t"><div class="l">' + esc(it.title) + "</div>" +
+        (it.value != null ? '<div class="v' + neg + '">' + esc(fmt(it.value, it.fmt || "currency")) + "</div>" : "") +
+        "</div>" + (it.body ? '<div class="f-b">' + esc(it.body) + "</div>" : "") +
+      "</li>";
+    }).join("") + "</ol>";
+  }
+
+  /* Opt in with sort:true. It is deliberately not the default, because a P&L, a liquidity
+     block, and a week-by-week grid all carry a meaningful order that sorting would destroy. */
+  function table(s){
+    var srt = s.sort === true;
+    var head = "<tr>" + (s.columns || []).map(function (c, i){
+      return "<th" + (srt ? ' data-i="' + i + '" tabindex="0" role="columnheader"' : "") +
+             ">" + esc(c) + "</th>";
+    }).join("") + "</tr>";
+    var rws = s.rows || [];
+    function totalRow(r){
+      var c = Array.isArray(r) ? r : (r.cells || []);
+      return (!Array.isArray(r) && r.total === true) || /^total/i.test(String(c[0]));
+    }
+    /* Below the first total the table stops being a list and starts being arithmetic, so
+       nothing down there is a rankable member, catch-all or otherwise. */
+    var firstTot = rws.length;
+    for (var ti = 0; ti < rws.length; ti++){ if (totalRow(rws[ti])) { firstTot = ti; break; } }
+    var body = rws.map(function (r, ri){
+      var cells = Array.isArray(r) ? r : (r.cells || []);
+      var isTot = totalRow(r);
+      /* A catch-all is a bucket, not a member, so it is pinned below the real rows the same
+         way a total is. Detected from the label the way `total` already is, and overridable
+         with catchall:true/false. See reference/DIMENSIONS.md. */
+      var isCatch = !isTot && ri < firstTot && (Array.isArray(r) || r.catchall == null
+        ? CATCHALL.test(String(cells[0]))
+        : r.catchall === true);
+      /* member rows carry the highlight key from their label cell, so hovering the row
+         lights up the same account on the bridge and the matrix */
+      var key = (!isTot && typeof cells[0] !== "object") ? keyAttr(cells[0]) : "";
+      return '<tr class="' + (isTot ? "tot" : (isCatch && srt ? "ca" : "")) + '"' + key + ">" + cells.map(function (x){
+        if (x == null) return "<td></td>";
+        if (typeof x !== "object") return "<td>" + esc(x) + "</td>";
+        /* Negatives color themselves, but sign and sentiment are not the same thing. A fall in
+           spend is good news, so tone:"plain" opts a cell out; a rise in days-to-collect is bad
+           news at a positive value, so tone:"neg" opts one in. */
+        var neg = (x.tone === "neg" || (Number(x.v) < 0 && x.tone !== "plain")) ? " neg" : "";
+        /* The raw value rides along on the cell so sorting never has to parse "$4,281,374"
+           back into a number, which is where currency, percent, and locale all go wrong. */
+        var dv = (srt && x.v != null && isFinite(Number(x.v))) ? ' data-v="' + Number(x.v) + '"' : "";
+        /* a numeric cell inherits the section's fmt, so money reads as money without
+           having to repeat fmt on every cell */
+        return '<td class="' + neg.trim() + '"' + dv + ">" +
+               esc(fmt(x.v, x.fmt || s.fmt || "currency")) + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+    /* `measures:true` marks a table whose rows are named measures rather than data points:
+       current ratio, days to collect, debt cover. The brand pass puts one glyph per row in
+       the first cell so the eye can find a row again without reading it. A grid of numbers
+       never gets this, which is why it is opt-in rather than automatic. */
+    var cls = [srt ? "srt" : "", s.measures === true ? "mlist" : ""].filter(Boolean).join(" ");
+    /* search:true adds a filter box above the table. Sort answers "what's the biggest
+       mover"; search answers "where's the line I already have in mind", which starts
+       to matter once a statement runs sixty lines. Never printed. */
+    var box = s.search === true
+      ? '<div class="tsr"><input type="search" placeholder="Find a row by name"' +
+        ' aria-label="Find a row by name"></div>'
+      : "";
+    return card(s, box + "<table" + (cls ? ' class="' + cls + '"' : "") + "><thead>" + head +
+                   "</thead><tbody>" + body + "</tbody></table>", true);
+  }
+
+  /* ---- column sorting ----------------------------------------------------
+     One delegated listener for every sortable table on the page. Three behaviours are
+     worth stating, because each one is a decision rather than a default:
+       - the table's total row and everything below it hold their payload order, and catch-alls
+         ("Unassigned", "Other vendors (43)") pin just above them, because a bucket is not a
+         member you can rank against the real ones
+       - cells with no value ("n/m", blank) sink in both directions rather than sorting
+         as zero, which would bury them in the middle of the range
+       - a numeric column opens descending, because the reason you sort a variance column
+         is to see the biggest movers first  */
+  function cellKey(td){
+    if (!td) return { empty: true, num: null, txt: "" };
+    var raw = td.getAttribute("data-v");
+    var txt = (td.textContent || "").trim();
+    if (raw != null && isFinite(Number(raw))) return { empty: false, num: Number(raw), txt: txt };
+    return { empty: txt === "" || txt === "n/m" || txt === "-", num: null, txt: txt };
+  }
+
+  function numericCol(tb, i){
+    var seen = 0, numeric = 0;
+    for (var r = 0; r < tb.rows.length; r++){
+      var td = tb.rows[r].cells[i];
+      if (!td) continue;
+      seen++;
+      if (td.hasAttribute("data-v")) numeric++;
+    }
+    return seen > 0 && numeric / seen >= 0.5;
+  }
+
+  function sortTable(tbl, i, dir){
+    var tb = tbl.tBodies[0];
+    if (!tb) return;
+    var all = Array.prototype.slice.call(tb.rows);
+    all.forEach(function (r, n){ if (r.dataset.o == null) r.dataset.o = n; });  // payload order
+    /* Everything from the first total row down is the footer, and it keeps its payload order.
+       That block is often arithmetic rather than a list: Total, then Unallocated overhead,
+       then Operating income. Reordering it turns a reconciliation into nonsense. */
+    var cut = all.length;
+    for (var n = 0; n < all.length; n++){
+      if (all[n].className.indexOf("tot") > -1) { cut = n; break; }
+    }
+    var footer = all.slice(cut), catchalls = [], rows = [];
+    all.slice(0, cut).forEach(function (r){
+      (r.className.indexOf("ca") > -1 ? catchalls : rows).push(r);
+    });
+    rows.sort(function (a, b){
+      var x = cellKey(a.cells[i]), y = cellKey(b.cells[i]);
+      if (x.empty !== y.empty) return x.empty ? 1 : -1;
+      var c = 0;
+      if (x.num != null && y.num != null) c = x.num - y.num;
+      else c = String(x.txt).localeCompare(String(y.txt), undefined, { numeric: true });
+      if (c === 0) return Number(a.dataset.o) - Number(b.dataset.o);
+      return dir === "asc" ? c : -c;
+    });
+    rows.concat(catchalls, footer).forEach(function (r){ tb.appendChild(r); });
+
+    var ths = tbl.tHead ? tbl.tHead.rows[0].cells : [];
+    for (var k = 0; k < ths.length; k++){
+      if (k === i) ths[k].setAttribute("aria-sort", dir === "asc" ? "ascending" : "descending");
+      else ths[k].removeAttribute("aria-sort");
+    }
+  }
+
+  function onSort(th){
+    var tbl = th.closest("table");
+    if (!tbl || !tbl.classList.contains("srt")) return;
+    var i = Number(th.getAttribute("data-i"));
+    var current = th.getAttribute("aria-sort");
+    var dir = current === "descending" ? "asc"
+            : current === "ascending" ? "desc"
+            : (numericCol(tbl.tBodies[0], i) ? "desc" : "asc");
+    sortTable(tbl, i, dir);
+  }
+
+  document.addEventListener("click", function (e){
+    var th = e.target && e.target.closest ? e.target.closest("table.srt th") : null;
+    if (th) onSort(th);
+  });
+  document.addEventListener("keydown", function (e){
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var th = e.target && e.target.closest ? e.target.closest("table.srt th") : null;
+    if (th) { e.preventDefault(); onSort(th); }
+  });
+
+  /* ---- evidence drawers ----------------------------------------------------
+     Click a bridge bar or a matrix cell that carries evidence, a drawer opens beneath it
+     with the transactions behind that number. Everything was embedded at generation time,
+     so this only parses and places: no query, no network, and printing still works
+     because an open drawer is just a table. */
+  function evHTML(el){
+    var ev;
+    try { ev = JSON.parse(el.getAttribute("data-ev") || "null"); } catch (err) { ev = null; }
+    if (!ev || !ev.txns || !ev.txns.length) return "";
+    var f = ev.fmt || "currency";
+    var shown = ev.txns.reduce(function (a, t){ return a + (Number(t.amount) || 0); }, 0);
+    var total = shown + (Number(ev.moreValue) || 0);
+    var rows = ev.txns.map(function (t){
+      var neg = Number(t.amount) < 0 ? ' class="neg"' : "";
+      return "<tr><td>" + esc(t.date || "") + "</td><td>" + esc(t.name || "") +
+             '</td><td class="m">' + esc(t.memo || "") + "</td><td" + neg + ">" +
+             esc(fmt(t.amount, f)) + "</td></tr>";
+    }).join("");
+    /* the drawer says what it covers, so a capped list never passes itself off as the
+       whole population */
+    var count = ev.txns.length + " transaction" + (ev.txns.length === 1 ? "" : "s");
+    var covers = ev.more ? esc(fmt(shown, f)) + " of " + esc(fmt(total, f)) : esc(fmt(shown, f));
+    var more = ev.more
+      ? '<div class="ev-m">' + Number(ev.more) + " more in the ledger \u00b7 " +
+        esc(fmt(ev.moreValue || 0, f)) + "</div>"
+      : "";
+    return '<div class="ev"><div class="ev-h"><b>' + esc(el.getAttribute("data-ev-t") || "") +
+      "</b><span>" + count + " \u00b7 " + covers + "</span></div>" +
+      "<table><thead><tr><th>Date</th><th>Name</th><th>Memo</th><th>Amount</th></tr></thead>" +
+      "<tbody>" + rows + "</tbody></table>" + more + "</div>";
+  }
+
+  document.addEventListener("click", function (e){
+    var el = e.target && e.target.closest ? e.target.closest("[data-ev]") : null;
+    if (!el) return;
+    var src = el.getAttribute("data-ev-t") || "";
+    var td = el.closest("td");
+    if (td) {
+      /* matrix cell: the drawer is a full-width row injected under the cell's own row,
+         so it opens in place instead of at the bottom of the grid */
+      var tr = td.parentNode;
+      var next = tr.nextElementSibling;
+      var open = next && next.className === "evd";
+      var same = open && next.getAttribute("data-src") === src;
+      if (open) next.parentNode.removeChild(next);
+      if (same) return;  /* second click on the same cell closes it */
+      var dr = document.createElement("tr");
+      dr.className = "evd";
+      dr.setAttribute("data-src", src);
+      var cell = document.createElement("td");
+      cell.colSpan = tr.cells.length;
+      cell.innerHTML = evHTML(el);
+      dr.appendChild(cell);
+      tr.parentNode.insertBefore(dr, tr.nextSibling);
+    } else {
+      /* bridge bar: one drawer per chart, under the plot, swapped between bars */
+      var host = el.closest(".card");
+      var p = host ? host.querySelector(".evp") : null;
+      if (!p) return;
+      if (!p.hidden && p.getAttribute("data-src") === src) { p.hidden = true; return; }
+      p.innerHTML = evHTML(el);
+      p.setAttribute("data-src", src);
+      p.hidden = false;
+    }
+  });
+
+  /* ---- cross-highlight -----------------------------------------------------
+     The bridge, the matrix, and the table each show a piece of the same account. Hover
+     any of them and the others light up, keyed by normalized label. Pure DOM wiring
+     against keys already on the page, and it stays silent when a label appears once. */
+  var xhlOn = [];
+  function xhlClear(){
+    for (var i = 0; i < xhlOn.length; i++) xhlOn[i].classList.remove("xhl");
+    xhlOn = [];
+  }
+  document.addEventListener("mouseover", function (e){
+    var el = e.target && e.target.closest ? e.target.closest("[data-key]") : null;
+    if (!el) { if (xhlOn.length) xhlClear(); return; }
+    if (el.classList.contains("xhl")) return;  /* already lit, moving within it */
+    xhlClear();
+    var k = el.getAttribute("data-key");
+    var all = document.querySelectorAll("[data-key]"), match = [];
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].getAttribute("data-key") === k) match.push(all[i]);
+    }
+    if (match.length < 2) return;  /* nothing else to point at */
+    for (var j = 0; j < match.length; j++) {
+      match[j].classList.add("xhl");
+      xhlOn.push(match[j]);
+    }
+  });
+
+  /* ---- table search --------------------------------------------------------
+     Filters member rows by their label as you type. The total row and everything below
+     it stay put (they are page arithmetic, not matches), and an evidence drawer follows
+     its own row's visibility. */
+  document.addEventListener("input", function (e){
+    var inp = e.target && e.target.closest ? e.target.closest(".tsr input") : null;
+    if (!inp) return;
+    var host = inp.closest(".card");
+    var tbl = host ? host.querySelector("table") : null;
+    if (!tbl || !tbl.tBodies[0]) return;
+    var q = inp.value.trim().toLowerCase();
+    var rows = tbl.tBodies[0].rows, past = false, prev = "";
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r.className.indexOf("evd") > -1) { r.style.display = prev; continue; }
+      if (r.className.indexOf("tot") > -1) past = true;
+      if (past) { r.style.display = ""; prev = ""; continue; }
+      var name = (r.cells[0] ? r.cells[0].textContent : "").toLowerCase();
+      r.style.display = (!q || name.indexOf(q) > -1) ? "" : "none";
+      prev = r.style.display;
+    }
+  });
+
+  /* Members down the side, periods across the top: the shape that answers "which
+     location is growing" in one look. Shading is magnitude-only emphasis. */
+  function matrix(s){
+    var rows = s.rows || [], cols = s.columns || [], f = s.fmt || "currency";
+    var showShare = s.share !== false;
+
+    /* Scale the wash on cell magnitude across the whole grid, excluding row totals so one
+       large total cannot flatten every cell to invisible. */
+    var peak = 0;
+    rows.filter(function (r){ return !r.group && r.subtotal !== true; }).forEach(function (r){
+      (r.values || []).forEach(function (v){
+        if (v != null) peak = Math.max(peak, Math.abs(Number(v)) || 0);
+      });
+    });
+    peak = peak || 1;
+
+    /* Group headers have no figures and subtotals restate rows already counted, so both are
+       excluded from the column totals. Adding a subtotal in would double every group. */
+    var adds = rows.filter(function (r){ return !r.group && r.subtotal !== true; });
+    var totals = cols.map(function (_, ci){
+      return adds.reduce(function (a, r){ return a + (Number((r.values || [])[ci]) || 0); }, 0);
+    });
+    var rowTotal = function (r){
+      return r.total != null
+        ? Number(r.total)
+        : (r.values || []).reduce(function (a, v){ return a + (Number(v) || 0); }, 0);
+    };
+    var grand = adds.reduce(function (a, r){ return a + rowTotal(r); }, 0);
+    var maxRow = Math.max.apply(null, adds.map(rowTotal).concat([1]));
+
+    var head = "<tr><th>" + esc(s.rowHeader || "") + "</th>" +
+      cols.map(function (c){ return '<th class="c">' + esc(c) + "</th>"; }).join("") +
+      '<th class="rt">' + esc(s.totalHeader || "Total") + "</th>" +
+      (showShare ? "<th>Share</th>" : "") + "</tr>";
+
+    var span = cols.length + 1 + (showShare ? 1 : 0);
+    var body = rows.map(function (r, ri){
+      /* A group header carries no figures. It exists so a long grid reads as two or three
+         blocks rather than twenty rows, which is the difference between a statement and a
+         list. Cash in, then cash out, then what is left. */
+      if (r.group) {
+        return '<tr class="mgrp"><td colspan="' + span + '">' + esc(r.group) + "</td></tr>";
+      }
+      /* Sign and sentiment are not the same thing, and a grid cannot tell them apart on
+         its own. On a profit-by-member grid a negative is a loss and earns pastel red; on
+         a variance grid over expense lines a negative is spend coming down, which is good
+         news. tone:"plain" on the row keeps every cell in charcoal. The parentheses
+         already carry the sign, and the wash stays as pure magnitude emphasis. */
+      var plain = (r.tone || s.tone) === "plain";
+      var cells = cols.map(function (_, ci){
+        var v = (r.values || [])[ci];
+        if (v == null) return '<td class="c"><span style="color:var(--mut2)">-</span></td>';
+        var n = Number(v);
+        /* A true zero prints nothing. A column of "$0" is noise that buries the two cells
+           that carry a number, and blank is the statement convention for "nothing here". */
+        if (n === 0) return '<td class="c"></td>';
+        var neg = n < 0 && !plain;
+        /* Wash scales with magnitude so the eye finds the big cells: emphasis, never a
+           score. The ceiling stays low on purpose: a single saturated cell mid-grid reads
+           as a selected or highlighted cell, which it is not. */
+        var mag = Math.min(1, Math.abs(n) / peak);
+        var a = mag > 0 ? 0.03 + 0.09 * mag : 0;
+        var rgb = neg ? "192,127,126" : "111,102,227";
+        var ev = (r.evidence || [])[ci];
+        var hasEv = ev && ev.txns && ev.txns.length;
+        var mt = tipStr(r.label, cols[ci] + ": " + fmt(n, f),
+          hasEv ? "click for the transactions behind it" : "");
+        return '<td class="c' + (neg ? " neg" : "") +
+          (a ? '" style="background:rgba(' + rgb + "," + a.toFixed(3) + ')"' : '"') +
+          tipAttr(mt) + (hasEv ? evAttr(ev, r.label + " \u00b7 " + cols[ci], f) : "") +
+          ">" + esc(fmt(n, f)) + "</td>";
+      }).join("");
+      var rt = rowTotal(r);
+      var c = colorOf(r, ri);
+      /* A subtotal is arithmetic on the rows above it, not a member alongside them, so it
+         gets a rule and no colour dot. */
+      var sub = r.subtotal === true;
+      /* No dots by default: at table density an icon is noise, not an identifier. The
+         share bar on the right already carries the row's colour where it earns its place. */
+      return '<tr' + (sub ? ' class="msub"' : "") + (sub ? "" : keyAttr(r.label)) + ">" +
+        '<td><span class="nm">' + (s.dots !== true || sub ? "" :
+          '<i class="dot" style="background:' + esc(c) + '"></i>') + esc(r.label) + "</span></td>" +
+        cells +
+        '<td class="rt' + (rt < 0 && !plain ? " neg" : "") + '">' + esc(fmt(rt, f)) + "</td>" +
+        (showShare
+          ? '<td><span class="sb"><i style="width:' +
+            (Math.max(0, rt) / maxRow * 100).toFixed(1) + "%;background:" + esc(c) + '"></i></span></td>'
+          : "") +
+      "</tr>";
+    }).join("");
+
+    var footPlain = s.tone === "plain";
+    var foot = s.footTotal === false ? "" :
+      '<tr class="tot"><td>' + esc(s.totalLabel || "Total") + "</td>" +
+      totals.map(function (t){
+        return '<td class="c' + (t < 0 && !footPlain ? " neg" : "") + '">' + esc(fmt(t, f)) + "</td>";
+      }).join("") +
+      '<td class="rt' + (grand < 0 && !footPlain ? " neg" : "") + '">' + esc(fmt(grand, f)) + "</td>" +
+      (showShare ? "<td></td>" : "") + "</tr>";
+
+    return card(s, '<div class="mx"><table><thead>' + head + "</thead><tbody>" +
+      body + foot + "</tbody></table></div>", true);
+  }
+
+  /* card shell with the title/note header used by most sections */
+  function card(s, inner, flush){
+    var hdr = (s.title || s.note)
+      ? '<div class="ch"' + (flush ? ' style="padding-bottom:14px"' : "") + "><div class=\"ct\">" +
+        esc(s.title || "") + "</div>" + (s.note ? '<div class="cn">' + esc(s.note) + "</div>" : "") + "</div>"
+      : "";
+    return '<div class="card">' + hdr + inner + "</div>";
+  }
+
+  var BUILD = {
+    kpi: kpi, yoy: lineSection, trend: lineSection, hbars: hbars, donut: donut, share: share,
+    stack: stack,
+    pnl: pnl, budgets: budgets, findings: findings, table: table, matrix: matrix,
+    waterfall: waterfall, bridge: waterfall,
+    text: function (s){ return card(s, '<div class="prose" style="padding:14px 18px 16px">' + esc(s.body || "") + "</div>"); }
+  };
+
+  /* ------------------------------------------------------------------ layout */
+
+  function sectionHtml(s){
+    var b = BUILD[s.type];
+    if (!b) return "";
+    var inner = b(s);
+    if (!inner) return "";
+    /* kpi/findings/budgets bring their own containers; the rest sit in a card */
+    var needsHeader = s.title && ["kpi", "findings", "budgets"].indexOf(s.type) > -1;
+    return (needsHeader
+      ? '<div class="shd">' + esc(s.title) + "</div>" +
+        (s.note ? '<div class="snote">' + esc(s.note) + "</div>" : "")
+      : "") + inner;
+  }
+
+  /* A section naming one or more entities is hidden when none of them are selected. No
+     attribute means consolidated, which always shows. */
+  function entAttr(s){
+    var e = s && s.entities;
+    if (!e || !e.length) return "";
+    return ' data-ents="' + esc([].concat(e).join("\u001f")) + '"';
+  }
+
+  /* consecutive span:"half" sections pair into a two-up row */
+  function renderSections(list, host){
+    var i = 0;
+    while (i < list.length) {
+      var s = list[i];
+      if (s.span === "half" && list[i + 1] && list[i + 1].span === "half") {
+        host.insertAdjacentHTML("beforeend",
+          '<div class="row grid2"><div' + entAttr(s) + ">" + sectionHtml(s) + "</div><div" +
+          entAttr(list[i + 1]) + ">" + sectionHtml(list[i + 1]) + "</div></div>");
+        i += 2;
+      } else {
+        host.insertAdjacentHTML("beforeend",
+          '<div class="row"' + entAttr(s) + ">" + sectionHtml(s) + "</div>");
+        i += 1;
+      }
+    }
+  }
+
+  var app = document.getElementById("app");
+  var m = DATA.meta || {};
+  var initials = (m.mark || (m.entity || "").split(/\s+/).map(function (w){ return w[0]; }).join(""))
+    .toUpperCase().slice(0, 3);
+
+  var meta = [
+    ["Period", m.period], ["Source", m.source], ["Closed through", m.closedThrough]
+  ].filter(function (p){ return p[1]; });
+
+  app.insertAdjacentHTML("beforeend",
+    '<div class="hd"><div class="brand"><div class="mark">' + esc(initials) + '</div><div class="btxt">' +
+      (m.entity ? '<div class="ent">' + esc(m.entity) + "</div>" : "") +
+      '<div class="ttl">' + esc(m.title || "Advisory report") + "</div></div></div>" +
+    '<div class="hmeta">' + meta.map(function (p){
+      return '<div><div class="hm-l">' + esc(p[0]) + '</div><div class="hm-v">' + esc(p[1]) + "</div></div>";
+    }).join("") + "</div></div>");
+
+  var views = DATA.views && DATA.views.length
+    ? DATA.views
+    : [{ name: "", sections: DATA.sections || [] }];
+
+  /* Entities. A group engagement shows one report covering several books, and the reader's
+     first question is "which of these am I looking at". Sections that belong to one entity
+     declare it; consolidated sections declare nothing and are always shown, because a
+     consolidated total is not a member of the set it consolidates. */
+  var ents = (m.entities || []).map(function (e){
+    return typeof e === "string" ? { name: e } : e;
+  }).filter(function (e){ return e && e.name; });
+  var entsHtml = "";
+  if (ents.length > 1) {
+    entsHtml = '<div class="ents" id="ents"><button type="button" aria-expanded="false">' +
+      '<span class="chips">' + ents.map(function (e, i){
+        return '<i class="chip" data-n="' + esc(e.name) + '" style="background:' +
+               esc(e.color || PALETTE[i % PALETTE.length]) + '">' +
+               esc((e.code || e.name).trim().charAt(0).toUpperCase()) + "</i>";
+      }).join("") + "</span><span class=\"lbl\">All entities</span></button>" +
+      '<div class="menu">' + ents.map(function (e){
+        return "<label>" + esc(e.name) +
+               '<input type="checkbox" checked value="' + esc(e.name) + '"></label>';
+      }).join("") + "</div></div>";
+  }
+
+  if (views.length > 1 || entsHtml) {
+    app.insertAdjacentHTML("beforeend", '<div class="tabs" id="tabs">' +
+      (views.length > 1 ? views.map(function (v, i){
+        return '<button type="button" class="tab" data-i="' + i + '" aria-selected="' + (i === 0) + '">' +
+          esc(v.name) + "</button>";
+      }).join("") : "") +
+      (entsHtml ? '<div style="flex:1 1 auto"></div>' + entsHtml : "") + "</div>");
+  } else {
+    app.insertAdjacentHTML("beforeend", '<div style="height:20px"></div>');
+  }
+
+  if (DATA.headline) app.insertAdjacentHTML("beforeend", '<p class="headline">' + esc(DATA.headline) + "</p>");
+
+  var c = DATA.callout;
+  if (c && c.value) {
+    app.insertAdjacentHTML("beforeend",
+      '<div class="callout' + (c.tone === "neg" ? " neg" : "") + '">' +
+        (c.label ? '<div class="co-l">' + esc(c.label) + "</div>" : "") +
+        '<div class="co-v">' + esc(c.value) + "</div>" +
+        (c.body ? '<div class="co-b">' + esc(c.body) + "</div>" : "") + "</div>");
+  }
+
+  /* A strip is a section rendered once, above every view. Headline numbers belong to the
+     whole report, so repeating them inside each tab is the same page shown twice. */
+  if (DATA.strip) renderSections([].concat(DATA.strip), app);
+
+  views.forEach(function (v, i){
+    var d = document.createElement("div");
+    d.className = "view";
+    d.style.display = i === 0 ? "block" : "none";
+    if (v.name) d.insertAdjacentHTML("beforeend", '<p class="vlabel">' + esc(v.name) + "</p>");
+    renderSections(v.sections || [], d);
+    app.appendChild(d);
+  });
+
+  var entsEl = document.getElementById("ents");
+  if (entsEl) {
+    var btn = entsEl.querySelector("button");
+    var boxes = [].slice.call(entsEl.querySelectorAll("input"));
+    function applyEnts(){
+      var on = boxes.filter(function (b){ return b.checked; }).map(function (b){ return b.value; });
+      btn.querySelector(".lbl").textContent =
+        on.length === boxes.length ? "All entities"
+        : on.length === 1 ? on[0]
+        : on.length + " entities";
+      /* the chips mirror the selection, so the pill reads at a glance without opening it */
+      [].forEach.call(entsEl.querySelectorAll(".chip"), function (c){
+        c.style.display = on.indexOf(c.getAttribute("data-n")) > -1 ? "" : "none";
+      });
+      [].forEach.call(app.querySelectorAll("[data-ents]"), function (el){
+        var mine = el.getAttribute("data-ents").split("\u001f");
+        var show = mine.some(function (x){ return on.indexOf(x) > -1; });
+        el.style.display = show ? "" : "none";
+      });
+      fitValues();
+    }
+    btn.addEventListener("click", function (e){
+      e.stopPropagation();
+      var open = entsEl.className.indexOf("open") > -1;
+      entsEl.className = open ? "ents" : "ents open";
+      btn.setAttribute("aria-expanded", String(!open));
+    });
+    entsEl.addEventListener("change", applyEnts);
+    /* a menu that only closes on its own button is a menu people leave open */
+    document.addEventListener("click", function (e){
+      if (!entsEl.contains(e.target)) {
+        entsEl.className = "ents";
+        btn.setAttribute("aria-expanded", "false");
+      }
+    });
+    applyEnts();
+  }
+
+  var tabs = document.getElementById("tabs");
+  if (tabs) {
+    var slug = function (s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); };
+    function select(idx){
+      Array.prototype.forEach.call(tabs.querySelectorAll(".tab"), function (t, i){
+        t.setAttribute("aria-selected", String(i === idx));
+      });
+      Array.prototype.forEach.call(app.querySelectorAll(".view"), function (v, i){
+        v.style.display = i === idx ? "block" : "none";
+      });
+      fitValues();   /* tiles in a hidden view measure zero, so fit them once shown */
+    }
+    tabs.addEventListener("click", function (e){
+      var b = e.target.closest(".tab");
+      if (!b) return;
+      var idx = +b.getAttribute("data-i");
+      select(idx);
+      /* Deep-linking is a convenience, and it is not allowed to break tab switching.
+         replaceState throws in a sandboxed context such as an email preview pane. */
+      try { history.replaceState(null, "", "#" + slug(views[idx].name)); } catch (err) {}
+    });
+    /* #budget in the URL opens that tab, so a specific view can be linked or shared */
+    var want = decodeURIComponent((location.hash || "").replace(/^#/, ""));
+    if (want) {
+      var hit = views.findIndex(function (v){ return slug(v.name) === slug(want); });
+      if (hit > -1) select(hit);
+    }
+  }
+
+  /* The headline number is the one thing on the page that cannot afford to look broken,
+     and "$4,205,000" breaking after the seventh character does. The value never wraps;
+     if the string outgrows its tile the type steps down until it fits. */
+  function fitValues(){
+    var els = document.querySelectorAll(".k-v");
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (!el.clientWidth) continue;          // hidden view, fitted on tab switch
+      var base = Number(el.getAttribute("data-fs"));
+      if (!base) {
+        el.style.fontSize = "";
+        base = parseFloat(getComputedStyle(el).fontSize);
+        el.setAttribute("data-fs", base);
+      }
+      el.style.fontSize = "";
+      var size = base, guard = 0;
+      while (el.scrollWidth > el.clientWidth + 0.5 && size > 15 && guard++ < 40) {
+        size -= 1;
+        el.style.fontSize = size + "px";
+      }
+    }
+  }
+  fitValues();
+  var fitT;
+  window.addEventListener("resize", function (){
+    clearTimeout(fitT);
+    fitT = setTimeout(fitValues, 120);
+  });
+
+  if (DATA.footnote) app.insertAdjacentHTML("beforeend", "<footer>" + esc(DATA.footnote) + "</footer>");
+  if (Array.isArray(DATA.footnotes) && DATA.footnotes.length) {
+    app.insertAdjacentHTML("beforeend", "<footer>" + DATA.footnotes.map(esc).join(" ") + "</footer>");
+  }
+
+  document.title = (m.title || "Advisory report") + (m.entity ? ": " + m.entity : "");
+})();
+</script>
+</body>
+</html>
