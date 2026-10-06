@@ -1,0 +1,20 @@
+{
+  "name": "quanto",
+  "version": "0.1.0",
+  "description": "Find the clients worth cloning. Answer one message about your clients; get every client ranked by estimated margin and books condition with the math shown, the places where the numbers disagree with your gut, your ideal client profile drawn from your own clients, and where to find more like them. Reads Kick, practice tools, and meeting notes; works from a fee list and a few notes alone. Read-only.",
+  "author": {
+    "name": "Kick",
+    "email": "support@kick.co",
+    "url": "https://kick.co"
+  },
+  "keywords": [
+    "accounting",
+    "ideal-client-profile",
+    "client-profitability",
+    "firm-growth",
+    "client-acquisition",
+    "kick"
+  ],
+  "displayName": "Kick Quanto Skills",
+  "homepage": "https://www.kick.co/accountants"
+}

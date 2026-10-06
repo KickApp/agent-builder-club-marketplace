@@ -17,8 +17,8 @@ companion. The phases:
 
 ## Procedure
 
-- [ ] 1. Confirm scope. Read `reference/HOUSE-RULES.md`, `reference/DATA.md`, and
-      `reference/MODELS.md` first. Horizon is 13 weeks: state it, do not ask; 6 to 8 when
+- [ ] 1. Confirm scope. Read `references/HOUSE-RULES.md`, `references/DATA.md`, and
+      `references/MODELS.md` first. Horizon is 13 weeks: state it, do not ask; 6 to 8 when
       cash is tight, through year-end for a funding conversation. Roll forward when a prior
       forecast is attached or named: same grid, closed weeks refreshed, assumptions
       preserved, ask before changing any the client set. Opening cash: the system balance
@@ -28,7 +28,7 @@ companion. The phases:
       four weeks of outflows as a planning heuristic, confirm once. Never ask who funds a
       gap or in what increments.
 - [ ] 2. Pull cash and bank balances, AR and AP aging, the recurring expense list, and the
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       trailing 13 weeks of actual flows as the baseline. Without aging, build from the P&L:
       average weekly flows labeled a *straight-line assumption from the P&L*, noting that an
       aging report converts timing into real collection dates. Deliver; never refuse.
@@ -37,14 +37,14 @@ companion. The phases:
       week is the squeeze the grid exists to reveal); monthly items in the week their day
       lands; quarterly and one-off on their dates; a weekly run-rate only for genuinely
       smooth spend. Collections at the aging's historical days-to-collect, never invoice date.
-- [ ] 4. Build by adapting `reference/templates/build_cash_model.py`: fill `CONFIG`, run it.
+- [ ] 4. Build by adapting `references/templates/build_cash_model.py`: fill `CONFIG`, run it.
       Two tabs, Forecast and Assumptions. Construction rules in `MODELS.md` and the caveats.
 - [ ] 5. Verify:
 
       ```
-      python3 reference/templates/verify_model.py cash-forecast.xlsx \
+      python3 references/templates/verify_model.py cash-forecast.xlsx \
         --report "Forecast!<lowest cash tile>" "Forecast!<shortfall tile>"
-      python3 reference/templates/model_test.py
+      python3 references/templates/model_test.py
       ```
 
       The first (needs `pip install formulas openpyxl`) must report zero errors and zero
@@ -83,9 +83,9 @@ companion. The phases:
 - **The HTML companion** (to forward, not edit): write the payload to `data.json`, then
 
   ```
-  python3 reference/templates/build_report.py data.json {entity}-cash-forecast-{date}.html
-  python3 reference/templates/theme.py \
-          reference/brand-config.md {entity}-cash-forecast-{date}.html
+  python3 references/templates/build_report.py data.json {entity}-cash-forecast-{date}.html
+  python3 references/templates/theme.py \
+          references/brand-config.md {entity}-cash-forecast-{date}.html
   ```
 
   Two steps, always in that order: the first writes the report, the second applies the firm

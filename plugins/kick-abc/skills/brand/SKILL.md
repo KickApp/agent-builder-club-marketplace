@@ -62,9 +62,9 @@ A second look: another fenced json block below a `preset:` line; first block win
 }
 ```
 
-Read `reference/PALETTE.md` before changing any of it. Surfaces and tooltips:
-`reference/SURFACES.md`. Statement presentation: `reference/ARTIFACTS.md`. Suite conduct:
-`reference/HOUSE-RULES.md`. Known limitations: `reference/KNOWN-GAPS.md`.
+Read `references/PALETTE.md` before changing any of it. Surfaces and tooltips:
+`references/SURFACES.md`. Statement presentation: `references/ARTIFACTS.md`. Suite conduct:
+`references/HOUSE-RULES.md`. Known limitations: `references/KNOWN-GAPS.md`.
 
 - [ ] 1. Generate first, brand second, always two steps; there is deliberately no flag doing
       both. Multiple files: generate all, then one `theme.py` call over the whole set, which
@@ -72,8 +72,8 @@ Read `reference/PALETTE.md` before changing any of it. Surfaces and tooltips:
 - [ ] 2. Theme each HTML report. Never hand-edit the HTML and never restyle the template.
 
       ```
-      python3 reference/templates/build_report.py data.json out.html
-      python3 reference/templates/theme.py SKILL.md out.html
+      python3 references/templates/build_report.py data.json out.html
+      python3 references/templates/theme.py SKILL.md out.html
       ```
 
       It injects `<style id="brand-theme">` and `<script id="brand-icons">`, both replaced,

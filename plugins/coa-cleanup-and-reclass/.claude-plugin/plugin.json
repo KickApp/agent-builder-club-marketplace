@@ -1,0 +1,15 @@
+{
+  "name": "coa-cleanup-and-reclass",
+  "version": "1.0.0",
+  "description": "Reviews an entity's chart of accounts and a full year of transactions, proposes a cleaner revenue and expense structure with an old-to-new mapping, then applies approved CoA changes and bulk-reclasses transactions into the new structure with a change log. Each write phase is previewed separately before posting.",
+  "author": {
+    "name": "Kick"
+  },
+  "keywords": [
+    "accounting",
+    "chart-of-accounts",
+    "reclassification",
+    "bookkeeping",
+    "cleanup"
+  ]
+}

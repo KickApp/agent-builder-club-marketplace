@@ -21,10 +21,10 @@ import-ready CSV; this skill posts nothing anywhere.
       from the exceptions register (when running inside a close), standing accruals due.
       Other inputs: the client profile, GL detail and TB for control account tie-outs.
 - [ ] 2. Check reversals before drafting anything new.
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       Every prior auto-reverse accrual either has its reversal in this period's GL, was settled directly against the liability (documented on the schedule), or gets a reversal proposed here. Relieved neither way: first entry on the register. Relieved both ways: double-relief flag.
       The prior period's JE register carries the auto-reverse flags; read them when available, fall back to the GL pattern when not.
-- [ ] 3. Roll each schedule forward per [reference/schedule-formats.md](reference/schedule-formats.md), including the optional loan roll with its interest recalc whenever a lender statement is on hand.
+- [ ] 3. Roll each schedule forward per [references/schedule-formats.md](references/schedule-formats.md), including the optional loan roll with its interest recalc whenever a lender statement is on hand.
       Each schedule ties to its GL control account exactly: closing balance equals TB balance, rounding documented on the schedule, never absorbed silently.
 - [ ] 4. Run the completeness scan against the period's activity, both directions.
       Tells: a payment to a prepaid-type vendor with no schedule row; an asset-sized purchase not on the register; a new billing whose service period extends past close (existing deferral contract, or invoice language like "annual" or "12 months") sitting fully in revenue.

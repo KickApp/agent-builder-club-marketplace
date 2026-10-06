@@ -20,13 +20,13 @@ Fixed page order, most important first:
 
 ## Procedure
 
-- [ ] 1. Confirm books, period, basis. Read `reference/HOUSE-RULES.md`, `reference/DATA.md`,
-      `reference/ARTIFACTS.md`, and `reference/DIMENSIONS.md` first.
+- [ ] 1. Confirm books, period, basis. Read `references/HOUSE-RULES.md`, `references/DATA.md`,
+      `references/ARTIFACTS.md`, and `references/DIMENSIONS.md` first.
 - [ ] 2. Pull the P&L for the period and the comparisons: prior period, trailing three-period
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       average, same period last year when twelve months exist. Label every column; no targets
       or plans, only what happened against what happened before.
-- [ ] 3. Detect dimensions and measure coverage per `reference/DIMENSIONS.md`: never ask, read
+- [ ] 3. Detect dimensions and measure coverage per `references/DIMENSIONS.md`: never ask, read
       for it, then say what you found; its coverage bands decide whether a view ships. One
       section per owner question, three dimensional sections maximum.
 - [ ] 4. Compute variance by category; contribution by member where costs are tagged. Dollar
@@ -41,9 +41,9 @@ Fixed page order, most important first:
 - [ ] 6. Write the payload to `data.json`, then build in two steps, always in this order:
 
       ```
-      python3 reference/templates/build_report.py data.json {entity}-dashboard-{period}.html
-      python3 reference/templates/theme.py \
-              reference/brand-config.md {entity}-dashboard-{period}.html
+      python3 references/templates/build_report.py data.json {entity}-dashboard-{period}.html
+      python3 references/templates/theme.py \
+              references/brand-config.md {entity}-dashboard-{period}.html
       ```
 
       Step one writes the report, step two applies the firm brand and runs the copy audit;

@@ -23,7 +23,7 @@ whatever prepared it.
       the client profile for materiality and risk areas. No close folder: review what the
       user provides (a TB and draft statements at minimum), scope the verdict to it.
 - [ ] 2. TB roll: prior TB plus GL activity plus approved adjustments equals the final
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       adjusted TB, account by account. List every account that does not roll.
 - [ ] 3. Substantiation: every material balance sheet account ties to a reconciliation proof,
       a schedule, or a named register exception; none of the three is a blocker.
