@@ -8,7 +8,7 @@ Advisors and Real Estate BFF, for
 
 ```text
 /plugin marketplace add KickApp/agent-builder-club-marketplace
-/plugin install vendor-price-variance-monitor@agent-builder-club
+/plugin install oscar-setiawan@agent-builder-club
 ```
 
 ## What it does

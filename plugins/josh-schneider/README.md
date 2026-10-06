@@ -7,7 +7,7 @@ Built by [Josh Schneider](https://MultiplyAdvisors.com), CEO of Multiply Advisor
 
 ```text
 /plugin marketplace add KickApp/agent-builder-club-marketplace
-/plugin install client-meeting@agent-builder-club
+/plugin install josh-schneider@agent-builder-club
 ```
 
 ## What it does

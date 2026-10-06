@@ -16,23 +16,23 @@ In Claude Code or Cowork:
 /plugin install kick-abc@agent-builder-club
 ```
 
-Install a creator plugin the same way, by its name, for example
-`/plugin install quanto@agent-builder-club`.
+Creator plugins are named after the creator. Install one the same way, for example
+`/plugin install anderson-petergeorge@agent-builder-club`.
 
 Enable the plugin, then ask Claude to run the work. Sidekick is the entry point when you
 have not named a skill. Ledger access requires a Kick account.
 
 ## Plugins
 
-| Plugin | Built by | What it does |
-| --- | --- | --- |
-| `kick-abc` | Kick | The Agent Builder Club accounting suite: close, advisory, reporting, and skill-writer |
-| `profit-first-instant-assessment` | Mike Michalowicz | Runs the Profit First Instant Assessment against a client's books |
-| `client-meeting` | Josh Schneider | A one-page client meeting brief from the books |
-| `vendor-price-variance-monitor` | Oscar Setiawan | Flags vendors billing above contract or creeping up in price |
-| `coa-cleanup-and-reclass` | Glenn Hopper | Redesigns the chart of accounts and reclassifies the year, with approval on every write |
-| `personal-business-deduction-scan` | Ramon Liriano Jr | Finds likely business deductions in personal accounts for CPA review |
-| `quanto` | Anderson Petergeorge, CPA | Ranks a firm's clients by estimated margin and draws its ideal client profile |
+| Plugin | Built by | Skill | What it does |
+| --- | --- | --- | --- |
+| `kick-abc` | Kick | The full suite | The Agent Builder Club accounting suite: close, advisory, reporting, and skill-writer |
+| `mike-michalowicz` | Mike Michalowicz | `profit-first-instant-assessment` | Runs the Profit First Instant Assessment against a client's books |
+| `josh-schneider` | Josh Schneider | `client-meeting` | A one-page client meeting brief from the books |
+| `oscar-setiawan` | Oscar Setiawan | `vendor-price-variance-monitor` | Flags vendors billing above contract or creeping up in price |
+| `glenn-hopper` | Glenn Hopper | `coa-cleanup-and-reclass` | Redesigns the chart of accounts and reclassifies the year, with approval on every write |
+| `ramon-liriano-jr` | Ramon Liriano Jr | `personal-business-deduction-scan` | Finds likely business deductions in personal accounts for CPA review |
+| `anderson-petergeorge` | Anderson Petergeorge, CPA | `quanto` and its five steps | Ranks a firm's clients by estimated margin and draws its ideal client profile |
 
 Kick suite skills are connector-agnostic. Kick execution lives in each skill's
 `references/kick.md`.

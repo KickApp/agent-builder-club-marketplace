@@ -7,7 +7,7 @@ Built by [Mike Michalowicz](https://mikemichalowicz.com/), author of Profit Firs
 
 ```text
 /plugin marketplace add KickApp/agent-builder-club-marketplace
-/plugin install profit-first-instant-assessment@agent-builder-club
+/plugin install mike-michalowicz@agent-builder-club
 ```
 
 Installs one skill: `profit-first-instant-assessment`.

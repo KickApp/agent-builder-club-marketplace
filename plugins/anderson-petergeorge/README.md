@@ -13,7 +13,7 @@ Quanto, for [Agent Builder Club](https://www.agentbuilder.club/builders/anderson
 
 ```text
 /plugin marketplace add KickApp/agent-builder-club-marketplace
-/plugin install quanto@agent-builder-club
+/plugin install anderson-petergeorge@agent-builder-club
 ```
 
 ## What it reads

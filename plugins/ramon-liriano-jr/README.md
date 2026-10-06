@@ -8,7 +8,7 @@ Strategies, for
 
 ```text
 /plugin marketplace add KickApp/agent-builder-club-marketplace
-/plugin install personal-business-deduction-scan@agent-builder-club
+/plugin install ramon-liriano-jr@agent-builder-club
 ```
 
 ## What it does

@@ -8,7 +8,7 @@ Finance Professionals, for
 
 ```text
 /plugin marketplace add KickApp/agent-builder-club-marketplace
-/plugin install coa-cleanup-and-reclass@agent-builder-club
+/plugin install glenn-hopper@agent-builder-club
 ```
 
 ## What it does

@@ -16,11 +16,12 @@ discrepancy.
 
 - `documents_download { documentId: 12345 }` returns a presigned URL. `documentId`
   is numeric. The URL expires in minutes.
-- A name with no id: `documents_query { operation: "search", search: "<filename or description>" }`
-  resolves the numeric id. Search matches filename and metadata, not the text
-  inside the file. Confirm with `documents_query { operation: "get_metadata", documentId }`
-  when more than one row comes back. If the loaded guide names the operation
-  differently, follow the guide.
+- A name with no id: `documents_query { operation: "search", workspaceId, search: "<filename or description>" }`
+  resolves the numeric id. `workspaceId` is required. Search matches filename and
+  metadata, not the text inside the file. When more than one row comes back,
+  confirm with `documents_query { operation: "get_metadata", financialDocumentId }`.
+  Metadata takes `financialDocumentId`; the download takes the same numeric id as
+  `documentId`. If the loaded guide names a field differently, follow the guide.
 - The URL is for Procedure step 2 (save the file). Fetching the URL over HTTP, or
   reading the document inside Chrome, skips the save.
 

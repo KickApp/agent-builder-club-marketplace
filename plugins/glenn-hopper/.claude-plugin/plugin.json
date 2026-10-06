@@ -1,5 +1,5 @@
 {
-  "name": "coa-cleanup-and-reclass",
+  "name": "glenn-hopper",
   "version": "1.0.0",
   "description": "Reviews an entity's chart of accounts and a full year of transactions, proposes a cleaner revenue and expense structure with an old-to-new mapping, then applies approved CoA changes and bulk-reclasses transactions into the new structure with a change log. Each write phase is previewed separately before posting.",
   "author": {
@@ -11,5 +11,6 @@
     "reclassification",
     "bookkeeping",
     "cleanup"
-  ]
+  ],
+  "displayName": "Glenn Hopper"
 }

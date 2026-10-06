@@ -23,8 +23,8 @@
       "strict": true
     },
     {
-      "name": "profit-first-instant-assessment",
-      "source": "./plugins/profit-first-instant-assessment",
+      "name": "mike-michalowicz",
+      "source": "./plugins/mike-michalowicz",
       "description": "Runs Mike Michalowicz's Profit First Instant Assessment against a client's books: derives Real Revenue, selects the TAP bracket, and produces the assessment table. Read-only.",
       "version": "0.1.0",
       "author": {
@@ -36,8 +36,8 @@
       "strict": true
     },
     {
-      "name": "client-meeting",
-      "source": "./plugins/client-meeting",
+      "name": "josh-schneider",
+      "source": "./plugins/josh-schneider",
       "description": "Prepares a one-page, read-only client meeting brief from the books: financial highlights since the last meeting, open bookkeeping items, anomalies, and suggested talking points, with optional calendar and email enrichment.",
       "version": "1.0.0",
       "author": {
@@ -51,8 +51,8 @@
       "strict": true
     },
     {
-      "name": "vendor-price-variance-monitor",
-      "source": "./plugins/vendor-price-variance-monitor",
+      "name": "oscar-setiawan",
+      "source": "./plugins/oscar-setiawan",
       "description": "Compares a vendor's contracted or expected monthly price to what actually posted on the corporate card or bank feed, and flags vendors billing above contract or showing silent price creep. Read-only.",
       "version": "1.0.0",
       "author": {
@@ -64,8 +64,8 @@
       "strict": true
     },
     {
-      "name": "coa-cleanup-and-reclass",
-      "source": "./plugins/coa-cleanup-and-reclass",
+      "name": "glenn-hopper",
+      "source": "./plugins/glenn-hopper",
       "description": "Reviews an entity's chart of accounts and a full year of transactions, proposes a cleaner revenue and expense structure with an old-to-new mapping, then applies approved CoA changes and bulk-reclasses transactions into the new structure with a change log. Each write phase is previewed separately before posting.",
       "version": "1.0.0",
       "author": {
@@ -77,8 +77,8 @@
       "strict": true
     },
     {
-      "name": "personal-business-deduction-scan",
-      "source": "./plugins/personal-business-deduction-scan",
+      "name": "ramon-liriano-jr",
+      "source": "./plugins/ramon-liriano-jr",
       "description": "Scans an owner's personal bank and card accounts for likely business-deductible spend, estimates totals by deduction type, and produces a read-only CPA-review shortlist. Every figure is an estimate, not filing advice.",
       "version": "1.0.0",
       "author": {
@@ -92,8 +92,8 @@
       "strict": true
     },
     {
-      "name": "quanto",
-      "source": "./plugins/quanto",
+      "name": "anderson-petergeorge",
+      "source": "./plugins/anderson-petergeorge",
       "description": "Find the clients worth cloning. Answer one message about your clients; get every client ranked by estimated margin and books condition with the math shown, the places where the numbers disagree with your gut, your ideal client profile drawn from your own clients, and where to find more like them. Reads Kick, practice tools, and meeting notes; works from a fee list and a few notes alone. Read-only.",
       "version": "0.1.0",
       "author": {
