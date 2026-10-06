@@ -22,7 +22,7 @@ the artifact; the request list lives inside it. Never require a perfect data pac
       `profile.md` at the root in a single-client workspace, or in project knowledge): it
       names the accounts, schedules, and statements this client's close expects.
 - [ ] 2. Inventory what was provided: each file's type, system of origin, and period coverage,
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       identified from its contents, never its filename or the user's description. Inputs, any
       subset: trial balance (required for a full close; a GL export substitutes per Caveats),
       prior-period TB, GL detail, bank and card statements, subledgers or schedules.
@@ -44,7 +44,7 @@ the artifact; the request list lives inside it. Never require a perfect data pac
       leases, related parties, foreign currency) has matching evidence or a request-list line
       naming what is missing and what it blocks.
 - [ ] 7. Write the readiness report (format in Example) with the missing-items request list
-      inside it as a client-ready message, per [reference/request-list-format.md](reference/request-list-format.md).
+      inside it as a client-ready message, per [references/request-list-format.md](references/request-list-format.md).
 - [ ] 8. File it. In a close (a close folder exists or the user wants one): report to
       `workpapers/`, exactly one copy of each input into the folder's `inputs/`, the close's
       canonical data set. On divergence from originals elsewhere, stop and confirm which is
@@ -92,7 +92,7 @@ the artifact; the request list lives inside it. Never require a perfect data pac
 **Provided:** <files received and what each covered>
 **Proven:** <TB balanced, GL tie-out result, roll-forward result>
 **Gaps:** <each missing item and what it blocks>
-**Request list:** <client-ready message, per reference/request-list-format.md>
+**Request list:** <client-ready message, per references/request-list-format.md>
 **Next step:** <one action>
 ```
 

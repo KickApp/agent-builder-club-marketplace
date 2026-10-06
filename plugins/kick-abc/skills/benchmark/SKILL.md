@@ -17,11 +17,11 @@ worse than no range at all. Two modes:
 
 ## Procedure
 
-- [ ] 1. Confirm books, period, basis. Read `reference/HOUSE-RULES.md`, `reference/DATA.md`,
-      and `reference/BENCHMARK-DATA.md` (the retrieval manual for every tier: where each
+- [ ] 1. Confirm books, period, basis. Read `references/HOUSE-RULES.md`, `references/DATA.md`,
+      and `references/BENCHMARK-DATA.md` (the retrieval manual for every tier: where each
       source lives, how its tables read, the citation grammar) before touching any tier.
 - [ ] 2. Take the client's own figures from the run's shared pull, or compute them with the
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       same formulas dashboard uses, so one margin never reads two ways.
 - [ ] 3. Resolve the classification (NAICS or equivalent, from the ledger and the user's
       description) and the size band from revenue or receipts. Play both back in one line
@@ -40,9 +40,9 @@ worse than no range at all. Two modes:
       this order, and hand over the path:
 
       ```
-      python3 reference/templates/build_report.py data.json {entity}-benchmark-{period}.html
-      python3 reference/templates/theme.py \
-              reference/brand-config.md {entity}-benchmark-{period}.html
+      python3 references/templates/build_report.py data.json {entity}-benchmark-{period}.html
+      python3 references/templates/theme.py \
+              references/brand-config.md {entity}-benchmark-{period}.html
       ```
 
       Step one writes the report, step two applies the firm brand and runs the copy audit;

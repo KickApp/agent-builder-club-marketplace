@@ -23,14 +23,14 @@ adjusted trial balance; the package contains nothing the close did not prove.
       Gather the close folder (adjusted TB, workpapers, JE register, review report, exceptions register) and the client profile for deliverable preferences (naming, emphasis, recipients) when it exists.
 - [ ] 2. Build the statements from the adjusted TB: P&L, balance sheet, and cash flow
       (indirect), each with prior-period comparatives when a prior TB exists.
-      Formats in `reference/close-package-format.md`. Retained earnings proof: prior equity plus net income ties to the balance sheet.
+      Formats in `references/close-package-format.md`. Retained earnings proof: prior equity plus net income ties to the balance sheet.
 - [ ] 3. Build the workpapers workbook, one Excel file: a summary tab listing every
       material account with its support, linked to one tab per area (each reconciliation
       proof, each schedule, the JE register, the cleanup list).
       Summary tab figures reference the detail tabs; nothing is retyped.
 - [ ] 4. Write the close memo as a Word document (.docx), never markdown.
       It opens with the executive summary for the owner: plain language, the three to five things that mattered this period, flux highlights with their drivers, and cash position. Then the preparer's sections: scope and basis, what was reconciled, entries booked (count and total), open items and accepted exceptions, the review verdict, and a sign-off checklist with the preparer and reviewer lines. One document serves both readers; there is no separate executive summary file.
-- [ ] 5. Name and file everything in `package/` per the file set in `reference/close-package-format.md`.
+- [ ] 5. Name and file everything in `package/` per the file set in `references/close-package-format.md`.
       If a cloud storage or docs connector is available (Drive, OneDrive, Notion, SharePoint), offer to save the package and the updated profile there too; a connected store is durable across sessions and visible to teammates, which the session workspace is not. The workspace copy remains the working copy; note where the shared copy went in the memo and the close log when one is kept.
 - [ ] 6. Close out: note the delivery date and post-close follow-ups (accrual reversals
       due next period, aging investigate items, schedule updates such as new assets or

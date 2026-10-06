@@ -1,0 +1,17 @@
+{
+  "name": "oscar-setiawan",
+  "description": "Compares a vendor's contracted or expected monthly price to what actually posted on the corporate card or bank feed, and flags vendors billing above contract or showing silent price creep. Read-only.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Kick"
+  },
+  "keywords": [
+    "vendor",
+    "pricing",
+    "variance",
+    "contract",
+    "subscriptions",
+    "accounting"
+  ],
+  "displayName": "Oscar Setiawan"
+}

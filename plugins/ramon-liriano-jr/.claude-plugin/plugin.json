@@ -1,0 +1,11 @@
+{
+  "name": "ramon-liriano-jr",
+  "version": "1.0.0",
+  "description": "Scans an owner's personal bank and card accounts for likely business-deductible spend, estimates totals by deduction type, and produces a read-only CPA-review shortlist. Every figure is an estimate, not filing advice.",
+  "author": {
+    "name": "Kick",
+    "email": "support@kick.co",
+    "url": "https://kick.co"
+  },
+  "displayName": "Ramon Liriano Jr"
+}

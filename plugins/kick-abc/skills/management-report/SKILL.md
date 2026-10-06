@@ -23,13 +23,13 @@ on the P&L, balance sheet, or cash flow statement, it does not belong here.
 - [ ] 1. Confirm books, period, basis. Inventory what the ledger holds.
 - [ ] 2. Pull in one pass: P&L leaves by month (24 where they exist), balance sheets at
       period end, prior end, prior year end, and the period's movements.
-      On Kick: exact tools and call shapes in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
+      On Kick: exact tools and call shapes in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       A P&L alone is still a report, just shorter. Omit empty sections and say so. Never pad.
 - [ ] 3. Write `payload.json`: entity, contiguous months, chart of accounts with polarity
       per line, monthly ledger, optional balance sheet block.
       Feed the leaves and the movements; derive every total. Subtotals sum from leaves, never hardcoded.
       Supply real retained earnings where the books carry them; a derived plug prints itself.
-- [ ] 4. Run the engine: `python3 reference/templates/build_mgmt_report.py payload.json out.pdf`.
+- [ ] 4. Run the engine: `python3 references/templates/build_mgmt_report.py payload.json out.pdf`.
       Validation and tie-out proofs must pass or no file is emitted. A failed proof is a books finding to report, never a figure to plug.
 - [ ] 5. Verify against Completion, hand over the PDF path with one sentence on the period.
 

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "kick": {
+      "type": "http",
+      "url": "https://use.kick.co/mcp"
+    }
+  }
+}

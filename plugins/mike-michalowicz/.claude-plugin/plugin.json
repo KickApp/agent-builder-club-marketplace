@@ -1,0 +1,15 @@
+{
+  "name": "mike-michalowicz",
+  "version": "0.1.0",
+  "description": "Runs Mike Michalowicz's Profit First Instant Assessment against a client's books: derives Real Revenue, selects the TAP bracket, and produces the assessment table. Read-only.",
+  "author": {
+    "name": "Kick"
+  },
+  "keywords": [
+    "accounting",
+    "profit-first",
+    "advisory",
+    "bookkeeping"
+  ],
+  "displayName": "Mike Michalowicz"
+}

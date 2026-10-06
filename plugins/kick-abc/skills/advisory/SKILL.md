@@ -20,28 +20,28 @@ calculation here is how two deliverables end up disagreeing on the same figure.
 5. Brand the whole set in one pass
 6. Verify the set and hand over
 
-Read `reference/HOUSE-RULES.md`, `reference/DATA.md`, `reference/ARTIFACTS.md`, and
-`reference/DIMENSIONS.md` before starting.
+Read `references/HOUSE-RULES.md`, `references/DATA.md`, `references/ARTIFACTS.md`, and
+`references/DIMENSIONS.md` before starting.
 
 ## Procedure
 
 - [ ] 1. Orient: read what you were given, name what it supports in one line, and move.
-      On Kick: guides and pull mapping in `reference/kick.md`. Other connectors: discover at runtime, never guess names.
-      No opening questionnaire. `reference/DATA.md` has the tier table.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
+      No opening questionnaire. `references/DATA.md` has the tier table.
 - [ ] 2. Choose the deliverables and state the plan in one line.
       Default to one: a single report someone reads beats three they skim. "How are we doing" means the dashboard against the business's own history; "send me the financials" means the management report. The line between them: the dashboard is business segments at a point in time, the management report is statement lines over time. Dimensional cuts and rankings only ever go in the dashboard; the full statements only ever go in the management report.
       Benchmark is never the default answer to a vague ask. It runs on a genuinely comparative request, or as the reference layer under another skill's run.
       Run more than one only when the request genuinely spans them, ordered so the later skill inherits: flux after dashboard (inherits the line and the period rather than re-deriving them), cashflow after dashboard (carries the cash balance and burn across rather than recomputing), benchmark after dashboard (inherits the figures dashboard computed, so both state the same margin to the decimal), management-report then dashboard for the classic close-and-deliver pairing.
       If the ask is genuinely ambiguous, show the routing table and ask rather than guessing.
 - [ ] 3. Pull the ledger once into scratch; every skill in the run reads from it.
-      Fix before the first skill starts, and hold for the whole run: entity, period and comparison period, basis (accrual or cash), closed-through date, and which dimensions the books actually carry per `reference/DIMENSIONS.md`. Every artifact carries the same four in its header and footnote.
+      Fix before the first skill starts, and hold for the whole run: entity, period and comparison period, basis (accrual or cash), closed-through date, and which dimensions the books actually carry per `references/DIMENSIONS.md`. Every artifact carries the same four in its header and footnote.
       When benchmark is in the plan, it runs its sourcing at pull time: classification and size band confirmed, tiers checked, the labeled reference set written into the same scratch. Skills carrying an external figure take it from that set and never source one themselves.
 - [ ] 4. Generate every artifact, unbranded, context-setting skills before deep dives.
-      Announce each in one line as you start it; never paste a report into chat between steps. One artifact per turn, per `reference/HOUSE-RULES.md`.
-      Read `reference/brand-config.md` copy rules before writing any payload, not after: writing to them costs nothing, retrofitting them means rebuilding every artifact in the run.
+      Announce each in one line as you start it; never paste a report into chat between steps. One artifact per turn, per `references/HOUSE-RULES.md`.
+      Read `references/brand-config.md` copy rules before writing any payload, not after: writing to them costs nothing, retrofitting them means rebuilding every artifact in the run.
       If a skill can't produce something worth reading from the data available, say so and skip it. A thin report is worse than a named gap.
 - [ ] 5. Brand the whole set in one pass, after the last artifact is generated:
-      `python3 reference/templates/theme.py reference/brand-config.md report1.html report2.html`
+      `python3 references/templates/theme.py references/brand-config.md report1.html report2.html`
       The pass is idempotent; re-running it after a palette change is the supported way to re-skin a finished set. It reports banned punctuation and ledger words rather than rewriting; fix each in the payload, rebuild that file, and brand the set again.
       Workbooks have no script: apply the input convention and number formats from `brand` by hand, then re-run `verify_model.py`, because a formatting pass can hide an error value behind a custom format.
       The management report is the exception: its engine builds the PDF directly with brand tokens baked in and takes no `theme.py` pass, but its sentences follow the brand copy rules, so write them to those rules the first time.

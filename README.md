@@ -1,6 +1,11 @@
 # Agent Builder Club marketplace
 
-Catalog of Claude plugins for [Agent Builder Club](https://agentbuilder.club). Add this repository as a marketplace, then install the plugins you want.
+Deployed catalog of Claude plugins for [Agent Builder Club](https://agentbuilder.club).
+
+This repository is a publish target. Skill work happens in the private
+[KickApp/agent-factory](https://github.com/KickApp/agent-factory) repo, under `abc/`.
+A cleaned snapshot is copied here when a change is ready. Do not open pull requests
+against this repo for skill edits.
 
 ## Install
 
@@ -11,42 +16,23 @@ In Claude Code or Cowork:
 /plugin install kick-abc@agent-builder-club
 ```
 
-If the repository is private, Claude uses your existing GitHub credentials. For Anthropic's public plugin directory, this repo needs to be public.
+Creator plugins are named after the creator. Install one the same way, for example
+`/plugin install anderson-petergeorge@agent-builder-club`.
 
-Enable the plugin, then ask Claude to run the work. Sidekick is the entry point when you have not named a skill.
+Enable the plugin, then ask Claude to run the work. Sidekick is the entry point when you
+have not named a skill. Ledger access requires a Kick account.
 
 ## Plugins
 
-| Plugin | What it does |
-| --- | --- |
-| `kick-abc` | The Agent Builder Club accounting suite: close, advisory, reporting, and skill-writer |
+| Plugin | Built by | Skill | What it does |
+| --- | --- | --- | --- |
+| `kick-abc` | Kick | The full suite | The Agent Builder Club accounting suite: close, advisory, reporting, and skill-writer |
+| `mike-michalowicz` | Mike Michalowicz | `profit-first-instant-assessment` | Runs the Profit First Instant Assessment against a client's books |
+| `josh-schneider` | Josh Schneider | `client-meeting` | A one-page client meeting brief from the books |
+| `oscar-setiawan` | Oscar Setiawan | `vendor-price-variance-monitor` | Flags vendors billing above contract or creeping up in price |
+| `glenn-hopper` | Glenn Hopper | `coa-cleanup-and-reclass` | Redesigns the chart of accounts and reclassifies the year, with approval on every write |
+| `ramon-liriano-jr` | Ramon Liriano Jr | `personal-business-deduction-scan` | Finds likely business deductions in personal accounts for CPA review |
+| `anderson-petergeorge` | Anderson Petergeorge, CPA | `quanto` and its five steps | Ranks a firm's clients by estimated margin and draws its ideal client profile |
 
-### kick-abc skills
-
-- **sidekick**: plans which skills to run and at what scope, runs them with their own resources, finishes artifacts through brand, and reports results only
-- **Action skills**: adjust, advisory, benchmark, cashflow, close, close-setup, dashboard, deliver, intake, management-report, prep, review
-- **brand**: the appearance layer. Runs last over finished artifacts and never changes a number
-- **skill-writer**: turn your own workflows into new skills with clean-room test runs
-- **skill-pr**: Kick-internal. Opens the catalog PR for an approved skill. Not for customer environments
-
-Skills are connector-agnostic. Kick execution lives in each skill's `reference/kick.md`, which loads Kick's published guides at runtime. Ledger access requires a Kick account.
-
-## Layout
-
-Claude marketplaces are a git repo with `.claude-plugin/marketplace.json` at the root. Each plugin is a folder with `.claude-plugin/plugin.json` and its `skills/` at the plugin root.
-
-```text
-.claude-plugin/marketplace.json
-plugins/kick-abc/.claude-plugin/plugin.json
-plugins/kick-abc/skills/<name>/SKILL.md
-```
-
-Users install with `/plugin install <plugin>@agent-builder-club`.
-
-## Source
-
-Assembled from `abc/templated/` in [KickApp/agent-factory](https://github.com/KickApp/agent-factory) (`kick-abc`).
-
-## License
-
-Apache-2.0. See `LICENSE`.
+Kick suite skills are connector-agnostic. Kick execution lives in each skill's
+`references/kick.md`.

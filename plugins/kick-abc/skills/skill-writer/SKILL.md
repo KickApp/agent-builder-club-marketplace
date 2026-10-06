@@ -22,7 +22,7 @@ works for someone who has none of this conversation.
 - [ ] 1. Collect: the source material (SOP, prompt, existing skill, or a description),
       sample data the skill should run on, and the task stated as one sentence.
       No sample data means no test loop; say so and get some, or mark the skill untested in the handoff.
-- [ ] 2. Draft per `reference/TEMPLATE.md` and `reference/WRITING.md`: five sections,
+- [ ] 2. Draft per `references/TEMPLATE.md` and `references/WRITING.md`: five sections,
       execution knowledge in resources, connector bindings that reference the
       connector's published guides rather than restating them.
 - [ ] 3. Run it clean. Launch a subagent whose entire context is: the skill file, its
@@ -33,7 +33,7 @@ works for someone who has none of this conversation.
       Data stays fixed across iterations so the only variable is the skill.
 - [ ] 5. Approval gate: the user approves the output and the skill, explicitly. Then
       run the writing gates (line-by-line comparison, em dash sweep, five sections)
-      and hand over the skill folder. Offer `skill-pr` to contribute it to the catalog.
+      and hand over the skill folder.
 
 ## Guardrails
 

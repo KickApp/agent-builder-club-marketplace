@@ -1,0 +1,11 @@
+{
+  "name": "josh-schneider",
+  "version": "1.0.0",
+  "description": "Prepares a one-page, read-only client meeting brief from the books: financial highlights since the last meeting, open bookkeeping items, anomalies, and suggested talking points, with optional calendar and email enrichment.",
+  "author": {
+    "name": "Kick",
+    "email": "support@kick.co",
+    "url": "https://kick.co"
+  },
+  "displayName": "Josh Schneider"
+}
