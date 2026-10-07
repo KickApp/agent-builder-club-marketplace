@@ -51,8 +51,8 @@ gets its own line and, later, its own column. Judge it from whatever is present:
 
 Messy: two or more of the items above, or one of the two severe ones on its own (personal
 spending mixed into the business account; a catch-up of three months or more). Fair: one
-ordinary item. Clean: none. Say which items drove the word. The same rule is in the notes
-reference so the two never disagree.
+ordinary item. Clean: none. Say which items drove the word. The same rule is in the
+evidence skill's `references/reading-notes.md` so the two never disagree.
 
 ## Source tags
 

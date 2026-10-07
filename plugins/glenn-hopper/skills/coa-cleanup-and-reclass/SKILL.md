@@ -1,201 +1,188 @@
 ---
 name: coa-cleanup-and-reclass
-description: "Reviews an entity's chart of accounts and a full year of transactions, proposes a cleaner revenue and expense structure with an old-to-new mapping, then applies approved CoA changes and bulk-reclasses transactions into the new structure with a change log. Each write phase is previewed separately before posting. Use when a customer says clean up our chart of accounts, propose cleaner revenue and expense categories, restructure the CoA and reclass the year, or remap every transaction into a new account structure with a change log. Not for moving transactions between two existing accounts only."
+description: "Reviews a Kick entity's chart of accounts and a full year of transactions, proposes a cleaner revenue and expense structure with an old-to-new mapping, then applies approved CoA changes and bulk-reclasses transactions into the new structure with a change log. Each write phase is previewed separately before posting. Use when a customer says 'clean up our chart of accounts', 'propose cleaner revenue and expense categories', 'restructure the CoA and reclass the year', or 'remap every transaction into a new account structure with a change log'. Not for moving txns between two existing accounts only; that is bulk-account-reclassifier."
 ---
 
 # CoA cleanup and reclass
 
-Important: this skill assists with chart-of-accounts redesign and transaction remapping and
-does not provide financial advice. It writes to the books only after the proposal is approved
-and each write phase echoes its full payload and receives one explicit "yes".
+## Purpose
 
-Goal: a user-approved cleaner revenue/expense CoA for the entity, every in-scope transaction
-remapped into that structure, and a change log of what moved, with CoA writes and transaction
-reclass each confirmed in their own preview round. Nothing posts until the user approves the
-proposal, then each write phase.
+Propose a cleaner revenue and expense chart of accounts for one entity, move every in-scope
+transaction in the window into it, and hand back a change log. Nothing posts until the user
+approves the proposal, and each write phase gets its own preview and confirm.
 
-## When to use
+1. Phase 1: read the chart of accounts and the window's activity, then propose.
+2. Phase 2a: chart-of-accounts writes (groups, new accounts, renames, regroups, merges, and
+   disables of emptied sources).
+3. Phase 2b: one bulk reclass of the activity still on old accounts.
+4. Phase 3: the change log, with before and after figures from fresh reads.
 
-* "Review our chart of accounts and 2025 activity, propose cleaner categories, and reclass
-  everything into the new structure with a change log."
-* "Collapse duplicate expense accounts and remap the year."
-* "Rebuild a messy P&L CoA and move the transactions."
-* Use cases: CoA redesign proposal, duplicate/merge cleanup with remap, year-long
-  reclassification into a new structure with a change log.
-* Not this skill: bulk move from one existing wrong account to one existing correct account
-  with no CoA redesign; uncategorized-queue triage alone; importing a full external CoA file as
-  the primary job without a redesign conversation.
+Not this skill: a move from one existing wrong account to one existing right account with no
+redesign (bulk-account-reclassifier); uncategorized-queue triage alone
+(kick-uncategorized-gl-review); importing a full external chart of accounts as the main job,
+with no redesign conversation (the connector's own CoA migration guide).
 
-## Data you need
+On Kick, load [references/kick.md](references/kick.md) before step 1.
 
-* The books and period: which set of books, ledger basis, and the year or window to redesign.
-* Current chart of accounts: account names, types, and structure (including groups if used).
-* Year activity: P&L and account activity that justify keep / create / merge / disable
-  choices, plus the transaction population for later remap.
-* Write capability: CoA create/update/merge/disable and bulk transaction reclass, each with
-  a preview path.
+## Procedure
 
-## Workflow
+Copy this checklist into the response and check items off as you go.
 
-Copy this checklist into your response and check items off as you go:
+- [ ] 1. Load the connector's CoA migration and transaction review guides.
+      Also load the GL-first guide when the workspace classifies by GL account (GL-first).
+- [ ] 2. Resolve the entity, its workspace, and its ledger and basis. Confirm the window.
+      Reads only through step 5. Never ask the user for an ID.
+- [ ] 3. Pull the current chart of accounts and the window's activity.
+      Monthly P&L for the window, plus account detail for noisy or duplicate accounts. Quote
+      the report lines that justify each change. Empty read: name the entity and window read,
+      and ask the user to confirm the entity or widen the window. A new entity with no
+      activity goes structure-only (CoA changes, no reclass) only on the user's yes.
+- [ ] 4. Draft one proposal the user can approve or edit.
+      - Keep: accounts that are clean and used.
+      - Create: clearer revenue and expense accounts, with name, type, subtype, and parent group.
+      - Rename or regroup: accounts whose name or placement is wrong, updated in place.
+      - Merge: each true duplicate merges into one survivor, so its balances and transactions
+        move there.
+      - Disable: accounts that should stop receiving activity. Never hard-delete.
+      - Old-to-new mapping for every in-scope source account with activity in the window.
+      - Change-log skeleton: account actions plus the expected count per mapping line, from
+        transaction statistics or report reads.
+- [ ] 5. Get explicit approval of the proposal.
+      One message, one ask. Revise on pushback. No write preview until the structure is agreed.
+- [ ] 6. Phase 2a: apply the approved CoA writes.
+      Order: groups first, then new accounts, then renames and regroups, then merges, then
+      disables of emptied sources. For each write: preview the change, show the summary, wait
+      for one explicit confirm, apply it once with the identical input. A homogeneous batch is
+      one preview, one stated count, one yes. Where the connector has no merge write, the
+      binding gives the equivalent path and where it falls in this sequence.
+- [ ] 7. Phase 2b: build the reclass set from post-2a reads.
+      Resolve the destination for every mapping line. Merges already moved their sources'
+      activity, so pull only activity still on old accounts. For each line, page the
+      transaction finder over the window, filtered to the entity and the old account. Finder
+      transaction IDs are the only payload IDs. Each ID appears in one mapping line only.
+- [ ] 8. Phase 2b: preview one bulk reclass, confirm, apply once.
+      State the count. GL-first: set the GL account only, never a category. Category-first:
+      set the new category, keeping category and GL aligned. Huge sets go in user-agreed date
+      chunks, each its own preview and yes. Echo what posted.
+- [ ] 9. Offer ongoing coding rules only if the user asks.
+      A separate preview and confirm, with apply-to-existing transactions set explicitly.
+- [ ] 10. Phase 3: deliver the change log in the Example format.
+      Actions taken, the old-to-new mapping, counts moved from preview and statistics
+      responses, and before and after P&L lines and net income from fresh reads.
 
-* [ ] 1. Confirm books; pull CoA + year activity (reads only)
-* [ ] 2. Draft proposal: new/kept/merged/disabled accounts + old→new mapping + change-log skeleton
-* [ ] 3. Get explicit approval of the proposal (no writes yet)
-* [ ] 4. Phase 2a: apply CoA writes, each with its own echo → yes → write
-* [ ] 5. Phase 2b: one bulk reclass preview for remaps; confirm; optional rules if requested
-* [ ] 6. Deliver change log + before/after figures from fresh reads
+## Caveats
 
-### Phase 1: Orient, read, propose (no writes)
+- **Two-phase discipline.** Proposal approval first, then CoA write previews, then the reclass
+  preview. Tell: one confirmation covering account changes and transaction remaps. Never
+  combine them under one confirmation.
+- **One preview, one ask per write or batch.** No auto-confirm. Never chain a preview straight
+  into the apply. The original request is not approval.
+- **No hard deletes of accounts.** Tell: a delete anywhere in the plan. Cleanup is merge or
+  disable. If the user insists on deleting, explain the safer pattern and proceed only with an
+  operation the loaded guide and live tools allow, after a clear yes. Never instruct
+  irreversible deletion.
+- **Merges have blast radius.** The merge preview names source and survivor, and what moves:
+  balances and transactions. The disable preview names every account that stops receiving
+  activity.
+- **GL-first takes the GL account only.** Tell: a category on a GL-first reclass line; the
+  connector rejects it. Speak to the user in their own word, "category".
+- **Figures from reads and previews only.** Change-log counts and before and after amounts come
+  from tool responses. Tell: hand-built monthly totals or mental arithmetic on books totals.
+- **Materiality is for ranking.** A threshold used to order the proposal is labeled assumed and
+  never appears as a posted figure.
+- **Resolve every ID by query.** Never ask for an ID, never guess one. Tell: a workspace ID
+  passed where the entity ID belongs.
+- **Date fields differ by read.** Transaction reads and report reads take different date
+  fields, and ledger-scoped reports need the ledger. The binding names each.
+- **Reports are not payloads.** Report rows inform the proposal and baselines only. Tell: a
+  reclass payload built from report rows.
+- **Double remap.** Tell: one transaction ID in two mapping lines, a merged source's rows in
+  the reclass set, or an ID list built before Phase 2a landed. Rebuild from post-2a reads;
+  each ID appears once.
+- **Ambiguity goes to the user.** Competing survivors, or unclear revenue versus expense
+  placement, get options, not a silent pick.
+- **No silent rules.** Never create a coding rule "for next time" without its own preview.
+- **Simple moves belong elsewhere.** Tell: both accounts already exist and the proposal has no
+  create, rename, or merge line. Defer to bulk-account-reclassifier.
+- **Locked period stops the run.** A write rejected for a closed period stops; ask the user.
+  Never retry into it. Expired approvals follow the binding.
+- **Rollback.** A posted batch that proves wrong is reverted through the connector's undo
+  path, with its own preview and confirm. A wrong disable is re-enabled the same way.
+- **Net income ties.** Remaps between revenue and expense accounts leave net income for the
+  window unchanged. Tell: the before and after reads differ. Name the mapping line that moved
+  activity off the P&L.
+- **In-run corrections.** A user correction to an assumption, format, threshold, or account
+  choice applies at once and holds for the run. It never overrides previews, confirmations, or
+  figures from reads.
+- **Drift.** A rejected call follows the drift rule in the binding. Never edit this skill file
+  mid-run.
 
-1. Confirm the books and window. Confirm which set of books and the year or date window.
-2. Note how coding works. Some books post to chart-of-accounts accounts directly; others use
-   categories. Remaps must use the field the books accept.
-3. Pull the current CoA and ledger basis.
-4. Pull year activity that informs the redesign: P&L for the year, and targeted account
-   activity for noisy or duplicate accounts. Quote report figures; do not invent materiality
-   math for books totals. Gather transaction ids for later remap when needed.
-5. Draft one proposal the user can approve or edit:
-   * Keep accounts that are clean and used.
-   * Create clearer revenue/expense accounts (names, type/subtype, parent group).
-   * Merge true duplicates into a survivor.
-   * Disable accounts that should stop receiving activity (not hard-delete).
-   * Old → new mapping for every in-scope source account that still has year activity.
-   * Change-log skeleton: account actions + expected transaction remap counts from reads.
-6. Ask for approval of the proposal before any write. One message, one ask. Revise if they
-   push back. Do not preview a write until the structure is agreed.
+## Example
 
-### Phase 2a: CoA writes (own confirmation round per write/batch)
+Request: "Review the chart of accounts and every 2025 transaction for Summit Coaching, propose
+cleaner revenue and expense categories, reclass everything into the new structure with a
+change log. Preview before posting."
 
-1. Apply approved CoA changes in a sensible order: create new accounts/groups first, then
-   updates, then merges, then disables of emptied sources.
-2. Each write is its own echo-payload → show summary → explicit yes → write. You may batch
-   homogeneous rows (for example one bulk disable) when the tools support it; still state the
-   count and get one yes for that preview. Never chain preview straight into confirm.
-3. Never hard-delete accounts as the cleanup path. Prefer merge (balances and transactions
-   move to the target) or disable. If the user insists on delete, explain the safer pattern and
-   only proceed with an operation the live tools allow after a clear yes.
-4. On lock-date errors: stop and ask. On a rejected write: re-echo; apply without re-asking only
-   when the fresh preview matches the approved change.
+The workspace is category-first, on the accrual ledger. Phase 1 found three near-duplicate
+software accounts and two vague revenue buckets. The proposal created three accounts, merged
+SaaS Tools and Subscriptions into Software (the user kept "Software" as the survivor name),
+disabled the two emptied duplicates, and mapped three source accounts for the reclass. Each
+write below ran under its own preview and one yes.
 
-### Phase 2b: Transaction reclass (separate confirmation round)
+```markdown
+## Change log: Summit Coaching, 2025-01-01 to 2025-12-31
 
-1. Resolve destination accounts (or categories) for every mapping line. Rebuild transaction
-   lists from post-CoA reads: merges already move activity to the survivor, so only pull
-   remaining source activity.
-2. For each old→new mapping line still holding activity, gather the transaction ids over the
-   year window. Report totals inform the proposal and change-log baselines only; the bulk
-   payload uses the actual transaction identifiers.
-3. One bulk reclass preview for the approved remap set (or user-agreed date chunks if huge).
-   State the count. Use COA overrides when the books post directly to accounts; use categories
-   when that is what the books accept.
-4. After yes: write the identical payload. Echo what posted.
-5. Optional: if the user wants ongoing automation, offer coding-rule creates or updates as a
-   separate echo → yes → write, with "apply to existing" set explicitly. Never silently
-   create rules.
+| # | Phase | Action | From | To | Count | Figure source | Result |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 2a | Create | | 4010 Coaching Revenue | | Create preview | Posted |
+| 2 | 2a | Create | | 4020 Workshop Revenue | | Create preview | Posted |
+| 3 | 2a | Create | | 6410 Professional Development | | Create preview | Posted |
+| 4 | 2a | Merge | 6120 SaaS Tools | 6110 Software | 48 | Merge preview | Posted |
+| 5 | 2a | Merge | 6130 Subscriptions | 6110 Software | 31 | Merge preview | Posted |
+| 6 | 2a | Disable | 6120, 6130 | | 2 accounts | Disable preview | Posted |
+| 7 | 2b | Reclass | 4000 Sales | 4010 Coaching Revenue | 29 | Bulk reclass preview | Posted |
+| 8 | 2b | Reclass | 4900 Other Income | 4020 Workshop Revenue | 12 | Bulk reclass preview | Posted |
+| 9 | 2b | Reclass | 6990 Misc Expense | 6410 Professional Development | 6 | Bulk reclass preview | Posted |
 
-### Phase 3: Change log deliverable
+Reclass total: 47 transactions in one bulk preview. The merged sources' rows were not in it.
 
-1. Deliver a change log with: CoA actions taken (create/merge/disable/update), old→new mapping,
-   transaction counts moved (from preview/statistics responses), and a short before/after P&L
-   or account snapshot from fresh reads. Label any assumed materiality threshold used only for
-   proposal ranking, never as a posted figure.
+### Before and after (2025 P&L reads)
 
-## Working with your data
+| Line | Before | After |
+| --- | --- | --- |
+| 4000 Sales | $58,000 | $0 |
+| 4010 Coaching Revenue | | $58,000 |
+| 4900 Other Income | $6,400 | $0 |
+| 4020 Workshop Revenue | | $6,400 |
+| 6110 Software | $4,200 | $8,640 |
+| 6120 SaaS Tools | $2,880 | $0 |
+| 6130 Subscriptions | $1,560 | $0 |
+| 6990 Misc Expense | $1,150 | $250 |
+| 6410 Professional Development | | $900 |
+| Net income | $31,750 | $31,750 |
 
-This skill reads and writes through whatever accounting system is connected. If you have
-documented bindings for that system, use them. Otherwise:
+6990 Misc Expense keeps $250 of true miscellaneous spend and stays enabled.
+```
 
-### Unknown connector
+This run's connector merged natively. On a connector with no merge write, such as Kick, rows
+4 and 5 join the Phase 2b reclass instead (126 rows in that preview), row 6 follows it, and
+each merge row's Action reads "Merge (reclass then disable on Kick)". The binding gives that
+path; the before and after figures are the same.
 
-1. List the available tools and read their schemas and descriptions.
-2. Map them to the data needs above (CoA list, P&L and account activity, transaction population,
-   CoA writes, and bulk reclass). Anything with no plausible tool is marked UNSUPPORTED.
-3. STOP and show the user the mapping, and get confirmation, before any read or write beyond
-   discovery.
-4. Never guess tool names. If the system exposes guide or skill discovery tools, load the
-   relevant CoA migration and transaction-review guides first.
+## Completion
 
-## Guardrails
+Done when:
+- The user approved the proposal before any write preview.
+- Each Phase 2a write and the Phase 2b reclass had its own preview and one explicit yes.
+- No account was hard-deleted.
+- Every merge preview named source and survivor, and each merged source was disabled only
+  after its merge landed.
+- Every mapping line shows a count from a preview or statistics response.
+- Before and after P&L lines and net income come from fresh reads, and net income ties or the
+  difference is named.
+- The change log has the Example's columns.
 
-* Default-deny writes. Echo the full payload → one explicit "yes" → then write. No
-  auto-confirm.
-* Two-phase discipline. Proposal approval first; then CoA write previews; then reclass
-  preview. Never combine CoA mutations and transaction remaps into one confirmation.
-* One confirmation per write or batch. No auto-confirm.
-* A rejected write restarts the confirmation flow.
-* No hard deletes of accounts as the default cleanup. Prefer disable or merge.
-* Stop on lock-date errors.
-* Figures from reads/previews only. Change-log counts and before/after amounts come from
-  system responses, never mental arithmetic for books totals.
-* Ambiguity → ask. Competing merge targets or unclear revenue vs expense placement: options,
-  not silent picks.
-* Merges have blast radius. The preview must name source → target and that balances and
-  transactions move before asking.
-* Existing wrong→correct only? If the user already has both accounts and wants no redesign,
-  defer to a bulk account reclassifier.
-* Tool errors and drift: if a live call is rejected, trust the live error hint (and any
-  loaded guide) over this skill's examples. Fix the call and retry once. A rejected write
-  restarts the confirmation flow. If the working shape contradicts this skill's text, add a
-  method note to the deliverable so it can be reported and fixed centrally. Never edit this
-  skill file mid-run.
-
-## Worked example
-
-"Review the chart of accounts and every transaction posted in 2025 for Summit Coaching,
-propose a cleaner set of revenue and expense categories, and reclassify each transaction into
-the new structure with a change log. Preview before posting."
-
-1. Confirm the books for Summit Coaching; accrual ledger; categories (not direct COA overrides).
-2. Pull CoA and 2025 P&L → several near-duplicate expense accounts (Software, SaaS Tools,
-   Subscriptions) and two vague revenue buckets. Quote the report lines that justify the
-   proposal (illustrative).
-3. Proposal shown: create "Software Subscriptions"; merge "SaaS Tools" and "Subscriptions" into
-   it; rename vague revenue accounts; disable emptied duplicates after merge; mapping table for
-   five source accounts → destinations; expected remap counts. User approves with one edit (keep
-   "Software" as the survivor name).
-4. Phase 2a: create/update/merge/disable each echoed and confirmed in turn (merge preview names
-   source → target). No deletes.
-5. Phase 2b: for each non-merged source still holding activity, gather remaining transaction
-   ids; skip sources emptied by merge. Assemble 126 remaining ids → one bulk reclass preview
-   stating 126 → user yes → write.
-6. Change log delivered; fresh P&L read quoted for the cleaned expense section.
-
-## Common pitfalls
-
-* Writing CoA changes before the user approves the proposal structure.
-* Combining account creates and transaction remaps under one confirmation.
-* Hard-deleting accounts instead of merge/disable.
-* Remapping with the wrong coding field for how the books store categories vs accounts.
-* Hand-building monthly totals instead of quoting report responses.
-* Silently creating coding rules for "next time" without a separate preview.
-* Treating a simple two-account move as this skill; that belongs to a bulk account reclassifier.
-
-## Related skills
-
-* Bulk account reclassifier: wrong → correct existing accounts only; no CoA redesign.
-* Uncategorized review: uncategorized queue, not a full CoA redesign.
-* Activity undo / audit guides for the connected system when a remapped batch needs review.
-
-## Feedback and improvement
-
-This copy of the skill belongs to the person running it, and it should get better
-with use.
-
-* During a run: when the user corrects an assumption, an output, or a preference
-  (tone, format, thresholds, account or entity choices), apply the correction
-  immediately and keep it for the rest of the run. A correction never overrides the
-  safety contract: previews, confirmations, and figures-from-reads always stand.
-* Between runs: when a correction should stick, offer to save it. With the user's
-  explicit approval, add a dated entry under `## Learned preferences` at the end of
-  this file, creating that section if it is missing. Newer entries beat older ones.
-  Never edit this skill file mid-run, and never change the Guardrails, Tools used, or
-  safety wording: preferences and defaults only. A preference is declined, not saved,
-  when honoring it on a future run would loosen any Guardrails line or the safety
-  contract, even though it leaves their text untouched. If this file is not writable
-  where the skill runs, give the user the entry text to save wherever they keep their
-  instructions.
-* Improving the original: if someone sent the user this skill, end the deliverable
-  with one plain-English line describing what worked differently or which preference
-  was saved (inside the deliverable's method notes, when this skill's output template
-  has them), and ask them to forward it to whoever maintains the original copy.
+Cleanup: the change log goes to the user in chat, or to the file they name. Residuals and
+declined items sit in the log's Open lines with the user as owner. When a step worked
+differently than the binding describes, the deliverable ends with the method note from the
+binding.
