@@ -6,167 +6,154 @@ argument-hint: "[period]"
 
 # Evidence
 
-## Summary
+## Purpose
 
-The data's side of the story, one card per client, a source on every line. Fees and hours
-come from tools and exports, or from the owner when nothing else has them. How the
-relationship runs comes from the notes. Books condition comes from Kick and the notes
-together. Matching the same client across sources is the hard part and happens once. Two
-passes: a cheap roster pass that gives the interview its names, and a full pass after the
-owner has answered and confirmed scope.
+Build the data's side of the story: one card per client, a source on every line. Fees and
+hours come from tools and exports, or from the owner when nothing else has them; how the
+relationship runs comes from the notes; books condition comes from Kick and the notes
+together. On Kick, every read follows [references/kick.md](references/kick.md).
 
-## Inputs
+1. Roster pass, before the interview: the numbered client list the interview asks about.
+2. Full pass, after the owner answers and confirms scope: the cards and their footer.
 
-Any subset, classified from contents rather than filenames:
+A standalone run with no cards yet does both passes.
 
-- Kick, when `context_browse` responds: client workspaces and entities, transaction
-  statistics, connected accounts, open tasks, and the firm's own books if the firm keeps
-  them in Kick. See the Kick section below.
-- Practice and proposal tools whose tools respond (Ignition, Karbon, Financial Cents, Canopy,
-  TaxDome, Keeper, or any other): client list, agreed services, invoices or fees, time by
-  client. Read whatever the tool's descriptors say it offers; never assume a field exists.
-- Notes tools whose tools respond (Ping, Grain, Fathom, Fireflies, Notion): notes or
-  summaries per client for the period, found by searching the client's name and aliases.
-- Files or pasted text: meeting notes and transcripts (md, txt, docx, pdf), a fee list, an
-  invoice or billing export, a time-by-client export, a client list.
-- The owner's answers from the interview, once they exist.
+## Procedure
 
-The period is the trailing twelve months unless the owner or a `Firm notes` block names
-one; label it assumed when defaulted.
+Roster pass:
 
-## Workflow
+- [ ] 1. Classify the inputs from their contents, never their filenames.
+      Any subset: Kick, when it responds; practice and proposal tools whose tools respond
+      (Ignition, Karbon, Financial Cents, Canopy, TaxDome, Keeper, or any other) for the
+      client list, agreed services, invoices or fees, and time by client; notes tools
+      whose tools respond (Ping, Grain, Fathom, Fireflies, Notion); files or pasted text
+      (meeting notes and transcripts in md, txt, docx, or pdf, a fee list, an invoice or
+      billing export, a time-by-client export, a client list); the owner's interview
+      answers once they exist.
+- [ ] 2. Load the connector guidance before the first read.
+      Kick: per [references/kick.md](references/kick.md). Any other tool: read its live
+      descriptors first.
+- [ ] 3. Collect client names from every source.
+      Kick workspaces and entities with industry and location; the practice tool's client
+      list; note filenames, headers, and opening lines (no full bodies yet); fee list rows;
+      export client columns.
+- [ ] 4. Match identities across sources.
+      Normalize (strip LLC, Inc, Ltd, punctuation, case), exact match, then token overlap.
+      List every ambiguous or unmatched name under the list with the question that
+      resolves it. Set aside, by name, entities Kick marks as personal.
+- [ ] 5. Write the numbered client list.
+      Name, aliases seen, what they do, sources. Order by monthly fee descending when fees
+      are known, alphabetically otherwise. Close with one line naming the source classes
+      found. Under the router, hand off to the interview in the same turn; standalone,
+      stop here and offer it.
 
-Roster pass (before the interview; a standalone run with no cards yet does both passes):
+Full pass (skip anything the owner excluded, and say so):
 
-1. If Kick responds, discover and load its current guides first: `list_kick_skills` with
-   queries for financial reports, finding and querying transactions, and entity lookup, then
-   `load_kick_skill` with the exact names returned. Read each tool's live descriptor before
-   its first call. Do the same for any practice or notes tool: read its descriptors, never
-   remembered field names.
-2. Collect client names: `context_browse` and `entities_query` for Kick workspaces and
-   entities with industry and location; the practice tool's client list; note filenames,
-   headers, and opening lines (not full bodies yet); fee list rows; export client columns.
-3. Match identities across sources: normalize (strip LLC, Inc, Ltd, punctuation, case), exact
-   match, then token overlap. List every ambiguous or unmatched name under the list with the
-   question that resolves it. Never merge silently. Set aside entities Kick marks as personal,
-   by name.
-4. Write the numbered client list (name, aliases seen, what they do, sources), ordered by
-   monthly fee descending when fees are known and alphabetically otherwise, followed by one
-   line naming the source classes found. Under the router, hand off to the interview in the
-   same turn; standalone, stop here and offer it.
+- [ ] 6. Take fees per client for the months served, from the first source that exists.
+      Invoice export or practice tool (net of write-offs; say billed or collected); the
+      owner's fee times months served (agreed basis); the firm's own books in Kick. One
+      source per client.
+- [ ] 7. Take hours per client.
+      A time export or practice tool gives actual hours for the period, marked actual.
+      Otherwise the owner's range, marked estimate.
+- [ ] 8. Read Kick per client, every read scoped to that client and the period.
+      Transactions a month, share awaiting review, share missing a payee, connected
+      accounts, open tasks, and, only if the guides expose them cheaply, uncategorized or
+      unmatched counts. Optionally the client's own revenue, for a size band. Before
+      recording any zero, run one query known to return rows and quote its count.
+- [ ] 9. Read the notes onto the Business, Working with them, and Signals lines.
+      Per [references/reading-notes.md](references/reading-notes.md): plain words, dated,
+      at most two short quotes per client, cited to file and line.
+- [ ] 10. Judge books condition: one word and its reasons.
+      From the Kick figures, the notes, and the owner's remarks, per the card reference.
+- [ ] 11. Write the cards, then the footer.
+      Card shape in [references/client-card.md](references/client-card.md).
+      Below the cards: the control query and its count ("Control query: none, Kick not
+      connected" when Kick is absent); "Not available", one line per absent source or
+      exclusion, or none; a method note only if a call behaved differently from this
+      skill's text. Under the router, hand off to rank in the same turn; standalone, say
+      "Next: the ranking" and stop.
 
-Full pass (after the interview and the scope decision; skip anything the owner excluded and
-say so):
+## Caveats
 
-5. Fees per client for the months served, first source that exists: invoice export or
-   practice tool (net of write-offs, say whether billed or collected); the owner's fee times
-   months served (agreed basis); the firm's own books in Kick (see below). One source per
-   client; two that disagree are both shown with a question mark.
-6. Hours per client: a time export or practice tool gives actual hours for the period, marked
-   actual; otherwise the owner's range, marked estimate. Never blend the two into one number.
-7. Kick per client, every read scoped to the client and the period: transactions a month,
-   share awaiting review, share missing a payee, connected accounts, open tasks, and, only
-   if the guides expose them cheaply, uncategorized or unmatched counts. Optionally the
-   client's own revenue for a size band, never mixed with fees. Before recording any zero,
-   run one query known to return rows and quote its count.
-8. Notes into the card's Business, Working with them, and Signals lines, per
-   [reference/reading-notes.md](reference/reading-notes.md): plain words, dated, at most two
-   short quotes per client cited to file and line.
-9. Books condition, one word and its reasons, from the Kick figures, the notes, and the
-   owner's remarks, per the card reference.
-10. Write the cards (shape in `../quanto/reference/client-card.md`), then below them: the
-    control query and its count ("Control query: none, Kick not connected" when Kick is
-    absent), "Not available" (each absent source or exclusion in one line), and a method
-    note only if a call behaved differently from this skill's text. Under
-    the router, hand off to rank in the same turn; standalone, say "Next: the ranking" and
-    stop.
+- Never merge two names silently. Ambiguous matches are asked in one batch under the client
+  list.
+- Two sources that disagree on a fee are both shown with a question mark, and the owner is
+  asked which is current.
+- Never blend actual hours and an owner's range into one number.
+- Client financials never come from notes. A revenue remark is a size band on the Business
+  line, never a fee, and the client's own revenue is never mixed with fees.
+- An empty result proves nothing until a control query succeeds. The tell is a zero with no
+  control count in the footer.
+- A firm-wide or workspace-wide figure is not a client figure. A read that cannot be scoped
+  to the client leaves that figure "Not available" for the client.
+- A fact the data settles is derived, never asked. Scope is asked once, by the interview,
+  and never again per query. Never ask for ids.
+- The period is the trailing twelve months unless the owner or a `Firm notes` block names
+  one. Label it assumed when defaulted.
+- Read-only against every system. Anything whose descriptor creates, updates, deletes, or
+  reverts is out of scope.
+- Connectors other than Kick have no binding here. Build each request from the tool's live
+  descriptor, never from remembered field names. On a rejected call, trust the live error,
+  fix and retry once, add a method note, and never edit this skill file mid-run.
+- A missing source shortens the card and never stops the run:
+  - No Kick: the Kick line reads "not connected"; books condition from notes and owner
+    only; hours from the owner.
+  - No practice tool or exports: fees from the owner's list; hours from the owner's range,
+    marked estimate.
+  - No notes: Working with them and Signals read "no notes"; the profile later says it
+    rests on money and the owner's words.
+  - No fee source at all: the Fee line reads unknown; rank orders by effort and headache
+    and names fees as the missing input.
+  - A connector that does not respond, or data the plan does not include: one "Not
+    available" line. Files and pasted text are first class.
+  - A client or source the owner excluded: the card reads "excluded by owner", and nothing
+    is read for it.
+- An owner's correction applies at once for the rest of the run. One that should stick (a
+  client always set aside, a preferred fee source, a notes folder) is offered for the
+  `Firm notes` block. It never changes how any connector is called.
 
-## Kick
+## Example
 
-No request shapes live in this plugin. Which tool family gives what:
+The roster pass output, then the footer under the full-pass cards. Each card between them
+follows the card reference. More cases in [references/examples.md](references/examples.md).
 
-| Need | Tool family | Keep |
-| --- | --- | --- |
-| Workspaces and entities the firm can reach; the firm's own workspace; personal entities | `context_browse` | the client list |
-| Industry, description, address per entity | `entities_query` | Business line |
-| Transaction count; count awaiting review; count missing a payee, for the period and client | `transactions_query` (statistics) | Kick line, books condition |
-| Connected bank, card, and processor accounts | `financial_accounts_query` | Kick line |
-| Ledger and basis | `accounting_query` | basis; what report calls need |
-| Open work items | `tasks_query` | Kick line, books condition |
-| The client's own revenue for the period | `reports_query` (profit and loss) | size band only |
-| Fee revenue by client from the firm's own books | `reports_query` (profit and loss by counterparty, if offered), else `counterparties_query` then `transactions_query` statistics scoped to that payee | Fee line, tagged Kick firm books |
+```markdown
+## Your clients: Copperleaf Bookkeeping, Sep 2025 to Aug 2026 (assumed)
+Confidential, firm internal use only.
 
-Topology: many workspaces with one entity each means each workspace is a client; one
-workspace with several entities means each non-personal entity is a client, said out loud.
-Scope every read to the client and period with whatever the descriptor exposes; a
-workspace-wide result is not a client figure. Anything whose descriptor creates, updates,
-deletes, or reverts is out of scope. Data the plan does not include is one "Not available"
-line. On a rejected call, trust the error and the loaded guide, fix that one call, retry
-once, and add a one-line method note.
+1. Pinecrest Dental Studio (also "Pinecrest Dental") · dental practice · Kick, fee list, notes
+2. Vance Refrigeration (also "Vance Refrig LLC") · HVAC services · Kick, fee list, Karbon, notes
+3. Larkin Event Rentals · event rentals · Kick, fee list, notes
+4. Tidewater Print Shop · commercial printing · Kick, fee list, notes
 
-## Degradation
+Unmatched: "T. Marsh" appears in two notes and no other source. Is this a client, and which one?
+Set aside: Vance Family Trust (Kick marks it personal).
+Sources found: Kick (4 client workspaces), Karbon, 14 note files, a fee list.
 
-| Missing | What happens |
-| --- | --- |
-| Kick | Kick line reads "not connected"; books condition from notes and owner only; hours from the owner |
-| Practice tool and exports | Fees from the owner's list; hours from the owner's range, marked estimate |
-| Notes | Working with them and Signals lines read "no notes"; the profile later says it rests on money and the owner's words |
-| Any fee source | Fee line unknown; rank ranks by effort and headache and names fees as the missing input |
-| A connector that does not respond | One "Not available" line; files and pasted text are first class |
-| Owner excluded a client or source | Card marked "excluded by owner"; nothing read for it |
+This pass was read-only.
+```
 
-A missing source shortens the card; it never stops the run.
+```markdown
+Control query: all transactions, Pinecrest Dental Studio, Sep 2025 to Aug 2026, 4,920 rows.
+Not available: notes tool (none responded); invoice export (none provided).
 
-## When to ask vs proceed
+This pass was read-only.
+```
 
-- A fact the data settles: derive it, never ask.
-- An ambiguous name match: ask in one batch under the client list.
-- Two sources that disagree on a fee: show both, ask which is current.
-- Period not stated: trailing twelve months, labeled assumed.
-- Scope: the interview carries the one checkpoint; this skill never asks again per query.
-- Never ask for ids.
+## Completion
 
-## Completion criteria
+Done when:
+- Every name from every source is matched, set aside with a reason, or on the unmatched
+  list with its question.
+- Every fee and hours line names its source and says actual or estimate.
+- Every Kick figure names the period.
+- Books condition on every card gives its reasons.
+- The control query is recorded before any zero appears.
+- "Not available" lists every absent or excluded source, or says none.
+- The list and the cards each sit under "Confidential, firm internal use only" and end
+  with "This pass was read-only."
 
-- [ ] Every name from every source is matched, set aside with a reason, or on the unmatched list with its question
-- [ ] Every fee and hours line names its source and says actual or estimate
-- [ ] Every Kick figure names the period
-- [ ] Books condition on every card gives its reasons
-- [ ] The control query is recorded before any zero appears
-- [ ] "Not available" lists every absent or excluded source, or says none
-
-## Guardrails
-
-- Read-only. No write tool of Kick or any connector.
-- Requests to Kick and to every connector are built from live descriptors and loaded
-  guides, never from remembered field names.
-- Never conclude from an empty result before a control query succeeds.
-- Client financials never come from notes; a revenue remark is a size band, never a fee.
-- On a rejected call, fix from the error, retry once, record a method note. Never edit
-  this skill file mid-run.
-
-## Deliverable
-
-Voice, for every document this skill writes: a careful accountant's prose, not an
-assistant's. Short declarative sentences with varied length, sentence-case headings,
-concrete nouns and real figures. Banned tells: em dashes; filler words (delve, robust,
-seamless, leverage, comprehensive, crucial); the "not just X, but Y" construction; AI
-boilerplate ("It's important to note", "In conclusion", "I hope this helps"); decorative
-emoji; bolded keyword openers in prose. Read a sentence back; if no accountant would say
-it aloud to a client, rewrite it.
-
-The client list and the cards are the deliverables, each under "Confidential, firm internal
-use only", each ending with "This pass was read-only."
-
-## Learned preferences
-
-Apply an owner's correction immediately and keep it for the rest of the run. When a
-correction should stick (a client to always set aside, a preferred fee source, a notes
-folder), offer to save it as a dated entry under this heading with the owner's approval, or
-into the `Firm notes` block when it is a firm fact. Preferences never change the guardrails
-or how any connector is called. If this file is not writable here, hand the owner the text.
-
-## Reference files
-
-- [reference/reading-notes.md](reference/reading-notes.md): what to look for in a meeting
-  note and how to write it onto the card.
+Cleanup: the list and the cards stay in the conversation for the interview and for rank,
+profile, and options. Unmatched names wait under the list for the owner's answer. A method
+note rides on the page for the owner to forward to Kick support.

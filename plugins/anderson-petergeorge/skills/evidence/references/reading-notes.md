@@ -52,7 +52,7 @@ personal and business spending mixed, months of catch-up at onboarding or later,
 made more than once, a booking or payment platform never reconciled. Two or more of these
 reads messy; so does either severe item alone (personal spending mixed into the business
 account, or a catch-up of three months or more). One ordinary item reads fair. Same rule as
-the client card.
+the client card, [client-card.md](client-card.md).
 
 ## Quotes
 
