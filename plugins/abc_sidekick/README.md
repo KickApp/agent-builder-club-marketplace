@@ -1,4 +1,4 @@
-# Sidekick
+# ABC Sidekick
 
 The templated Agent Builder Club skill suite as one Claude plugin.
 
