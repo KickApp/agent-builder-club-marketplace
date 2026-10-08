@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "kick-abc",
-      "source": "./plugins/kick-abc",
-      "description": "The Kick accounting suite: sidekick plans and runs the right skills at the right scope, action skills do the close and advisory work, brand keeps every artifact on one visual standard, and skill-writer turns your own workflows into new skills",
+      "source": "./plugins/abc_sidekick",
+      "description": "Sidekick plans and runs the right skills at the right scope, action skills do the close and advisory work, brand keeps every artifact on one visual standard, and skill-writer turns your own workflows into new skills",
       "version": "1.0.0",
       "author": {
         "name": "Kick",

@@ -1,4 +1,4 @@
-# Kick Accounting Suite
+# Sidekick
 
 The templated Agent Builder Club skill suite as one Claude plugin.
 
@@ -12,7 +12,7 @@ The templated Agent Builder Club skill suite as one Claude plugin.
 Or load the plugin folder directly:
 
 ```bash
-claude --plugin-dir /path/to/kick-abc
+claude --plugin-dir /path/to/abc_sidekick
 ```
 
 Enable the plugin, then complete Kick sign-in when a skill needs the ledger.
