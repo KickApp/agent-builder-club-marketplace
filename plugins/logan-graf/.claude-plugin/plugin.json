@@ -1,0 +1,11 @@
+{
+  "name": "logan-graf",
+  "version": "1.0.0",
+  "description": "Turns a new accounting firm owner's income goal, service prices, and delivery cost into a revenue plan PDF: clients needed per price tier, the price floor, and whether a proposal still hits the goal.",
+  "author": {
+    "name": "Kick",
+    "email": "support@kick.co",
+    "url": "https://kick.co"
+  },
+  "displayName": "Logan Graf"
+}
