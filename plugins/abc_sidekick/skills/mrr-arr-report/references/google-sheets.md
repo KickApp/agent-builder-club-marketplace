@@ -59,11 +59,12 @@ window. Then send one message:
 > **<report>** for **<entity>** on the **<basis>** ledger, dates **<from> to <to>**,
 > with auto-refresh on. Then tell me.
 
-The pull is a General Ledger: one entity, all accounts or only revenue accounts, dates
-from 12 months before the first reporting month to today. The Waterfall and Rollforward
-aren't in the released add-on yet, so never ask for them; when a spreadsheet already has
-a Waterfall grouped by start month or by quarter, ask for the ledger instead. The
-spreadsheet locale must be United States (File → Settings) so the add-on's dates parse.
+For a General Ledger pull: one entity, all accounts or only revenue accounts, dates from
+12 months before the first reporting month to today. On Advanced and Enterprise, also
+offer a Revenue Waterfall with monthly periods, grouped by schedule or by customer,
+never by start month, and a Revenue Rollforward over the same dates for term ends. Lower
+plans don't have those two; ask only for the ledger. The spreadsheet locale must be
+United States (File → Settings) so the add-on's dates parse.
 
 ## 2. Choose one source per customer
 
@@ -287,9 +288,9 @@ with two or more plans, bars for the top 10 customers; one palette from
   accounts when a sheet gets slow, and say so.
 - Connections differ by chat and change over time. Some only read; some write values
   but not formats or charts. Step 4 says what to do in each case.
-- The Revenue Waterfall and Revenue Rollforward reports aren't in the released add-on
-  yet. Until they are, the ledger and user tables are the sources; the adapters read
-  those tabs only when a spreadsheet already has them.
+- The Revenue Waterfall and Revenue Rollforward reports show in the add-on only on
+  Advanced and Enterprise workspaces. Elsewhere the ledger and user tables are the
+  sources.
 - `MRR inputs` and `MRR rows` are sized from `sourceRows` with room to grow. A source
   that later outgrows them shows a `#REF!` that asks for more rows; rebuild with the new
   count.
