@@ -7,6 +7,9 @@
   2. Header-driven: a formula may name only skill-owned tabs ('MRR ...') directly.
      Source tabs are read through INDIRECT of a tab name typed on 'MRR sources', so a
      refresh that clears and rewrites a source tab never breaks a formula.
+  3. Grid bounds: every write, format, merge, validation, conditional color, width,
+     height, hidden column, and chart anchor fits inside its tab's rowCount and
+     columnCount. The Sheets API rejects a whole batch for one range past the grid.
 
 Usage:
   python3 sheets_lint.py [plan.json]     (default: references/templates/sheets_plan.json)
@@ -17,6 +20,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from sheets_payloads import DEFAULT_ROWS, grid
 
 DEFAULT_PLAN = Path(__file__).resolve().parent.parent / "references" / "templates" / "sheets_plan.json"
 TOKEN_RE = re.compile(r'"(?:[^"]|"")*"|\'(?:[^\']|\'\')*\'!|[A-Za-z_][A-Za-z0-9_.]*|[(),]|\s+|.')
@@ -73,9 +78,40 @@ def foreign_tabs(formula):
                    if not m.startswith("MRR ")})
 
 
+def tab_ranges(tab):
+    """(kind, A1, rows written, columns written) for every range the plan sends to a tab."""
+    for w in tab.get("writes", []):
+        values = w.get("values", [])
+        yield "write", w["range"], len(values), max((len(r) for r in values), default=0)
+    for key, field in (("formats", "range"), ("validations", "range"), ("conditionalFormats", "range"),
+                       ("columnWidths", "columns"), ("rowHeights", "rows")):
+        for item in tab.get(key, []):
+            yield key, item[field], 0, 0
+    for a1 in tab.get("merges", []):
+        yield "merges", a1, 0, 0
+    if tab.get("hiddenColumns"):
+        yield "hiddenColumns", tab["hiddenColumns"], 0, 0
+    for chart in tab.get("charts", []):
+        yield "chart anchor", chart["anchor"], 0, 0
+
+
+def bounds_problems(tab):
+    max_rows, max_cols = tab.get("rowCount", DEFAULT_ROWS), tab.get("columnCount", 26)
+    problems = []
+    for kind, a1, nrows, ncols in tab_ranges(tab):
+        g = grid(0, a1)
+        end_col = max(g.get("endColumnIndex", 0), g.get("startColumnIndex", 0) + ncols)
+        end_row = max(g.get("endRowIndex", 0), g.get("startRowIndex", 0) + nrows)
+        if end_col > max_cols or end_row > max_rows:
+            problems.append("%s!%s (%s): outside the tab's %d rows x %d columns"
+                            % (tab["name"], a1, kind, max_rows, max_cols))
+    return problems
+
+
 def lint_plan(plan):
     problems = []
     for tab in plan.get("tabs", []):
+        problems += bounds_problems(tab)
         for write in tab.get("writes", []):
             for row in write.get("values", []):
                 for cell in row:
