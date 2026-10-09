@@ -11,7 +11,8 @@ Each file stays under the chunk size (default 60,000 bytes) so a chat can send i
 call. Only tabs named in the plan appear in any request: Kick and user tabs are never
 named, so they can't be changed.
 
---sheet-ids (from the inventory) maps an existing tab name to its sheet id, or to
+The existing-tab map comes from a spreadsheets.get response (existing_from_spreadsheet) or
+from --sheet-ids. It maps an existing tab name to its sheet id, or to
 {"sheetId": n, "chartIds": [...], "protectedRangeIds": [...], "conditionalFormatCount": n}.
 "_userTabCount" (number of tabs that aren't MRR tabs) lets the tab-order step place the
 MRR tabs after the user's tabs; without it that step is skipped and the manifest says so.
@@ -155,13 +156,35 @@ def chart_request(ids, sheet_id, c):
 
 def sheet_properties(tab, sheet_id):
     props = {"sheetId": sheet_id, "title": tab["name"],
-             "gridProperties": {"rowCount": DEFAULT_ROWS, "columnCount": tab.get("columnCount", 26),
+             "gridProperties": {"rowCount": tab.get("rowCount", DEFAULT_ROWS),
+                                "columnCount": tab.get("columnCount", 26),
                                 "frozenRowCount": tab.get("frozenRows", 0),
                                 "frozenColumnCount": tab.get("frozenColumns", 0),
                                 "hideGridlines": bool(tab.get("hideGridlines"))}}
     if tab.get("tabColor"):
         props["tabColorStyle"] = rgb(tab["tabColor"])
     return props
+
+
+def existing_from_spreadsheet(doc, plan):
+    """The existing-tab map from a spreadsheets.get response, for the tabs the plan owns."""
+    owned = {t["name"] for t in plan["tabs"]} | set(plan.get("retiredTabs", []))
+    out, user_tabs = {}, 0
+    for sheet in doc.get("sheets", []):
+        props = sheet.get("properties", {})
+        title = props.get("title", "")
+        if title not in owned:
+            user_tabs += 1
+            continue
+        out[title] = {
+            "sheetId": props["sheetId"],
+            "chartIds": [c["chartId"] for c in sheet.get("charts", []) if "chartId" in c],
+            "protectedRangeIds": [p["protectedRangeId"] for p in sheet.get("protectedRanges", [])
+                                  if "protectedRangeId" in p],
+            "conditionalFormatCount": len(sheet.get("conditionalFormats", [])),
+        }
+    out["_userTabCount"] = user_tabs
+    return out
 
 
 def existing_entry(existing, name):

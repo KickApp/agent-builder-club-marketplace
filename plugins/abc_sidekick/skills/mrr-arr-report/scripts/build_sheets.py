@@ -3,7 +3,12 @@
 
 Usage:
   python3 build_sheets.py --config sheets_config.json --out-dir <dir> [--emit-payloads]
-      [--sheet-ids existing_ids.json] [--chunk-bytes 60000]
+      [--spreadsheet spreadsheet.json | --sheet-ids existing_ids.json] [--chunk-bytes 60000]
+
+--spreadsheet is a spreadsheets.get response with
+sheets(properties(sheetId,title,index),charts(chartId),protectedRanges(protectedRangeId),conditionalFormats).
+It supplies the ids of existing MRR tabs and what on them to clear, so a rebuild replaces
+charts, protections, and color rules instead of adding copies.
 
 Writes, from references/templates/sheets_plan.json:
   <slug>-mrr-sheet-plan.json       the filled plan: every tab, formula, format, and chart
@@ -33,11 +38,15 @@ Config shape (every source is optional; at least one is required):
     "tabsFound": [{"name": "Acme Inc - Balance Sheet", "kind": "Kick report",
                    "report": "Balance Sheet", "used": "No"}],
     "accelMultiple": 3, "gapDays": 31, "minCoverage": 0.8,
+    "sourceRows": 1840,
     "rules": [{"pattern": "plus quarterly", "plan": "Plus", "months": 3, "recurring": true}],
     "overrides": [{"customer": "Northgate", "exclude": true}],
     "skipDefaultRules": false
   }
 The older shape with top-level "glTab" and "revenueAccounts" still works.
+
+"sourceRows" is the total row count of the source tabs used. "MRR inputs" and "MRR rows"
+hold one row per source line, so they get max(1000, 2 x sourceRows + 100) rows.
 
 Rules are case-insensitive RE2 regexes matched against the ledger description (or the
 user table's plan column); the first match wins. Overrides match the customer exactly
@@ -52,7 +61,7 @@ import sys
 from pathlib import Path
 
 from sheets_lint import lint_plan
-from sheets_payloads import emit_payloads
+from sheets_payloads import DEFAULT_ROWS, emit_payloads, existing_from_spreadsheet
 
 TEMPLATES = Path(__file__).resolve().parent.parent / "references" / "templates"
 PLAN_TEMPLATE = TEMPLATES / "sheets_plan.json"
@@ -207,6 +216,9 @@ def build_config(raw, plan):
         fail("'gapDays' must be a whole number, 0 or more")
     if not (isinstance(coverage, (int, float)) and 0 <= coverage <= 1):
         fail("'minCoverage' must be a share from 0 to 1")
+    source_rows = raw.get("sourceRows", 0)
+    if not (isinstance(source_rows, int) and source_rows >= 0):
+        fail("'sourceRows' must be a whole number, 0 or more")
     tabs_found = raw.get("tabsFound") or []
     if not all(isinstance(t, dict) and isinstance(t.get("name"), str) for t in tabs_found):
         fail("'tabsFound' must be a list of objects with a 'name'")
@@ -220,6 +232,7 @@ def build_config(raw, plan):
         "sources": sources,
         "tabsFound": tabs_found,
         "accelMultiple": accel, "gapDays": gap, "minCoverage": coverage,
+        "sourceRows": source_rows,
         "rules": rules,
         "overrides": overrides,
     }
@@ -290,6 +303,9 @@ def build_plan(template, config):
     }
     plan = fill_tokens(copy.deepcopy(template), {k: as_text(v) for k, v in tokens.items()})
     resolve_lists(plan, config)
+    for tab in plan["tabs"]:
+        if tab.pop("rowsFollowSource", False):
+            tab["rowCount"] = max(DEFAULT_ROWS, 2 * config["sourceRows"] + 100)
     settings = tab_by_name(plan, "MRR settings")
     if config["rules"]:
         settings["writes"].append({
@@ -329,8 +345,11 @@ def main():
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--emit-payloads", action="store_true",
                         help="also write Sheets API request bodies under <out-dir>/payloads")
-    parser.add_argument("--sheet-ids", help="JSON object of existing tab name to sheetId, from the "
-                                            "inventory; those tabs are reused instead of added")
+    existing_src = parser.add_mutually_exclusive_group()
+    existing_src.add_argument("--spreadsheet", help="spreadsheets.get response; existing MRR tabs are "
+                                                    "reused and their charts, protections, and color rules replaced")
+    existing_src.add_argument("--sheet-ids", help="JSON object of existing tab name to sheetId (or the full "
+                                                  "entry); those tabs are reused instead of added")
     parser.add_argument("--chunk-bytes", type=int, default=60000,
                         help="largest payload file in bytes (default 60000)")
     args = parser.parse_args()
@@ -366,7 +385,10 @@ def main():
         "lint": "clean",
     }
     if args.emit_payloads:
-        existing = json.loads(Path(args.sheet_ids).read_text()) if args.sheet_ids else {}
+        if args.spreadsheet:
+            existing = existing_from_spreadsheet(json.loads(Path(args.spreadsheet).read_text()), plan)
+        else:
+            existing = json.loads(Path(args.sheet_ids).read_text()) if args.sheet_ids else {}
         summary["payloads"] = emit_payloads(plan, out_dir / "payloads", existing, args.chunk_bytes)
     print(json.dumps(summary))
 

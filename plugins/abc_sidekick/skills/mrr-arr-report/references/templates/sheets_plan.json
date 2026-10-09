@@ -665,6 +665,7 @@
     {
       "name": "MRR inputs",
       "createOnly": false,
+      "rowsFollowSource": true,
       "writes": [
         {
           "range": "A1:N1",
@@ -901,6 +902,7 @@
     {
       "name": "MRR rows",
       "createOnly": false,
+      "rowsFollowSource": true,
       "writes": [
         {
           "range": "A1:N1",
@@ -1012,7 +1014,7 @@
           "bold": true
         },
         {
-          "range": "B2:ZZ",
+          "range": "B2:CZ",
           "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
         }
       ],

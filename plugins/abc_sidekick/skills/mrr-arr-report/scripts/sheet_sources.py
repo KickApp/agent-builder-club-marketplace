@@ -42,6 +42,7 @@ KICK_REPORTS = ["Profit & Loss", "Balance Sheet", "Trial Balance", "Cash Flow St
 MONTHS = {m.lower(): i for i, m in enumerate(calendar.month_name) if m}
 MONTHS.update({m.lower(): i for i, m in enumerate(calendar.month_abbr) if m})
 MONTH_LABEL_RE = re.compile(r"^([A-Za-z]{3,9}) (\d{4})$")
+BALANCE_ROW_RE = re.compile(r"^(beginning balance|ending balance|total\b)", re.I)
 DATE_TOKEN_RE = re.compile(r"([A-Za-z]{3,9})(?: (\d{1,2}),)?(?: (\d{4}))?")
 ROLE_HINTS = [("customer", r"customer|client|tenant|counterparty|company|account name|email"),
               ("date", r"date|period|month|created|paid"),
@@ -300,6 +301,8 @@ def ledger_rows(rows, accounts):
         b = r[1].strip() if len(r) > 1 else ""
         d = parse_date(b)
         amt = parse_amount(r[ci["Amount"]]) if "Amount" in ci and ci["Amount"] < len(r) else None
+        if BALANCE_ROW_RE.match(b):
+            continue
         if b and d is None and amt is None:
             account = b
             continue

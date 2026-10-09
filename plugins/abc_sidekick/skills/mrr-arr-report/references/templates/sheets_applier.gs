@@ -68,6 +68,8 @@ function prepareSheet(ss, tab, created) {
   }
   const needed = tab.columnCount || 26;
   if (sheet.getMaxColumns() < needed) sheet.insertColumnsAfter(sheet.getMaxColumns(), needed - sheet.getMaxColumns());
+  const rows = tab.rowCount || 1000;
+  if (sheet.getMaxRows() < rows) sheet.insertRowsAfter(sheet.getMaxRows(), rows - sheet.getMaxRows());
   return { sheet, tab };
 }
 

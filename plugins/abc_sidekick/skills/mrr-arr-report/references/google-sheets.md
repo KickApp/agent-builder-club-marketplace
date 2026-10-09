@@ -59,10 +59,11 @@ window. Then send one message:
 > **<report>** for **<entity>** on the **<basis>** ledger, dates **<from> to <to>**,
 > with auto-refresh on. Then tell me.
 
-For a General Ledger pull: one entity, all accounts or only revenue accounts, dates from
-12 months before the first reporting month to today. For a Waterfall: monthly periods,
-grouped by schedule or by customer, never by start month. The spreadsheet locale must be
-United States (File → Settings) so the add-on's dates parse.
+The pull is a General Ledger: one entity, all accounts or only revenue accounts, dates
+from 12 months before the first reporting month to today. The Waterfall and Rollforward
+aren't in the released add-on yet, so never ask for them; when a spreadsheet already has
+a Waterfall grouped by start month or by quarter, ask for the ledger instead. The
+spreadsheet locale must be United States (File → Settings) so the add-on's dates parse.
 
 ## 2. Choose one source per customer
 
@@ -114,13 +115,23 @@ in the header of `scripts/build_sheets.py`:
   whose descriptions say nothing.
 - `accelMultiple` (3), `gapDays` (31), `minCoverage` (0.8): the C9 and data-quality
   thresholds, same defaults as the script.
+- `sourceRows`: the total row count of the source tabs used, from the inventory. It
+  sizes `MRR inputs` and `MRR rows`, which hold one row per source line.
+
+Read the spreadsheet once with `spreadsheets.get`, fields
+`sheets(properties(sheetId,title,index),charts(chartId),protectedRanges(protectedRangeId),conditionalFormats)`,
+and save the response as `spreadsheet.json`. The build takes the ids of existing MRR
+tabs, their charts, protections, and color rules from it, so a rebuild replaces them
+instead of stacking copies.
 
 ```
-python3 scripts/build_sheets.py --config sheets_config.json --out-dir <dir> --emit-payloads
+python3 scripts/build_sheets.py --config sheets_config.json --out-dir <dir> --emit-payloads \
+    --spreadsheet spreadsheet.json
 ```
 
 The formula lint (`scripts/sheets_lint.py`) runs first and fails the build on a name
-collision or a formula that reads a source tab by name instead of through `MRR sources`.
+collision, a formula that reads a source tab by name instead of through `MRR sources`, or
+a write, format, merge, width, or chart anchor outside its tab's rows and columns.
 Outputs: `<slug>-mrr-sheet-plan.json`, `<slug>-mrr-sheets-installer.gs`, and
 `payloads/` (see step 4). Then simulate the rules on the scanned rows: every recurring
 revenue line must match a rule or an override.
@@ -143,8 +154,9 @@ the order `manifest.json` lists:
 | `03-format-NN.json` | Formats, merges, dropdowns, conditional rules, widths, hidden columns, charts, warning-only protection, tab order | `spreadsheets.batchUpdate` |
 
 `createOnly` tabs (`MRR settings`) are skipped when they exist, so the user's edits
-survive a rebuild. Pass the existing sheet ids with `--sheet-ids` on a rebuild so the
-payloads target them.
+survive a rebuild. Build from a fresh `spreadsheet.json` before every write, first run or
+rebuild, so the payloads target the tabs as they are now and place the MRR tabs after
+the user's.
 
 If the connection can write values but not run `batchUpdate`, send the values and say
 that formats, charts, and protection were skipped; offer the installer (step 5) to
@@ -275,9 +287,12 @@ with two or more plans, bars for the top 10 customers; one palette from
   accounts when a sheet gets slow, and say so.
 - Connections differ by chat and change over time. Some only read; some write values
   but not formats or charts. Step 4 says what to do in each case.
-- The Revenue Waterfall and Revenue Rollforward reports exist in the add-on only on
-  workspaces with revenue recognition (Advanced plan). Elsewhere the ledger and user
-  tables are the sources.
+- The Revenue Waterfall and Revenue Rollforward reports aren't in the released add-on
+  yet. Until they are, the ledger and user tables are the sources; the adapters read
+  those tabs only when a spreadsheet already has them.
+- `MRR inputs` and `MRR rows` are sized from `sourceRows` with room to grow. A source
+  that later outgrows them shows a `#REF!` that asks for more rows; rebuild with the new
+  count.
 
 ## Maintaining the plan
 
