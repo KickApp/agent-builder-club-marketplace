@@ -1,0 +1,2867 @@
+{
+  "version": 2,
+  "note": "Tabs in creation order (dependencies first). Apply writes with valueInputOption USER_ENTERED. Ranges are A1 on that tab. Tabs with createOnly are written only when missing, so user edits survive a rebuild. After writing, move the tabs into displayOrder after the user's own tabs. Delete retiredTabs if they exist (older skill-owned tabs). Never touch any other tab.",
+  "settings": {
+    "rulesStart": "A14",
+    "overridesStart": "F14",
+    "ruleRows": 30,
+    "overrideRows": 50
+  },
+  "tabs": [
+    {
+      "name": "MRR settings",
+      "createOnly": true,
+      "writes": [
+        {
+          "range": "A1",
+          "values": [
+            [
+              "MRR settings"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "Edit the yellow cells. The other MRR tabs read from here."
+            ]
+          ]
+        },
+        {
+          "range": "A3:B10",
+          "values": [
+            [
+              "General Ledger tab (pick it on MRR sources)",
+              "='MRR sources'!B5"
+            ],
+            [
+              "Revenue accounts (comma-separated, as the ledger shows them)",
+              "{{REVENUE_ACCOUNTS}}"
+            ],
+            [
+              "First month of history",
+              "{{FIRST_MONTH}}"
+            ],
+            [
+              "Include current month to date",
+              "{{INCLUDE_CURRENT_MONTH}}"
+            ],
+            [
+              "Last month reported",
+              ""
+            ],
+            [
+              "Currency",
+              "{{CURRENCY}}"
+            ],
+            [
+              "Ledger basis",
+              "{{BASIS}}"
+            ],
+            [
+              "Entity",
+              "{{ENTITY}}"
+            ]
+          ]
+        },
+        {
+          "range": "B7",
+          "values": [
+            [
+              "=IF(B6=\"Yes\", DATE(YEAR(TODAY()), MONTH(TODAY()), 1), EDATE(DATE(YEAR(TODAY()), MONTH(TODAY()), 1), -1))"
+            ]
+          ]
+        },
+        {
+          "range": "A13:D13",
+          "values": [
+            [
+              "Description contains (regex)",
+              "Plan",
+              "Billing months",
+              "Recurring"
+            ]
+          ]
+        },
+        {
+          "range": "F13:J13",
+          "values": [
+            [
+              "Customer (as the ledger shows it)",
+              "Plan",
+              "Billing months",
+              "Report as",
+              "Exclude"
+            ]
+          ]
+        },
+        {
+          "range": "L13:L13",
+          "values": [
+            [
+              "Accounts found in the ledger tab"
+            ]
+          ]
+        },
+        {
+          "range": "L14",
+          "values": [
+            [
+              "=IFERROR('MRR inputs'!P2:P, \"\")"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1",
+          "fontSize": 16,
+          "bold": true
+        },
+        {
+          "range": "B5",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "B7",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "B4",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "B5",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "B6",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "A13:D13",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A14:D43",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "F13:J13",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "F14:J63",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "L13:L13",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "B3",
+          "fontColor": "#64748b"
+        }
+      ],
+      "validations": [
+        {
+          "range": "B6",
+          "list": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "range": "D14:D43",
+          "list": [
+            "Yes",
+            "No"
+          ]
+        }
+      ],
+      "columnWidths": [
+        {
+          "columns": "A:A",
+          "width": 330
+        },
+        {
+          "columns": "B:K",
+          "width": 150
+        },
+        {
+          "columns": "L:L",
+          "width": 260
+        }
+      ],
+      "tabColor": "#f59e0b",
+      "columnCount": 12
+    },
+    {
+      "name": "MRR sources",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1",
+          "values": [
+            [
+              "MRR sources"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "Which tab feeds what. Yellow cells are editable; the skill writes the tabs it found at build time. Source tabs are only read, never changed."
+            ]
+          ]
+        },
+        {
+          "range": "A4:J4",
+          "values": [
+            [
+              "Source",
+              "Tab",
+              "Used for",
+              "Layout",
+              "Header says from",
+              "Header says to",
+              "Rows read",
+              "First date",
+              "Last date",
+              "Status"
+            ]
+          ]
+        },
+        {
+          "range": "A5:F5",
+          "values": [
+            [
+              "General Ledger",
+              "{{GL_TAB}}",
+              "Revenue lines for customers with no schedule or billing row",
+              "{{BASIS}}",
+              "{{GL_FROM}}",
+              "{{GL_TO}}"
+            ]
+          ]
+        },
+        {
+          "range": "A6:F6",
+          "values": [
+            [
+              "Revenue Waterfall",
+              "{{WF_TAB}}",
+              "Recognized revenue per customer and month",
+              "{{WF_GROUPING}}",
+              "",
+              ""
+            ]
+          ]
+        },
+        {
+          "range": "A7:F7",
+          "values": [
+            [
+              "Revenue Rollforward",
+              "{{RF_TAB}}",
+              "Term ends, and a cross-check on the Waterfall",
+              "{{RF_GROUPING}}",
+              "",
+              ""
+            ]
+          ]
+        },
+        {
+          "range": "A8:F8",
+          "values": [
+            [
+              "Your table",
+              "{{UT_TAB}}",
+              "Billing records: customer, date, amount",
+              "Columns below",
+              "",
+              ""
+            ]
+          ]
+        },
+        {
+          "range": "G5",
+          "values": [
+            [
+              "=IF($B5 = \"\", \"\", COUNT('MRR inputs'!A2:A))"
+            ]
+          ]
+        },
+        {
+          "range": "H5",
+          "values": [
+            [
+              "=IF($B5 = \"\", \"\", IFERROR(LET(glCol, INDEX(INDIRECT(\"'\" & $B5 & \"'!A1:B\"), 0, 2),\n    glDates, MAP(glCol, LAMBDA(x, IF(ISNUMBER(x), x, IFERROR(DATEVALUE(x), \"\")))),\n    MIN(FILTER(glDates, ISNUMBER(glDates)))), \"\"))"
+            ]
+          ]
+        },
+        {
+          "range": "I5",
+          "values": [
+            [
+              "=IF($B5 = \"\", \"\", IFERROR(LET(glCol, INDEX(INDIRECT(\"'\" & $B5 & \"'!A1:B\"), 0, 2),\n    glDates, MAP(glCol, LAMBDA(x, IF(ISNUMBER(x), x, IFERROR(DATEVALUE(x), \"\")))),\n    MAX(FILTER(glDates, ISNUMBER(glDates)))), \"\"))"
+            ]
+          ]
+        },
+        {
+          "range": "J5",
+          "values": [
+            [
+              "=IF($B5 = \"\", \"Not used\", IF(NOT(ISREF(INDIRECT(\"'\" & $B5 & \"'!A1\"))), \"Check: tab not found\", IF(N(G5) = 0, \"Check: nothing read from this tab\", IF(AND(ISNUMBER(E5), ISNUMBER(H5), H5 - E5 > $B$12), \"Check: rows start \" & TEXT(H5, \"mmm d, yyyy\") & \", header says \" & TEXT(E5, \"mmm d, yyyy\"), IF(AND(ISNUMBER(F5), ISNUMBER(I5), F5 - I5 > $B$12), \"Check: rows end \" & TEXT(I5, \"mmm d, yyyy\") & \", header says \" & TEXT(F5, \"mmm d, yyyy\"), \"OK\")))))"
+            ]
+          ]
+        },
+        {
+          "range": "G6",
+          "values": [
+            [
+              "=IF($B6 = \"\", \"\", COUNT('MRR inputs'!T2:T))"
+            ]
+          ]
+        },
+        {
+          "range": "H6",
+          "values": [
+            [
+              "=IF(N(G6) = 0, \"\", MIN('MRR inputs'!T2:T))"
+            ]
+          ]
+        },
+        {
+          "range": "I6",
+          "values": [
+            [
+              "=IF(N(G6) = 0, \"\", EOMONTH(MAX('MRR inputs'!T2:T), 0))"
+            ]
+          ]
+        },
+        {
+          "range": "J6",
+          "values": [
+            [
+              "=IF($B6 = \"\", \"Not used\", IF(NOT(ISREF(INDIRECT(\"'\" & $B6 & \"'!A1\"))), \"Check: tab not found\", IF(N(G6) = 0, \"Check: nothing read from this tab\", \"OK\")))"
+            ]
+          ]
+        },
+        {
+          "range": "G7",
+          "values": [
+            [
+              "=IF($B7 = \"\", \"\", COUNT('MRR inputs'!AL2:AL))"
+            ]
+          ]
+        },
+        {
+          "range": "J7",
+          "values": [
+            [
+              "=IF($B7 = \"\", \"Not used\", IF(NOT(ISREF(INDIRECT(\"'\" & $B7 & \"'!A1\"))), \"Check: tab not found\", IF(N(G7) = 0, \"Check: nothing read from this tab\", \"OK\")))"
+            ]
+          ]
+        },
+        {
+          "range": "G8",
+          "values": [
+            [
+              "=IF($B8 = \"\", \"\", COUNT('MRR inputs'!AN2:AN))"
+            ]
+          ]
+        },
+        {
+          "range": "H8",
+          "values": [
+            [
+              "=IF(N(G8) = 0, \"\", MIN('MRR inputs'!AN2:AN))"
+            ]
+          ]
+        },
+        {
+          "range": "I8",
+          "values": [
+            [
+              "=IF(N(G8) = 0, \"\", MAX('MRR inputs'!AN2:AN))"
+            ]
+          ]
+        },
+        {
+          "range": "J8",
+          "values": [
+            [
+              "=IF($B8 = \"\", \"Not used\", IF(NOT(ISREF(INDIRECT(\"'\" & $B8 & \"'!A1\"))), \"Check: tab not found\", IF(N(G8) = 0, \"Check: nothing read from this tab\", \"OK\")))"
+            ]
+          ]
+        },
+        {
+          "range": "A10:C10",
+          "values": [
+            [
+              "Rules",
+              "Value",
+              "What it does"
+            ]
+          ]
+        },
+        {
+          "range": "A11:C13",
+          "values": [
+            [
+              "Stopped schedule multiple",
+              "{{ACCEL_MULTIPLE}}",
+              "A schedule's last month at this many times the month before uses the month before (rule C9)"
+            ],
+            [
+              "Days a ledger may fall short of its header",
+              "{{GAP_DAYS}}",
+              "More than this between the header's dates and the first or last line flags the ledger as stale"
+            ],
+            [
+              "Revenue with a customer, at least",
+              "{{MIN_COVERAGE}}",
+              "Below this share the data-quality check fails"
+            ]
+          ]
+        },
+        {
+          "range": "A14:C14",
+          "values": [
+            [
+              "Your table columns",
+              "Header text in that tab",
+              "Required"
+            ]
+          ]
+        },
+        {
+          "range": "A15:C19",
+          "values": [
+            [
+              "Customer",
+              "{{UT_CUSTOMER}}",
+              "Yes"
+            ],
+            [
+              "Date",
+              "{{UT_DATE}}",
+              "Yes"
+            ],
+            [
+              "Amount",
+              "{{UT_AMOUNT}}",
+              "Yes"
+            ],
+            [
+              "Plan or description",
+              "{{UT_PLAN}}",
+              "No, used by the plan rules on MRR settings"
+            ],
+            [
+              "Billing months",
+              "{{UT_MONTHS}}",
+              "No, rules decide when blank"
+            ]
+          ]
+        },
+        {
+          "range": "A21",
+          "values": [
+            [
+              "Data quality"
+            ]
+          ]
+        },
+        {
+          "range": "B21",
+          "values": [
+            [
+              "=LET(nameList, VSTACK(IFERROR(FILTER('MRR rows'!B2:B, 'MRR rows'!B2:B <> \"\"), \"\"), IFERROR(FILTER('MRR rows'!E2:E, 'MRR rows'!E2:E <> \"\"), \"\"), 'MRR settings'!$B$10),\n    hits, IFERROR(TEXTJOIN(\", \", TRUE, ARRAY_CONSTRAIN(UNIQUE(FILTER(nameList, REGEXMATCH(nameList & \"\", \"(?i)\\b(test(ing|s)?\\d*|qa|dummy)\\b\"))), 5, 1)), \"\"),\n    share, $B$23,\n    reasons, TEXTJOIN(\"; \", TRUE,\n      IF(hits <> \"\", \"names look like test or QA data (\" & hits & \")\", \"\"),\n      IF(AND(ISNUMBER(share), share < $B$13), \"only \" & TEXT(share, \"0.0%\") & \" of revenue has a customer\", \"\"),\n      IF(AND(ISNUMBER(share), share < 0.5), \"most revenue has no customer\", \"\")),\n    IF(reasons = \"\", \"\", \"Test or incomplete data: \" & reasons))"
+            ]
+          ]
+        },
+        {
+          "range": "A22",
+          "values": [
+            [
+              "Source line"
+            ]
+          ]
+        },
+        {
+          "range": "B22",
+          "values": [
+            [
+              "=IFERROR(TEXTJOIN(\"; \", TRUE, MAP(A5:A8, B5:B8, G5:G8, LAMBDA(srcName, tabName, rowCount,\n    IF(OR(tabName = \"\", N(rowCount) = 0), \"\", srcName & \" '\" & tabName & \"'\")))), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A23",
+          "values": [
+            [
+              "Revenue with a customer"
+            ]
+          ]
+        },
+        {
+          "range": "B23",
+          "values": [
+            [
+              "=LET(total, SUMIFS('MRR rows'!D2:D, 'MRR rows'!G2:G, \"<>Payout\"),\n    noCust, SUMIF('MRR rows'!G2:G, \"No customer\", 'MRR rows'!D2:D),\n    IF(total = 0, \"\", (total - noCust) / total))"
+            ]
+          ]
+        },
+        {
+          "range": "A25:D25",
+          "values": [
+            [
+              "Other tabs found",
+              "Kind",
+              "Report",
+              "Used"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1",
+          "fontSize": 16,
+          "bold": true
+        },
+        {
+          "range": "A2",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A4:J4",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A10:C10",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A14:C14",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A25:D25",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "B5:B8",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "D6:D7",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "B11:B13",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "B15:B19",
+          "background": "#fef9c3"
+        },
+        {
+          "range": "E5:F8",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "H5:I8",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "G5:G8",
+          "numberFormat": "#,##0"
+        },
+        {
+          "range": "B13",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "B23",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "A21:A23",
+          "bold": true
+        }
+      ],
+      "validations": [
+        {
+          "range": "B5:B8",
+          "listFrom": "tabs"
+        },
+        {
+          "range": "D6:D7",
+          "list": [
+            "By schedule",
+            "By customer"
+          ]
+        },
+        {
+          "range": "B15:B19",
+          "listFrom": "userTableHeaders"
+        }
+      ],
+      "conditionalFormats": [
+        {
+          "range": "J5:J8",
+          "textContains": "Check",
+          "background": "#fee2e2"
+        },
+        {
+          "range": "J5:J8",
+          "textContains": "OK",
+          "background": "#dcfce7"
+        },
+        {
+          "range": "B21",
+          "textContains": "Test or incomplete",
+          "background": "#fee2e2"
+        }
+      ],
+      "columnWidths": [
+        {
+          "columns": "A:A",
+          "width": 260
+        },
+        {
+          "columns": "B:B",
+          "width": 240
+        },
+        {
+          "columns": "C:C",
+          "width": 320
+        },
+        {
+          "columns": "D:I",
+          "width": 120
+        },
+        {
+          "columns": "J:J",
+          "width": 360
+        }
+      ],
+      "frozenRows": 4,
+      "tabColor": "#f59e0b",
+      "columnCount": 10
+    },
+    {
+      "name": "MRR inputs",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1:N1",
+          "values": [
+            [
+              "Date",
+              "Customer",
+              "Description",
+              "Amount",
+              "Plan",
+              "Term months",
+              "Check",
+              "Start month",
+              "End month",
+              "Monthly amount",
+              "Source customer",
+              "Source",
+              "Term end",
+              "Cadence"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=IFERROR(LET(raw, INDIRECT(\"'\" & 'MRR sources'!$B$5 & \"'!A1:M\"),\n    bcol, INDEX(raw, 0, 2),\n    h, MATCH(\"Date\", bcol, 0),\n    hdr, INDEX(raw, h, 0),\n    last, MAX(FILTER(ROW(bcol), bcol <> \"\")),\n    d, ARRAY_CONSTRAIN(raw, last, 13),\n    b, INDEX(d, 0, 2),\n    descs, INDEX(d, 0, MATCH(\"Description\", hdr, 0)),\n    cps, INDEX(d, 0, MATCH(\"Counterparty\", hdr, 0)),\n    amts, INDEX(d, 0, MATCH(\"Amount\", hdr, 0)),\n    bals, INDEX(d, 0, MATCH(\"Balance\", hdr, 0)),\n    rws, SEQUENCE(last),\n    dates, MAP(b, LAMBDA(x, IF(ISNUMBER(x), x, IFERROR(DATEVALUE(x), \"\")))),\n    heads, MAP(rws, b, dates, amts, bals, LAMBDA(r, x, dt, a, bl, AND(r > h, x <> \"\", dt = \"\", a = \"\", bl = \"\"))),\n    accts, SCAN(\"\", rws, LAMBDA(acc, i, IF(INDEX(heads, i), INDEX(b, i), acc))),\n    revs, MAP(accts, LAMBDA(a, SUMPRODUCT(--(TRIM(SPLIT('MRR settings'!$B$4, \",\")) = a)) > 0)),\n    keep, MAP(rws, dates, amts, revs, LAMBDA(r, dt, a, rv, AND(r > h, dt <> \"\", ISNUMBER(a), rv))),\n    fdates, FILTER(dates, keep),\n    fdesc, FILTER(descs, keep),\n    fcp, FILTER(cps, keep),\n    famt, FILTER(amts, keep),\n    ridx, MAP(fdesc, LAMBDA(x, IFERROR(MATCH(TRUE, MAP('MRR settings'!$A$14:$A$43, LAMBDA(p, IF(p = \"\", FALSE, IFERROR(REGEXMATCH(x & \"\", \"(?i)\" & p), FALSE)))), 0), 0))),\n    oidx, MAP(fcp, LAMBDA(c, IF(c = \"\", 0, IFERROR(MATCH(c, 'MRR settings'!$F$14:$F$63, 0), 0)))),\n    plans, MAP(ridx, oidx, LAMBDA(r, o, IF(AND(o > 0, INDEX('MRR settings'!$G$14:$G$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$G$14:$G$63, MAX(o, 1)), IF(r > 0, INDEX('MRR settings'!$B$14:$B$43, MAX(r, 1)), \"\")))),\n    months, MAP(ridx, oidx, LAMBDA(r, o, IF(AND(o > 0, INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)), IF(r > 0, INDEX('MRR settings'!$C$14:$C$43, MAX(r, 1)), \"\")))),\n    names, MAP(fcp, oidx, LAMBDA(c, o, IF(AND(o > 0, INDEX('MRR settings'!$I$14:$I$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$I$14:$I$63, MAX(o, 1)), c))),\n    pays, MAP(fdesc, fcp, LAMBDA(x, c, OR(REGEXMATCH(LOWER(TRIM(c & \"\")), \"^(stripe|paypal|square|shopify|braintree|adyen|gocardless)( payments)?$\"), REGEXMATCH(x & \"\", \"(?i)\\b(stripe|paypal|square|shopify|braintree|adyen|gocardless)\\b.*\\b(deposit|payout|transfer)\\b|\\bpayout\\b|deposit for period ending\")))),\n    checks, MAP(fcp, ridx, oidx, months, pays, LAMBDA(c, r, o, m, isPay,\n      IF(isPay, \"Payout\", IF(c = \"\", \"No customer\",\n      IF(AND(o > 0, INDEX('MRR settings'!$J$14:$J$63, MAX(o, 1)) = \"Yes\"), \"Excluded\",\n      IF(AND(OR(o = 0, INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)) = \"\"), r > 0, INDEX('MRR settings'!$D$14:$D$43, MAX(r, 1)) = \"No\"), \"One-time\",\n      IF(OR(NOT(ISNUMBER(m)), m <= 0), \"No billing cycle\", \"OK\"))))))),\n    starts, MAP(fdates, LAMBDA(x, DATE(YEAR(x), MONTH(x), 1))),\n    ends, MAP(starts, months, LAMBDA(s, m, IF(ISNUMBER(m), EDATE(s, m), \"\"))),\n    monthly, MAP(famt, months, LAMBDA(a, m, IF(AND(ISNUMBER(m), m > 0), a / m, 0))),\n    cads, MAP(ridx, oidx, LAMBDA(r, o, IF(AND(o > 0, INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)) <> \"\"), \"confirmed\", IF(r > 0, \"described\", \"\")))),\n    HSTACK(fdates, names, fdesc, famt, plans, months, checks, starts, ends, monthly, fcp,\n      MAP(fdates, LAMBDA(x, \"Ledger\")), MAP(fdates, LAMBDA(x, \"\")), cads)), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "P1",
+          "values": [
+            [
+              "Accounts in ledger tab"
+            ]
+          ]
+        },
+        {
+          "range": "P2",
+          "values": [
+            [
+              "Accounts in ledger tab"
+            ]
+          ]
+        },
+        {
+          "range": "R1",
+          "values": [
+            [
+              "Ledger tie-out"
+            ]
+          ]
+        },
+        {
+          "range": "R2",
+          "values": [
+            [
+              "=IFERROR(LET(raw, INDIRECT(\"'\" & 'MRR sources'!$B$5 & \"'!A1:M\"),\n    bcol, INDEX(raw, 0, 2),\n    h, MATCH(\"Date\", bcol, 0),\n    hdr, INDEX(raw, h, 0),\n    last, MAX(FILTER(ROW(bcol), bcol <> \"\")),\n    d, ARRAY_CONSTRAIN(raw, last, 13),\n    b, INDEX(d, 0, 2),\n    descs, INDEX(d, 0, MATCH(\"Description\", hdr, 0)),\n    cps, INDEX(d, 0, MATCH(\"Counterparty\", hdr, 0)),\n    amts, INDEX(d, 0, MATCH(\"Amount\", hdr, 0)),\n    bals, INDEX(d, 0, MATCH(\"Balance\", hdr, 0)),\n    rws, SEQUENCE(last),\n    dates, MAP(b, LAMBDA(x, IF(ISNUMBER(x), x, IFERROR(DATEVALUE(x), \"\")))),\n    heads, MAP(rws, b, dates, amts, bals, LAMBDA(r, x, dt, a, bl, AND(r > h, x <> \"\", dt = \"\", a = \"\", bl = \"\"))),\n    accts, SCAN(\"\", rws, LAMBDA(acc, i, IF(INDEX(heads, i), INDEX(b, i), acc))),\n    revs, MAP(accts, LAMBDA(a, SUMPRODUCT(--(TRIM(SPLIT('MRR settings'!$B$4, \",\")) = a)) > 0)),\n    keep, MAP(rws, dates, amts, revs, LAMBDA(r, dt, a, rv, AND(r > h, dt <> \"\", ISNUMBER(a), rv))), UNIQUE(FILTER(b, heads))), \"Ledger tab not found\")"
+            ]
+          ]
+        },
+        {
+          "range": "T1:AG1",
+          "values": [
+            [
+              "Date",
+              "Customer",
+              "Description",
+              "Amount",
+              "Plan",
+              "Term months",
+              "Check",
+              "Start month",
+              "End month",
+              "Monthly amount",
+              "Source customer",
+              "Source",
+              "Term end",
+              "Cadence"
+            ]
+          ]
+        },
+        {
+          "range": "T2",
+          "values": [
+            [
+              "=IF('MRR sources'!$B$6 = \"\", \"\", IFERROR(LET(\n    wfRaw, INDIRECT(\"'\" & 'MRR sources'!$B$6 & \"'!A1:BZ\"),\n    byCustomer, 'MRR sources'!$D$6 = \"By customer\",\n    accelMult, 'MRR sources'!$B$11,\n    hdrRow, MATCH(TRUE, MAP(SEQUENCE(MIN(40, ROWS(wfRaw))), LAMBDA(rowNum, SUMPRODUCT(--MAP(INDEX(wfRaw, rowNum, 0), LAMBDA(cell, IF(ISNUMBER(cell), cell > 20000, REGEXMATCH(cell & \"\", \"^[A-Za-z]{3,9} \\d{4}$\"))))) > 0)), 0),\n    hdrCells, INDEX(wfRaw, hdrRow, 0),\n    monthCols, FILTER(SEQUENCE(1, COLUMNS(wfRaw)), MAP(hdrCells, LAMBDA(cell, IF(ISNUMBER(cell), cell > 20000, REGEXMATCH(cell & \"\", \"^[A-Za-z]{3,9} \\d{4}$\"))))),\n    monthStarts, MAP(monthCols, LAMBDA(colNum, LET(cell, INDEX(hdrCells, 1, colNum), IF(ISNUMBER(cell), DATE(YEAR(cell), MONTH(cell), 1), DATEVALUE(\"1 \" & cell))))),\n    labelCol, INDEX(wfRaw, 0, 2),\n    afterHdr, ROWS(labelCol) - hdrRow,\n    blankAt, IFERROR(MATCH(TRUE, MAP(SEQUENCE(afterHdr), LAMBDA(i, INDEX(labelCol, hdrRow + i) & \"\" = \"\")), 0), afterHdr + 1),\n    nData, blankAt - 1,\n    dataIdx, SEQUENCE(nData),\n    labels, MAP(dataIdx, LAMBDA(i, INDEX(labelCol, hdrRow + i) & \"\")),\n    depths, MAP(labels, LAMBDA(lbl, (LEN(lbl) - LEN(REGEXREPLACE(lbl, \"^ +\", \"\"))) / 2)),\n    names, MAP(labels, LAMBDA(lbl, TRIM(lbl))),\n    hasKids, MAP(dataIdx, LAMBDA(i, IF(i = nData, FALSE, INDEX(depths, i + 1) > INDEX(depths, i)))),\n    parents, SCAN(\"\", dataIdx, LAMBDA(acc, i, IF(INDEX(depths, i) = 0, INDEX(names, i), acc))),\n    isPair, MAP(dataIdx, LAMBDA(i, AND(INDEX(depths, i) = 1, INDEX(hasKids, i), NOT(REGEXMATCH(INDEX(names, i), \"^Total \"))))),\n    pairIdx, FILTER(dataIdx, isPair),\n    nPairs, ROWS(pairIdx),\n    nMonths, COLUMNS(monthCols),\n    cellIdx, SEQUENCE(nPairs * nMonths),\n    pairOf, MAP(cellIdx, LAMBDA(k, INDEX(pairIdx, INT((k - 1) / nMonths) + 1))),\n    monOf, MAP(cellIdx, LAMBDA(k, MOD(k - 1, nMonths) + 1)),\n    valAt, LAMBDA(i, m, IF(OR(m < 1, m > nMonths), 0, N(INDEX(wfRaw, hdrRow + i, INDEX(monthCols, 1, m))))),\n    booked, MAP(pairOf, monOf, LAMBDA(i, m, valAt(i, m))),\n    prior, MAP(pairOf, monOf, LAMBDA(i, m, valAt(i, m - 1))),\n    laterPos, MAP(pairOf, monOf, LAMBDA(i, m, SUMPRODUCT(--MAP(SEQUENCE(1, nMonths), LAMBDA(j, AND(j > m, valAt(i, j) > 0)))))),\n    isStopped, MAP(booked, prior, laterPos, LAMBDA(b, p, lp, AND(b > 0, p > 0, b >= accelMult * p, b > p, lp = 0))),\n    isReversal, MAP(booked, laterPos, LAMBDA(b, lp, AND(b < 0, lp > 0))),\n    used, MAP(booked, prior, isStopped, isReversal, LAMBDA(b, p, st, rv, IF(st, p, IF(rv, MAX(p, 0), b)))),\n    rawCust, MAP(pairOf, LAMBDA(i, IF(byCustomer, INDEX(parents, i), INDEX(names, i)))),\n    plans, MAP(pairOf, LAMBDA(i, IF(byCustomer, INDEX(names, i), INDEX(parents, i)))),\n    custs, MAP(rawCust, LAMBDA(c, IF(OR(c = \"No counterparty\", c = \"No customer\"), \"\", c))),\n    oidx, MAP(custs, LAMBDA(c, IF(c = \"\", 0, IFERROR(MATCH(c, 'MRR settings'!$F$14:$F$63, 0), 0)))),\n    shown, MAP(custs, oidx, LAMBDA(c, o, IF(AND(o > 0, INDEX('MRR settings'!$I$14:$I$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$I$14:$I$63, MAX(o, 1)), c))),\n    checks, MAP(custs, oidx, LAMBDA(c, o, IF(c = \"\", \"No customer\", IF(AND(o > 0, INDEX('MRR settings'!$J$14:$J$63, MAX(o, 1)) = \"Yes\"), \"Excluded\", \"OK\")))),\n    descs, MAP(plans, booked, isStopped, isReversal, LAMBDA(p, b, st, rv, p & IF(st, \" (adjusted: schedule stopped, booked \" & TEXT(b, \"$#,##0.00\") & \")\", IF(rv, \" (adjusted: reversal, booked \" & TEXT(b, \"$#,##0.00\") & \")\", \"\")))),\n    starts, MAP(monOf, LAMBDA(m, INDEX(monthStarts, 1, m))),\n    keep, MAP(booked, used, LAMBDA(b, u, OR(b <> 0, u <> 0))),\n    FILTER(HSTACK(starts, shown, descs, used, plans, MAP(cellIdx, LAMBDA(k, 1)), checks, starts,\n      MAP(starts, LAMBDA(s, EDATE(s, 1))), used, rawCust, MAP(cellIdx, LAMBDA(k, \"Waterfall\")),\n      MAP(cellIdx, LAMBDA(k, \"\")), MAP(cellIdx, LAMBDA(k, \"schedule\"))), keep)), \"Waterfall tab not readable\"))"
+            ]
+          ]
+        },
+        {
+          "range": "AI1:AL1",
+          "values": [
+            [
+              "Customer",
+              "Plan",
+              "Term end",
+              "Recognized in range"
+            ]
+          ]
+        },
+        {
+          "range": "AI2",
+          "values": [
+            [
+              "=IF('MRR sources'!$B$7 = \"\", \"\", IFERROR(LET(\n    rfRaw, INDIRECT(\"'\" & 'MRR sources'!$B$7 & \"'!A1:ZZ\"),\n    byCustomer, 'MRR sources'!$D$7 = \"By customer\",\n    hdrRow, MATCH(TRUE, MAP(SEQUENCE(MIN(40, ROWS(rfRaw))), LAMBDA(rowNum, SUMPRODUCT(--MAP(INDEX(rfRaw, rowNum, 0), LAMBDA(cell, IF(ISNUMBER(cell), cell > 20000, REGEXMATCH(cell & \"\", \"^[A-Za-z]{3,9} \\d{4}$\"))))) > 0)), 0),\n    hdrCells, INDEX(rfRaw, hdrRow, 0),\n    isRecognized, MAP(INDEX(rfRaw, hdrRow + 1, 0), LAMBDA(cell, cell & \"\" = \"Recognized\")),\n    endCol, IFERROR(MATCH(\"Schedule end date\", hdrCells, 0), 0),\n    labelCol, INDEX(rfRaw, 0, 2),\n    firstData, hdrRow + 2,\n    afterHdr, ROWS(labelCol) - firstData + 1,\n    blankAt, IFERROR(MATCH(TRUE, MAP(SEQUENCE(afterHdr), LAMBDA(i, INDEX(labelCol, firstData + i - 1) & \"\" = \"\")), 0), afterHdr + 1),\n    nData, blankAt - 1,\n    dataIdx, SEQUENCE(nData),\n    labels, MAP(dataIdx, LAMBDA(i, INDEX(labelCol, firstData + i - 1) & \"\")),\n    depths, MAP(labels, LAMBDA(lbl, (LEN(lbl) - LEN(REGEXREPLACE(lbl, \"^ +\", \"\"))) / 2)),\n    names, MAP(labels, LAMBDA(lbl, TRIM(lbl))),\n    hasKids, MAP(dataIdx, LAMBDA(i, IF(i = nData, FALSE, INDEX(depths, i + 1) > INDEX(depths, i)))),\n    parents, SCAN(\"\", dataIdx, LAMBDA(acc, i, IF(INDEX(depths, i) = 0, INDEX(names, i), acc))),\n    owners, SCAN(0, dataIdx, LAMBDA(acc, i, IF(INDEX(depths, i) <= 1, i, acc))),\n    endDates, MAP(dataIdx, LAMBDA(i, IF(endCol = 0, \"\", LET(cell, INDEX(rfRaw, firstData + i - 1, endCol), IF(ISNUMBER(cell), cell, IFERROR(DATEVALUE(cell), \"\")))))),\n    isPair, MAP(dataIdx, LAMBDA(i, AND(INDEX(depths, i) = 1, INDEX(hasKids, i), NOT(REGEXMATCH(INDEX(names, i), \"^Total \"))))),\n    pairIdx, FILTER(dataIdx, isPair),\n    termEnds, MAP(pairIdx, LAMBDA(i, IFERROR(MAX(FILTER(endDates, owners = i, ISNUMBER(endDates))), \"\"))),\n    recognized, MAP(pairIdx, LAMBDA(i, SUMPRODUCT(isRecognized * IFERROR(--INDEX(rfRaw, firstData + i - 1, 0), 0)))),\n    rawCust, MAP(pairIdx, LAMBDA(i, IF(byCustomer, INDEX(parents, i), INDEX(names, i)))),\n    plans, MAP(pairIdx, LAMBDA(i, IF(byCustomer, INDEX(names, i), INDEX(parents, i)))),\n    custs, MAP(rawCust, LAMBDA(c, IF(OR(c = \"No counterparty\", c = \"No customer\"), \"\", c))),\n    HSTACK(custs, plans, termEnds, recognized)), \"Rollforward tab not readable\"))"
+            ]
+          ]
+        },
+        {
+          "range": "AN1:BA1",
+          "values": [
+            [
+              "Date",
+              "Customer",
+              "Description",
+              "Amount",
+              "Plan",
+              "Term months",
+              "Check",
+              "Start month",
+              "End month",
+              "Monthly amount",
+              "Source customer",
+              "Source",
+              "Term end",
+              "Cadence"
+            ]
+          ]
+        },
+        {
+          "range": "AN2",
+          "values": [
+            [
+              "=IF(OR('MRR sources'!$B$8 = \"\", 'MRR sources'!$B$15 = \"\", 'MRR sources'!$B$16 = \"\", 'MRR sources'!$B$17 = \"\"), \"\", IFERROR(LET(\n    utRaw, INDIRECT(\"'\" & 'MRR sources'!$B$8 & \"'!A1:ZZ\"),\n    custHdr, 'MRR sources'!$B$15,\n    hdrRow, MATCH(TRUE, MAP(SEQUENCE(MIN(20, ROWS(utRaw))), LAMBDA(rowNum, COUNTIF(INDEX(utRaw, rowNum, 0), custHdr) > 0)), 0),\n    hdrCells, INDEX(utRaw, hdrRow, 0),\n    colOf, LAMBDA(hdrText, IF(hdrText = \"\", 0, IFERROR(MATCH(hdrText, hdrCells, 0), 0))),\n    custCol, colOf(custHdr),\n    dateCol, colOf('MRR sources'!$B$16),\n    amtCol, colOf('MRR sources'!$B$17),\n    planCol, colOf('MRR sources'!$B$18),\n    termCol, colOf('MRR sources'!$B$19),\n    dateVals, INDEX(utRaw, 0, dateCol),\n    lastRow, MAX(FILTER(ROW(dateVals), dateVals <> \"\")),\n    rowNums, SEQUENCE(lastRow - hdrRow, 1, hdrRow + 1),\n    cellAt, LAMBDA(rowNum, colNum, IF(colNum = 0, \"\", INDEX(utRaw, rowNum, colNum))),\n    dates, MAP(rowNums, LAMBDA(rowNum, LET(cell, cellAt(rowNum, dateCol), IF(ISNUMBER(cell), cell, IFERROR(DATEVALUE(cell), \"\"))))),\n    amts, MAP(rowNums, LAMBDA(rowNum, LET(cell, cellAt(rowNum, amtCol), IF(ISNUMBER(cell), cell, IFERROR(VALUE(REGEXREPLACE(cell & \"\", \"[$,\\s]\", \"\")), \"\"))))),\n    keep, MAP(dates, amts, LAMBDA(dt, a, AND(ISNUMBER(dt), ISNUMBER(a)))),\n    keptRows, FILTER(rowNums, keep),\n    fdates, FILTER(dates, keep),\n    famt, FILTER(amts, keep),\n    fcp, MAP(keptRows, LAMBDA(rowNum, TRIM(cellAt(rowNum, custCol) & \"\"))),\n    fdesc, MAP(keptRows, LAMBDA(rowNum, cellAt(rowNum, planCol) & \"\")),\n    fterm, MAP(keptRows, LAMBDA(rowNum, cellAt(rowNum, termCol))),\n    ridx, MAP(fdesc, LAMBDA(x, IFERROR(MATCH(TRUE, MAP('MRR settings'!$A$14:$A$43, LAMBDA(p, IF(p = \"\", FALSE, IFERROR(REGEXMATCH(x & \"\", \"(?i)\" & p), FALSE)))), 0), 0))),\n    oidx, MAP(fcp, LAMBDA(c, IF(c = \"\", 0, IFERROR(MATCH(c, 'MRR settings'!$F$14:$F$63, 0), 0)))),\n    plans, MAP(ridx, oidx, fdesc, LAMBDA(r, o, x, IF(AND(o > 0, INDEX('MRR settings'!$G$14:$G$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$G$14:$G$63, MAX(o, 1)), IF(r > 0, INDEX('MRR settings'!$B$14:$B$43, MAX(r, 1)), x)))),\n    months, MAP(ridx, oidx, fterm, LAMBDA(r, o, tm, IF(AND(o > 0, INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)), IF(ISNUMBER(tm), tm, IF(r > 0, INDEX('MRR settings'!$C$14:$C$43, MAX(r, 1)), \"\"))))),\n    names, MAP(fcp, oidx, LAMBDA(c, o, IF(AND(o > 0, INDEX('MRR settings'!$I$14:$I$63, MAX(o, 1)) <> \"\"), INDEX('MRR settings'!$I$14:$I$63, MAX(o, 1)), c))),\n    pays, MAP(fdesc, fcp, LAMBDA(x, c, OR(REGEXMATCH(LOWER(c), \"^(stripe|paypal|square|shopify|braintree|adyen|gocardless)( payments)?$\"), REGEXMATCH(x, \"(?i)\\b(stripe|paypal|square|shopify|braintree|adyen|gocardless)\\b.*\\b(deposit|payout|transfer)\\b|\\bpayout\\b|deposit for period ending\")))),\n    checks, MAP(fcp, ridx, oidx, months, pays, LAMBDA(c, r, o, m, isPay,\n      IF(isPay, \"Payout\", IF(c = \"\", \"No customer\",\n      IF(AND(o > 0, INDEX('MRR settings'!$J$14:$J$63, MAX(o, 1)) = \"Yes\"), \"Excluded\",\n      IF(AND(OR(o = 0, INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)) = \"\"), r > 0, INDEX('MRR settings'!$D$14:$D$43, MAX(r, 1)) = \"No\"), \"One-time\",\n      IF(OR(NOT(ISNUMBER(m)), m <= 0), \"No billing cycle\", \"OK\"))))))),\n    cads, MAP(ridx, oidx, fterm, LAMBDA(r, o, tm, IF(AND(o > 0, INDEX('MRR settings'!$H$14:$H$63, MAX(o, 1)) <> \"\"), \"confirmed\", IF(OR(ISNUMBER(tm), r > 0), \"described\", \"\")))),\n    starts, MAP(fdates, LAMBDA(x, DATE(YEAR(x), MONTH(x), 1))),\n    ends, MAP(starts, months, LAMBDA(s, m, IF(ISNUMBER(m), EDATE(s, m), \"\"))),\n    monthly, MAP(famt, months, LAMBDA(a, m, IF(AND(ISNUMBER(m), m > 0), a / m, 0))),\n    HSTACK(fdates, names, fdesc, famt, plans, months, checks, starts, ends, monthly, fcp,\n      MAP(fdates, LAMBDA(x, \"Your table\")), MAP(fdates, LAMBDA(x, \"\")), cads)), \"Your table not readable\"))"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1:N1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "P1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "R1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "T1:AG1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "AI1:AL1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "AN1:BA1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A2:A",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "D2:D",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H2:I",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "J2:J",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "T2:T",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "W2:W",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "AA2:AB",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "AC2:AC",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "AK2:AK",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "AL2:AL",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "AN2:AN",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "AQ2:AQ",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "AU2:AV",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "AW2:AW",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        }
+      ],
+      "frozenRows": 1,
+      "tabColor": "#9ca3af",
+      "protect": "warning",
+      "columnCount": 60
+    },
+    {
+      "name": "MRR rows",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1:N1",
+          "values": [
+            [
+              "Date",
+              "Customer",
+              "Description",
+              "Amount",
+              "Plan",
+              "Term months",
+              "Check",
+              "Start month",
+              "End month",
+              "Monthly amount",
+              "Source customer",
+              "Source",
+              "Term end",
+              "Cadence"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=IFERROR(LET(\n    stacked, VSTACK('MRR inputs'!A2:N, 'MRR inputs'!T2:AG, 'MRR inputs'!AN2:BA),\n    allRows, FILTER(stacked, ISNUMBER(INDEX(stacked, 0, 1))),\n    srcs, INDEX(allRows, 0, 12),\n    rawNames, INDEX(allRows, 0, 2),\n    keys, MAP(rawNames, LAMBDA(nm, LOWER(TRIM(REGEXREPLACE(nm & \"\", \"\\s+\", \" \"))))),\n    shown, MAP(keys, LAMBDA(key, IF(key = \"\", \"\", TRIM(REGEXREPLACE(XLOOKUP(key, keys, rawNames) & \"\", \"\\s+\", \" \"))))),\n    chks, INDEX(allRows, 0, 7),\n    wfKeys, IFERROR(FILTER(keys, srcs = \"Waterfall\", chks = \"OK\"), \"|none|\"),\n    utKeys, IFERROR(FILTER(keys, srcs = \"Your table\", chks = \"OK\"), \"|none|\"),\n    finalChk, MAP(srcs, keys, chks, LAMBDA(srcName, key, chkText, IF(chkText <> \"OK\", chkText,\n      IF(AND(srcName <> \"Waterfall\", SUMPRODUCT(--(wfKeys = key)) > 0), \"Counted from Waterfall\",\n      IF(AND(srcName = \"Ledger\", SUMPRODUCT(--(utKeys = key)) > 0), \"Counted from your table\", \"OK\"))))),\n    rfNames, IFERROR(FILTER('MRR inputs'!AI2:AI, 'MRR inputs'!AI2:AI <> \"\"), \"|none|\"),\n    rfEnds, IFERROR(FILTER('MRR inputs'!AK2:AK, 'MRR inputs'!AI2:AI <> \"\"), \"\"),\n    termEnds, MAP(srcs, keys, LAMBDA(srcName, key, IF(srcName <> \"Waterfall\", \"\",\n      LET(te, IFERROR(MAX(FILTER(rfEnds, LOWER(TRIM(rfNames & \"\")) = key)), 0), IF(N(te) > 0, te, \"\"))))),\n    HSTACK(CHOOSECOLS(allRows, 1), shown, CHOOSECOLS(allRows, 3, 4, 5, 6), finalChk,\n      CHOOSECOLS(allRows, 8, 9, 10, 11, 12), termEnds, CHOOSECOLS(allRows, 14))), \"\")"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1:N1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A2:A",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "D2:D",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H2:I",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "J2:J",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "M2:M",
+          "numberFormat": "mmm d, yyyy"
+        }
+      ],
+      "frozenRows": 1,
+      "tabColor": "#9ca3af",
+      "protect": "warning",
+      "columnCount": 14
+    },
+    {
+      "name": "MRR grid",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1",
+          "values": [
+            [
+              "Customer"
+            ]
+          ]
+        },
+        {
+          "range": "B1",
+          "values": [
+            [
+              "=LET(firstRev, IFERROR(MIN(FILTER('MRR rows'!H2:H, 'MRR rows'!G2:G = \"OK\", 'MRR rows'!J2:J > 0)), 'MRR settings'!$B$5),\n    startMonth, MAX(EOMONTH('MRR settings'!$B$5, -1) + 1, EOMONTH(firstRev, -1) + 1),\n    monthCount, DATEDIF(startMonth, 'MRR settings'!$B$7, \"M\") + 1,\n    MAP(SEQUENCE(1, monthCount, 0), LAMBDA(k, EDATE(startMonth, k))))"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=IFERROR(SORT(UNIQUE(FILTER('MRR rows'!B2:B, 'MRR rows'!G2:G = \"OK\"))), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "B2",
+          "values": [
+            [
+              "=IF(A2 = \"\", \"\", LET(\n    custs, FILTER(A2:A, A2:A <> \"\"),\n    mons, FILTER(B1:1, B1:1 <> \"\"),\n    MAKEARRAY(ROWS(custs), COLUMNS(mons), LAMBDA(r, k,\n      MAX(0, SUMIFS('MRR rows'!J2:J, 'MRR rows'!B2:B, INDEX(custs, r), 'MRR rows'!G2:G, \"OK\",\n        'MRR rows'!H2:H, \"<=\" & INDEX(mons, k), 'MRR rows'!I2:I, \">\" & INDEX(mons, k)))))))"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1",
+          "bold": true
+        },
+        {
+          "range": "1:1",
+          "numberFormat": "mmm yyyy",
+          "bold": true
+        },
+        {
+          "range": "B2:ZZ",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        }
+      ],
+      "frozenRows": 1,
+      "frozenColumns": 1,
+      "tabColor": "#9ca3af",
+      "protect": "warning",
+      "columnCount": 104
+    },
+    {
+      "name": "MRR movements",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1",
+          "values": [
+            [
+              "Customer"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=IFERROR(FILTER('MRR grid'!A2:A, 'MRR grid'!A2:A <> \"\"), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "B1",
+          "values": [
+            [
+              "=IFERROR(FILTER('MRR grid'!B1:1, 'MRR grid'!B1:1 <> \"\"), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "B2",
+          "values": [
+            [
+              "=IF(A2 = \"\", \"\", LET(\n    nr, COUNTA(A2:A), nc, COUNTA(B1:1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    MAKEARRAY(nr, nc, LAMBDA(r, k, LET(\n      cur, INDEX(G, r, k),\n      prev, (k > 1) * INDEX(G, r, MAX(1, k - 1)),\n      ever, IF(k = 1, FALSE, MAX(ARRAY_CONSTRAIN(INDEX(G, r, 0), 1, MAX(1, k - 1))) >= 0.005),\n      IF(AND(prev < 0.005, cur >= 0.005), IF(ever, \"reactivation\", \"new\"),\n      IF(AND(prev >= 0.005, cur < 0.005), \"churn\",\n      IF(cur - prev > 0.005, \"expansion\",\n      IF(prev - cur > 0.005, \"contraction\",\n      IF(cur >= 0.005, \"active\", \"\"))))))))))"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1",
+          "bold": true
+        },
+        {
+          "range": "1:1",
+          "numberFormat": "mmm yyyy",
+          "bold": true
+        }
+      ],
+      "frozenRows": 1,
+      "frozenColumns": 1,
+      "tabColor": "#9ca3af",
+      "protect": "warning",
+      "columnCount": 104
+    },
+    {
+      "name": "MRR customers",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1:M1",
+          "values": [
+            [
+              "Customer",
+              "Plan",
+              "Billing",
+              "Amount per bill",
+              "Payments",
+              "Collected",
+              "First payment",
+              "Last payment",
+              "Next bill due",
+              "MRR (latest month)",
+              "Status",
+              "Change vs prior month",
+              "Share of MRR"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=IF('MRR grid'!A2 = \"\", \"\", LET(nr, COUNTA('MRR grid'!A2:A),\n    nc, COUNTA('MRR grid'!B1:1),\n    names, ARRAY_CONSTRAIN('MRR grid'!A2:A, nr, 1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    cur, INDEX(G, 0, nc),\n    prv, IF(nc > 1, INDEX(G, 0, MAX(1, nc - 1)), MAP(cur, LAMBDA(x, 0))),\n    typ, INDEX(movTbl, 0, nc),\n    tot, SUM(cur),\n    oc, FILTER('MRR rows'!B2:B, 'MRR rows'!G2:G = \"OK\"), op, FILTER('MRR rows'!E2:E, 'MRR rows'!G2:G = \"OK\"), om, FILTER('MRR rows'!F2:F, 'MRR rows'!G2:G = \"OK\"),\n    oa, FILTER('MRR rows'!D2:D, 'MRR rows'!G2:G = \"OK\"), od, FILTER('MRR rows'!A2:A, 'MRR rows'!G2:G = \"OK\"),\n    plan, MAP(names, LAMBDA(c, XLOOKUP(c, oc, op, \"\", 0, -1))),\n    mons, MAP(names, LAMBDA(c, XLOOKUP(c, oc, om, \"\", 0, -1))),\n    billing, MAP(mons, LAMBDA(m, IFERROR(SWITCH(m, 1, \"Monthly\", 3, \"Quarterly\", 6, \"Semiannual\", 12, \"Annual\", m & \" months\"), \"\"))),\n    amt, MAP(names, LAMBDA(c, XLOOKUP(c, oc, oa, \"\", 0, -1))),\n    pays, MAP(names, LAMBDA(c, SUMPRODUCT(--(oc = c)))),\n    coll, MAP(names, LAMBDA(c, SUMPRODUCT((oc = c) * oa))),\n    firstp, MAP(names, LAMBDA(c, MIN(FILTER(od, oc = c)))),\n    lastp, MAP(names, LAMBDA(c, MAX(FILTER(od, oc = c)))),\n    tends, MAP(names, LAMBDA(c, IFERROR(MAX(FILTER('MRR rows'!M2:M, 'MRR rows'!B2:B = c, ISNUMBER('MRR rows'!M2:M))), 0))),\n    nextd, MAP(lastp, mons, tends, LAMBDA(l, m, te, IF(te > 0, te, IF(ISNUMBER(m), EDATE(l, m), \"\")))),\n    status, MAP(typ, LAMBDA(movType, IFERROR(SWITCH(movType, \"new\", \"New\", \"active\", \"Active\", \"expansion\", \"Expanded\", \"contraction\", \"Downgraded\", \"churn\", \"Churned\", \"reactivation\", \"Returned\", \"Inactive\"), \"Inactive\"))),\n    chg, MAP(cur, prv, LAMBDA(a, p, a - p)),\n    share, MAP(cur, LAMBDA(a, IF(tot = 0, 0, a / tot))),\n    SORT(HSTACK(names, plan, billing, amt, pays, coll, firstp, lastp, nextd, cur, status, chg, share), 10, FALSE, 1, TRUE)))"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1:M1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "D2:D",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "F2:F",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "G2:I",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "J2:J",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "L2:L",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "M2:M",
+          "numberFormat": "0.0%"
+        }
+      ],
+      "frozenRows": 1,
+      "frozenColumns": 1,
+      "tabColor": "#9ca3af",
+      "protect": "warning",
+      "columnCount": 14
+    },
+    {
+      "name": "MRR report",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1",
+          "values": [
+            [
+              "{{ENTITY}}: MRR and ARR"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=\"Source: \" & 'MRR sources'!$B$22 & \" (\" & 'MRR settings'!B9 & \" basis). Revenue spread over each plan's billing months. Management metric, not GAAP. Updates when its source tabs change.\""
+            ]
+          ]
+        },
+        {
+          "range": "A3",
+          "values": [
+            [
+              "=LET(errCount, SUMPRODUCT(--ISERROR('MRR inputs'!A1:BA)) + SUMPRODUCT(--ISERROR('MRR rows'!A1:N))\n      + SUMPRODUCT(--ISERROR('MRR grid'!A1:CZ)) + SUMPRODUCT(--ISERROR('MRR movements'!A1:CZ))\n      + SUMPRODUCT(--ISERROR('MRR customers'!A1:M)) + SUMPRODUCT(--ISERROR(A4:R38)) + SUMPRODUCT(--ISERROR($A$41:$R)),\n    srcProblems, IFERROR(TEXTJOIN(\"; \", TRUE, FILTER('MRR sources'!A5:A8 & \": \" & MID('MRR sources'!J5:J8, 8, 200), LEFT('MRR sources'!J5:J8, 6) = \"Check:\")), \"\"),\n    dataQuality, 'MRR sources'!$B$21,\n    IF(errCount > 0, \"Check failed: \" & errCount & \" formula errors in the MRR tabs\",\n    IF($D$18 <> \"Ties to the movements\", \"Check failed: \" & $D$18,\n    IF(srcProblems <> \"\", \"Check failed: \" & srcProblems,\n    IF(dataQuality <> \"\", \"Check failed: \" & dataQuality, \"All checks passed\")))))"
+            ]
+          ]
+        },
+        {
+          "range": "A4",
+          "values": [
+            [
+              "Latest month"
+            ]
+          ]
+        },
+        {
+          "range": "A5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 1)"
+            ]
+          ]
+        },
+        {
+          "range": "B4",
+          "values": [
+            [
+              "MRR"
+            ]
+          ]
+        },
+        {
+          "range": "B5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 2)"
+            ]
+          ]
+        },
+        {
+          "range": "C4",
+          "values": [
+            [
+              "ARR"
+            ]
+          ]
+        },
+        {
+          "range": "C5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 3)"
+            ]
+          ]
+        },
+        {
+          "range": "D4",
+          "values": [
+            [
+              "Customers"
+            ]
+          ]
+        },
+        {
+          "range": "D5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 4)"
+            ]
+          ]
+        },
+        {
+          "range": "E4",
+          "values": [
+            [
+              "ARPA"
+            ]
+          ]
+        },
+        {
+          "range": "E5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 5)"
+            ]
+          ]
+        },
+        {
+          "range": "F4",
+          "values": [
+            [
+              "Net new MRR"
+            ]
+          ]
+        },
+        {
+          "range": "F5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 11)"
+            ]
+          ]
+        },
+        {
+          "range": "G4",
+          "values": [
+            [
+              "MRR change vs prior month"
+            ]
+          ]
+        },
+        {
+          "range": "G5",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 12)"
+            ]
+          ]
+        },
+        {
+          "range": "A7",
+          "values": [
+            [
+              "Logo churn"
+            ]
+          ]
+        },
+        {
+          "range": "A8",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 14)"
+            ]
+          ]
+        },
+        {
+          "range": "B7",
+          "values": [
+            [
+              "Gross MRR churn"
+            ]
+          ]
+        },
+        {
+          "range": "B8",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 15)"
+            ]
+          ]
+        },
+        {
+          "range": "C7",
+          "values": [
+            [
+              "Net MRR churn"
+            ]
+          ]
+        },
+        {
+          "range": "C8",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 16)"
+            ]
+          ]
+        },
+        {
+          "range": "D7",
+          "values": [
+            [
+              "Quick ratio"
+            ]
+          ]
+        },
+        {
+          "range": "D8",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 17)"
+            ]
+          ]
+        },
+        {
+          "range": "E7",
+          "values": [
+            [
+              "Net revenue retention (12 mo)"
+            ]
+          ]
+        },
+        {
+          "range": "E8",
+          "values": [
+            [
+              "=IF('MRR grid'!A2 = \"\", \"\", LET(\n    nr, COUNTA('MRR grid'!A2:A), nc, COUNTA('MRR grid'!B1:1),\n    IF(nc < 13, \"Needs 13 months\", LET(\n      G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n      now, INDEX(G, 0, nc), then, INDEX(G, 0, nc - 12), base, SUM(then),\n      IF(base = 0, \"No customers 12 months ago\", SUMPRODUCT((then >= 0.005) * now) / base)))))"
+            ]
+          ]
+        },
+        {
+          "range": "F7",
+          "values": [
+            [
+              "Gross revenue retention (12 mo)"
+            ]
+          ]
+        },
+        {
+          "range": "F8",
+          "values": [
+            [
+              "=IF('MRR grid'!A2 = \"\", \"\", LET(\n    nr, COUNTA('MRR grid'!A2:A), nc, COUNTA('MRR grid'!B1:1),\n    IF(nc < 13, \"Needs 13 months\", LET(\n      G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n      now, INDEX(G, 0, nc), then, INDEX(G, 0, nc - 12), base, SUM(then),\n      IF(base = 0, \"No customers 12 months ago\", SUMPRODUCT((then >= 0.005) * ((now < then) * now + (now >= then) * then)) / base)))))"
+            ]
+          ]
+        },
+        {
+          "range": "G7",
+          "values": [
+            [
+              "Top customer share"
+            ]
+          ]
+        },
+        {
+          "range": "G8",
+          "values": [
+            [
+              "=IFERROR(MAX('MRR customers'!M2:M), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A11:D11",
+          "values": [
+            [
+              "Latest month bridge",
+              "MRR",
+              "Customers",
+              "Biggest"
+            ]
+          ]
+        },
+        {
+          "range": "A12",
+          "values": [
+            [
+              "Opening"
+            ]
+          ]
+        },
+        {
+          "range": "B12",
+          "values": [
+            [
+              "=IFERROR(INDEX($B$41:$B, COUNTA($A$41:$A) - 1), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "C12",
+          "values": [
+            [
+              "=IFERROR(INDEX($D$41:$D, COUNTA($A$41:$A) - 1), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "A13",
+          "values": [
+            [
+              "New"
+            ]
+          ]
+        },
+        {
+          "range": "B13",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 6)"
+            ]
+          ]
+        },
+        {
+          "range": "C13",
+          "values": [
+            [
+              "=IFERROR(SUMPRODUCT(--(INDEX('MRR movements'!B2:ZZ, 0, COUNTA('MRR movements'!B1:1)) = \"new\")), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "D13",
+          "values": [
+            [
+              "=IFERROR(LET(nr, COUNTA('MRR grid'!A2:A),\n    nc, COUNTA('MRR grid'!B1:1),\n    names, ARRAY_CONSTRAIN('MRR grid'!A2:A, nr, 1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    cur, INDEX(G, 0, nc),\n    prv, IF(nc > 1, INDEX(G, 0, MAX(1, nc - 1)), MAP(cur, LAMBDA(x, 0))),\n    typ, INDEX(movTbl, 0, nc),\n    tot, SUM(cur),\n      f, SORT(FILTER(HSTACK(names, MAP(cur, prv, LAMBDA(a, p, a - p))), typ = \"new\"), 2, FALSE),\n      INDEX(f, 1, 1) & \" \" & TEXT(INDEX(f, 1, 2), \"$#,##0\")), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A14",
+          "values": [
+            [
+              "Expansion"
+            ]
+          ]
+        },
+        {
+          "range": "B14",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 7)"
+            ]
+          ]
+        },
+        {
+          "range": "C14",
+          "values": [
+            [
+              "=IFERROR(SUMPRODUCT(--(INDEX('MRR movements'!B2:ZZ, 0, COUNTA('MRR movements'!B1:1)) = \"expansion\")), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "D14",
+          "values": [
+            [
+              "=IFERROR(LET(nr, COUNTA('MRR grid'!A2:A),\n    nc, COUNTA('MRR grid'!B1:1),\n    names, ARRAY_CONSTRAIN('MRR grid'!A2:A, nr, 1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    cur, INDEX(G, 0, nc),\n    prv, IF(nc > 1, INDEX(G, 0, MAX(1, nc - 1)), MAP(cur, LAMBDA(x, 0))),\n    typ, INDEX(movTbl, 0, nc),\n    tot, SUM(cur),\n      f, SORT(FILTER(HSTACK(names, MAP(cur, prv, LAMBDA(a, p, a - p))), typ = \"expansion\"), 2, FALSE),\n      INDEX(f, 1, 1) & \" \" & TEXT(INDEX(f, 1, 2), \"$#,##0\")), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A15",
+          "values": [
+            [
+              "Reactivation"
+            ]
+          ]
+        },
+        {
+          "range": "B15",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 8)"
+            ]
+          ]
+        },
+        {
+          "range": "C15",
+          "values": [
+            [
+              "=IFERROR(SUMPRODUCT(--(INDEX('MRR movements'!B2:ZZ, 0, COUNTA('MRR movements'!B1:1)) = \"reactivation\")), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "D15",
+          "values": [
+            [
+              "=IFERROR(LET(nr, COUNTA('MRR grid'!A2:A),\n    nc, COUNTA('MRR grid'!B1:1),\n    names, ARRAY_CONSTRAIN('MRR grid'!A2:A, nr, 1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    cur, INDEX(G, 0, nc),\n    prv, IF(nc > 1, INDEX(G, 0, MAX(1, nc - 1)), MAP(cur, LAMBDA(x, 0))),\n    typ, INDEX(movTbl, 0, nc),\n    tot, SUM(cur),\n      f, SORT(FILTER(HSTACK(names, MAP(cur, prv, LAMBDA(a, p, a - p))), typ = \"reactivation\"), 2, FALSE),\n      INDEX(f, 1, 1) & \" \" & TEXT(INDEX(f, 1, 2), \"$#,##0\")), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A16",
+          "values": [
+            [
+              "Contraction"
+            ]
+          ]
+        },
+        {
+          "range": "B16",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 9)"
+            ]
+          ]
+        },
+        {
+          "range": "C16",
+          "values": [
+            [
+              "=IFERROR(SUMPRODUCT(--(INDEX('MRR movements'!B2:ZZ, 0, COUNTA('MRR movements'!B1:1)) = \"contraction\")), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "D16",
+          "values": [
+            [
+              "=IFERROR(LET(nr, COUNTA('MRR grid'!A2:A),\n    nc, COUNTA('MRR grid'!B1:1),\n    names, ARRAY_CONSTRAIN('MRR grid'!A2:A, nr, 1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    cur, INDEX(G, 0, nc),\n    prv, IF(nc > 1, INDEX(G, 0, MAX(1, nc - 1)), MAP(cur, LAMBDA(x, 0))),\n    typ, INDEX(movTbl, 0, nc),\n    tot, SUM(cur),\n      f, SORT(FILTER(HSTACK(names, MAP(cur, prv, LAMBDA(a, p, a - p))), typ = \"contraction\"), 2, TRUE),\n      INDEX(f, 1, 1) & \" \" & TEXT(INDEX(f, 1, 2), \"$#,##0\")), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A17",
+          "values": [
+            [
+              "Churn"
+            ]
+          ]
+        },
+        {
+          "range": "B17",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 10)"
+            ]
+          ]
+        },
+        {
+          "range": "C17",
+          "values": [
+            [
+              "=IFERROR(SUMPRODUCT(--(INDEX('MRR movements'!B2:ZZ, 0, COUNTA('MRR movements'!B1:1)) = \"churn\")), 0)"
+            ]
+          ]
+        },
+        {
+          "range": "D17",
+          "values": [
+            [
+              "=IFERROR(LET(nr, COUNTA('MRR grid'!A2:A),\n    nc, COUNTA('MRR grid'!B1:1),\n    names, ARRAY_CONSTRAIN('MRR grid'!A2:A, nr, 1),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    cur, INDEX(G, 0, nc),\n    prv, IF(nc > 1, INDEX(G, 0, MAX(1, nc - 1)), MAP(cur, LAMBDA(x, 0))),\n    typ, INDEX(movTbl, 0, nc),\n    tot, SUM(cur),\n      f, SORT(FILTER(HSTACK(names, MAP(cur, prv, LAMBDA(a, p, a - p))), typ = \"churn\"), 2, TRUE),\n      INDEX(f, 1, 1) & \" \" & TEXT(INDEX(f, 1, 2), \"$#,##0\")), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A18",
+          "values": [
+            [
+              "Closing"
+            ]
+          ]
+        },
+        {
+          "range": "B18",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 2)"
+            ]
+          ]
+        },
+        {
+          "range": "C18",
+          "values": [
+            [
+              "=INDEX($A$41:$R, COUNTA($A$41:$A), 4)"
+            ]
+          ]
+        },
+        {
+          "range": "D18",
+          "values": [
+            [
+              "=LET(monthCount, COUNTA('MRR grid'!B1:1), errCount, SUMPRODUCT(--ISERROR($A$41:$R)), tieCount, COUNTIF($R$41:$R, TRUE),\n    IF(errCount > 0, \"Check failed: formula errors in the monthly table\",\n    IF(AND(monthCount > 0, tieCount = monthCount), \"Ties to the movements\", \"Does not tie: check MRR rows\")))"
+            ]
+          ]
+        },
+        {
+          "range": "F11:H11",
+          "values": [
+            [
+              "Top customers",
+              "MRR",
+              "Share"
+            ]
+          ]
+        },
+        {
+          "range": "F12",
+          "values": [
+            [
+              "=IFERROR(ARRAY_CONSTRAIN(FILTER(HSTACK('MRR customers'!A2:A, 'MRR customers'!J2:J, 'MRR customers'!M2:M), 'MRR customers'!J2:J >= 0.005), 10, 3), \"No active customers\")"
+            ]
+          ]
+        },
+        {
+          "range": "J11:N11",
+          "values": [
+            [
+              "MRR by plan",
+              "Customers",
+              "MRR",
+              "Share",
+              "ARPA"
+            ]
+          ]
+        },
+        {
+          "range": "J12",
+          "values": [
+            [
+              "=IFERROR(LET(\n    p, FILTER('MRR customers'!B2:B, 'MRR customers'!J2:J >= 0.005),\n    m, FILTER('MRR customers'!J2:J, 'MRR customers'!J2:J >= 0.005),\n    u, UNIQUE(p), tot, SUM(m),\n    cnt, MAP(u, LAMBDA(x, SUMPRODUCT(--(p = x)))),\n    mr, MAP(u, LAMBDA(x, SUMPRODUCT((p = x) * m))),\n    SORT(HSTACK(u, cnt, mr, MAP(mr, LAMBDA(v, v / tot)), MAP(mr, cnt, LAMBDA(v, c, v / c))), 3, FALSE)), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A23:D23",
+          "values": [
+            [
+              "Up for renewal (next 60 days)",
+              "Plan",
+              "Due",
+              "Amount"
+            ]
+          ]
+        },
+        {
+          "range": "A24",
+          "values": [
+            [
+              "=IFERROR(ARRAY_CONSTRAIN(SORT(FILTER(HSTACK('MRR customers'!A2:A, 'MRR customers'!B2:B, 'MRR customers'!I2:I, 'MRR customers'!D2:D),\n    'MRR customers'!I2:I >= TODAY(), 'MRR customers'!I2:I <= TODAY() + 60, 'MRR customers'!J2:J >= 0.005), 3, TRUE), 15, 4), \"Nothing due in the next 60 days\")"
+            ]
+          ]
+        },
+        {
+          "range": "F23:I23",
+          "values": [
+            [
+              "Data checks",
+              "Lines",
+              "Amount",
+              "Next step"
+            ]
+          ]
+        },
+        {
+          "range": "F24",
+          "values": [
+            [
+              "Sources"
+            ]
+          ]
+        },
+        {
+          "range": "G24",
+          "values": [
+            [
+              "=COUNTIF('MRR sources'!J5:J8, \"OK\") & \" of \" & COUNTIF('MRR sources'!B5:B8, \"?*\") & \" OK\""
+            ]
+          ]
+        },
+        {
+          "range": "I24",
+          "values": [
+            [
+              "=IFERROR(TEXTJOIN(\"; \", TRUE, FILTER('MRR sources'!A5:A8 & \": \" & 'MRR sources'!J5:J8, LEFT('MRR sources'!J5:J8, 5) = \"Check\")), \"Tabs, coverage, and rows read are on MRR sources\")"
+            ]
+          ]
+        },
+        {
+          "range": "F25",
+          "values": [
+            [
+              "Revenue rows read"
+            ]
+          ]
+        },
+        {
+          "range": "G25",
+          "values": [
+            [
+              "=COUNT('MRR rows'!A2:A)"
+            ]
+          ]
+        },
+        {
+          "range": "I25",
+          "values": [
+            [
+              "Should match revenue for the period in the source reports"
+            ]
+          ]
+        },
+        {
+          "range": "F26",
+          "values": [
+            [
+              "Ledger tie-out"
+            ]
+          ]
+        },
+        {
+          "range": "G26",
+          "values": [
+            [
+              "='MRR inputs'!R2"
+            ]
+          ]
+        },
+        {
+          "range": "I26",
+          "values": [
+            [
+              "Ledger lines must equal the change in the revenue account balance"
+            ]
+          ]
+        },
+        {
+          "range": "F27",
+          "values": [
+            [
+              "Revenue with a customer"
+            ]
+          ]
+        },
+        {
+          "range": "G27",
+          "values": [
+            [
+              "='MRR sources'!B23"
+            ]
+          ]
+        },
+        {
+          "range": "I27",
+          "values": [
+            [
+              "Share of revenue assigned to a customer"
+            ]
+          ]
+        },
+        {
+          "range": "F28",
+          "values": [
+            [
+              "No customer"
+            ]
+          ]
+        },
+        {
+          "range": "G28",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!G2:G, \"No customer\")"
+            ]
+          ]
+        },
+        {
+          "range": "H28",
+          "values": [
+            [
+              "=SUMIF('MRR rows'!G2:G, \"No customer\", 'MRR rows'!D2:D)"
+            ]
+          ]
+        },
+        {
+          "range": "I28",
+          "values": [
+            [
+              "Assign a customer in the source, then refresh"
+            ]
+          ]
+        },
+        {
+          "range": "F29",
+          "values": [
+            [
+              "No billing cycle"
+            ]
+          ]
+        },
+        {
+          "range": "G29",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!G2:G, \"No billing cycle\")"
+            ]
+          ]
+        },
+        {
+          "range": "H29",
+          "values": [
+            [
+              "=SUMIF('MRR rows'!G2:G, \"No billing cycle\", 'MRR rows'!D2:D)"
+            ]
+          ]
+        },
+        {
+          "range": "I29",
+          "values": [
+            [
+              "=IFERROR(\"Add a rule or override for: \" & TEXTJOIN(\", \", TRUE, UNIQUE(FILTER('MRR rows'!K2:K, 'MRR rows'!G2:G = \"No billing cycle\"))), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "F30",
+          "values": [
+            [
+              "One-time (left out)"
+            ]
+          ]
+        },
+        {
+          "range": "G30",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!G2:G, \"One-time\")"
+            ]
+          ]
+        },
+        {
+          "range": "H30",
+          "values": [
+            [
+              "=SUMIF('MRR rows'!G2:G, \"One-time\", 'MRR rows'!D2:D)"
+            ]
+          ]
+        },
+        {
+          "range": "I30",
+          "values": [
+            [
+              "Matched a rule marked Recurring = No"
+            ]
+          ]
+        },
+        {
+          "range": "F31",
+          "values": [
+            [
+              "Excluded (left out)"
+            ]
+          ]
+        },
+        {
+          "range": "G31",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!G2:G, \"Excluded\")"
+            ]
+          ]
+        },
+        {
+          "range": "H31",
+          "values": [
+            [
+              "=SUMIF('MRR rows'!G2:G, \"Excluded\", 'MRR rows'!D2:D)"
+            ]
+          ]
+        },
+        {
+          "range": "I31",
+          "values": [
+            [
+              "Excluded on MRR settings"
+            ]
+          ]
+        },
+        {
+          "range": "F32",
+          "values": [
+            [
+              "Payouts (left out)"
+            ]
+          ]
+        },
+        {
+          "range": "G32",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!G2:G, \"Payout\")"
+            ]
+          ]
+        },
+        {
+          "range": "H32",
+          "values": [
+            [
+              "=SUMIF('MRR rows'!G2:G, \"Payout\", 'MRR rows'!D2:D)"
+            ]
+          ]
+        },
+        {
+          "range": "I32",
+          "values": [
+            [
+              "Processor payouts bundle many customers' payments"
+            ]
+          ]
+        },
+        {
+          "range": "F33",
+          "values": [
+            [
+              "Counted from another source"
+            ]
+          ]
+        },
+        {
+          "range": "G33",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!G2:G, \"Counted from*\")"
+            ]
+          ]
+        },
+        {
+          "range": "H33",
+          "values": [
+            [
+              "=SUMIF('MRR rows'!G2:G, \"Counted from*\", 'MRR rows'!D2:D)"
+            ]
+          ]
+        },
+        {
+          "range": "I33",
+          "values": [
+            [
+              "Not double counted: these customers come from the Waterfall or your table"
+            ]
+          ]
+        },
+        {
+          "range": "F34",
+          "values": [
+            [
+              "Adjusted schedule months"
+            ]
+          ]
+        },
+        {
+          "range": "G34",
+          "values": [
+            [
+              "=COUNTIF('MRR rows'!C2:C, \"*(adjusted:*\")"
+            ]
+          ]
+        },
+        {
+          "range": "I34",
+          "values": [
+            [
+              "Rule C9: a stopped schedule or a reversal month uses the run-rate; the booked amount is in the description"
+            ]
+          ]
+        },
+        {
+          "range": "F35",
+          "values": [
+            [
+              "Rollforward minus Waterfall"
+            ]
+          ]
+        },
+        {
+          "range": "H35",
+          "values": [
+            [
+              "=IF('MRR sources'!$B$7 = \"\", \"\", SUM('MRR inputs'!AL2:AL) - SUMIFS('MRR rows'!D2:D, 'MRR rows'!L2:L, \"Waterfall\"))"
+            ]
+          ]
+        },
+        {
+          "range": "I35",
+          "values": [
+            [
+              "Zero when both tabs cover the same dates; rule C9 adjustments also show here"
+            ]
+          ]
+        },
+        {
+          "range": "F36",
+          "values": [
+            [
+              "Data quality"
+            ]
+          ]
+        },
+        {
+          "range": "G36",
+          "values": [
+            [
+              "=IF('MRR sources'!$B$21 = \"\", \"OK\", 'MRR sources'!$B$21)"
+            ]
+          ]
+        },
+        {
+          "range": "A40:R40",
+          "values": [
+            [
+              "Month",
+              "MRR",
+              "ARR",
+              "Customers",
+              "ARPA",
+              "New",
+              "Expansion",
+              "Reactivation",
+              "Contraction",
+              "Churn",
+              "Net new",
+              "Change",
+              "Churned customers",
+              "Logo churn",
+              "Gross MRR churn",
+              "Net MRR churn",
+              "Quick ratio",
+              "Ties"
+            ]
+          ]
+        },
+        {
+          "range": "A41",
+          "values": [
+            [
+              "=IF('MRR grid'!A2 = \"\", \"\", LET(\n    nr, COUNTA('MRR grid'!A2:A), nc, COUNTA('MRR grid'!B1:1),\n    mons, ARRAY_CONSTRAIN('MRR grid'!B1:ZZ1, 1, nc),\n    G, ARRAY_CONSTRAIN('MRR grid'!B2:ZZ, nr, nc),\n    movTbl, ARRAY_CONSTRAIN('MRR movements'!B2:ZZ, nr, nc),\n    ks, SEQUENCE(nc),\n    col, LAMBDA(k, INDEX(G, 0, k)),\n    pcol, LAMBDA(k, IF(k > 1, INDEX(G, 0, MAX(1, k - 1)), MAP(INDEX(G, 0, 1), LAMBDA(x, 0)))),\n    mrr, MAP(ks, LAMBDA(k, SUM(col(k)))),\n    pmrr, MAP(ks, LAMBDA(k, SUM(pcol(k)))),\n    cust, MAP(ks, LAMBDA(k, SUMPRODUCT(--(col(k) >= 0.005)))),\n    pcust, MAP(ks, LAMBDA(k, SUMPRODUCT(--(pcol(k) >= 0.005)))),\n    mv, LAMBDA(movType, MAP(ks, LAMBDA(k, SUMPRODUCT((INDEX(movTbl, 0, k) = movType) * (col(k) - pcol(k)))))),\n    nw, mv(\"new\"), ex, mv(\"expansion\"), re, mv(\"reactivation\"), co, mv(\"contraction\"), ch, mv(\"churn\"),\n    churned, MAP(ks, LAMBDA(k, SUMPRODUCT(--(INDEX(movTbl, 0, k) = \"churn\")))),\n    net, MAP(nw, ex, re, co, ch, LAMBDA(a, b, c, d, e, a + b + c + d + e)),\n    arr, MAP(mrr, LAMBDA(m, m * 12)),\n    arpa, MAP(mrr, cust, LAMBDA(m, c, IF(c = 0, \"\", m / c))),\n    mom, MAP(mrr, pmrr, LAMBDA(m, p, IF(p = 0, \"\", m / p - 1))),\n    logo, MAP(churned, pcust, LAMBDA(c, p, IF(p = 0, \"\", c / p))),\n    gross, MAP(co, ch, pmrr, LAMBDA(c, h, p, IF(p = 0, \"\", -(c + h) / p))),\n    netc, MAP(co, ch, ex, pmrr, LAMBDA(c, h, x, p, IF(p = 0, \"\", -(c + h + x) / p))),\n    quick, MAP(nw, ex, re, co, ch, LAMBDA(a, b, c, d, e, IF(d + e = 0, \"\", (a + b + c) / -(d + e)))),\n    ties, MAP(mrr, pmrr, net, LAMBDA(m, p, n, ROUND(p + n - m, 2) = 0)),\n    HSTACK(TRANSPOSE(mons), mrr, arr, cust, arpa, nw, ex, re, co, ch, net, mom, churned, logo, gross, netc, quick, ties)))"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1",
+          "fontSize": 16,
+          "bold": true
+        },
+        {
+          "range": "A2",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A5",
+          "numberFormat": "mmm yyyy",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "B4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "B5",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\"",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "C4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "C5",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\"",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "D4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "D5",
+          "numberFormat": "0",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "E4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "E5",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\"",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "F4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "F5",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\"",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "G4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "G5",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "A7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A8",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "B7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "B8",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "C7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "C8",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "D7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "D8",
+          "numberFormat": "0.0",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "E7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "E8",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "F7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "F8",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "G7",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "G8",
+          "numberFormat": "0.0%",
+          "fontSize": 14,
+          "bold": true
+        },
+        {
+          "range": "A11:D11",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "B12:B18",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\""
+        },
+        {
+          "range": "F11:H11",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "G12:G21",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H12:H21",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "J11:N11",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "L12:L20",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "M12:M20",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "N12:N20",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "A23:D23",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "C24:C35",
+          "numberFormat": "mmm d, yyyy"
+        },
+        {
+          "range": "D24:D35",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "F23:I23",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "H25",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H27",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H28",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H29",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "H30",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "A40:R40",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "A41:A",
+          "numberFormat": "mmm yyyy"
+        },
+        {
+          "range": "B41:C",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\""
+        },
+        {
+          "range": "E41:E",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        },
+        {
+          "range": "F41:K",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\""
+        },
+        {
+          "range": "L41:L",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "N41:P",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "Q41:Q",
+          "numberFormat": "0.0"
+        },
+        {
+          "range": "A3",
+          "bold": true,
+          "fontSize": 12
+        },
+        {
+          "range": "G27",
+          "numberFormat": "0.0%"
+        },
+        {
+          "range": "H24:H36",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\""
+        }
+      ],
+      "conditionalFormats": [
+        {
+          "range": "A3:R3",
+          "formula": "=LEFT($A$3, 12) = \"Check failed\"",
+          "background": "#fee2e2",
+          "fontColor": "#991b1b"
+        },
+        {
+          "range": "A3:R3",
+          "formula": "=$A$3 = \"All checks passed\"",
+          "background": "#dcfce7",
+          "fontColor": "#166534"
+        },
+        {
+          "range": "D18",
+          "textContains": "Does not tie",
+          "background": "#fee2e2"
+        },
+        {
+          "range": "D18",
+          "textContains": "Check failed",
+          "background": "#fee2e2"
+        },
+        {
+          "range": "D18",
+          "textContains": "Ties to the movements",
+          "background": "#dcfce7"
+        },
+        {
+          "range": "G24:G36",
+          "textContains": "Test or incomplete",
+          "background": "#fee2e2"
+        },
+        {
+          "range": "H28:H33",
+          "formula": "=AND(ISNUMBER(H28), H28 <> 0)",
+          "background": "#fef3c7"
+        }
+      ],
+      "columnWidths": [
+        {
+          "columns": "A:A",
+          "width": 210
+        },
+        {
+          "columns": "B:S",
+          "width": 120
+        },
+        {
+          "columns": "D:D",
+          "width": 220
+        },
+        {
+          "columns": "I:I",
+          "width": 320
+        }
+      ],
+      "tabColor": "#2f6bff",
+      "protect": "warning",
+      "columnCount": 20
+    },
+    {
+      "name": "MRR dashboard",
+      "createOnly": false,
+      "writes": [
+        {
+          "range": "A1",
+          "values": [
+            [
+              "{{ENTITY}}: MRR dashboard"
+            ]
+          ]
+        },
+        {
+          "range": "A2",
+          "values": [
+            [
+              "=\"Live: updates when its source tabs change (\" & 'MRR sources'!$B$22 & \"). Latest month: \" & TEXT('MRR report'!A5, \"mmmm yyyy\") & \". Management metric, not GAAP.\""
+            ]
+          ]
+        },
+        {
+          "range": "A3",
+          "values": [
+            [
+              "='MRR report'!A3"
+            ]
+          ]
+        },
+        {
+          "range": "A4:B4",
+          "values": [
+            [
+              "MRR"
+            ]
+          ]
+        },
+        {
+          "range": "A5:B5",
+          "values": [
+            [
+              "='MRR report'!B5"
+            ]
+          ]
+        },
+        {
+          "range": "C4:D4",
+          "values": [
+            [
+              "ARR"
+            ]
+          ]
+        },
+        {
+          "range": "C5:D5",
+          "values": [
+            [
+              "='MRR report'!C5"
+            ]
+          ]
+        },
+        {
+          "range": "E4:F4",
+          "values": [
+            [
+              "Customers"
+            ]
+          ]
+        },
+        {
+          "range": "E5:F5",
+          "values": [
+            [
+              "='MRR report'!D5"
+            ]
+          ]
+        },
+        {
+          "range": "G4:H4",
+          "values": [
+            [
+              "ARPA"
+            ]
+          ]
+        },
+        {
+          "range": "G5:H5",
+          "values": [
+            [
+              "='MRR report'!E5"
+            ]
+          ]
+        },
+        {
+          "range": "I4:J4",
+          "values": [
+            [
+              "Net new MRR"
+            ]
+          ]
+        },
+        {
+          "range": "I5:J5",
+          "values": [
+            [
+              "='MRR report'!F5"
+            ]
+          ]
+        },
+        {
+          "range": "K4:L4",
+          "values": [
+            [
+              "vs prior month"
+            ]
+          ]
+        },
+        {
+          "range": "K5:L5",
+          "values": [
+            [
+              "='MRR report'!G5"
+            ]
+          ]
+        },
+        {
+          "range": "M4:N4",
+          "values": [
+            [
+              "Logo churn"
+            ]
+          ]
+        },
+        {
+          "range": "M5:N5",
+          "values": [
+            [
+              "='MRR report'!A8"
+            ]
+          ]
+        },
+        {
+          "range": "O4:P4",
+          "values": [
+            [
+              "Net revenue retention"
+            ]
+          ]
+        },
+        {
+          "range": "O5:P5",
+          "values": [
+            [
+              "='MRR report'!E8"
+            ]
+          ]
+        },
+        {
+          "range": "AD1:AM1",
+          "values": [
+            [
+              "Month",
+              "MRR",
+              "ARR",
+              "Customers",
+              "ARPA",
+              "New",
+              "Expansion",
+              "Reactivation",
+              "Contraction",
+              "Churn"
+            ]
+          ]
+        },
+        {
+          "range": "AD2",
+          "values": [
+            [
+              "=IFERROR(LET(\n    t, FILTER('MRR report'!A41:J, 'MRR report'!A41:A <> \"\"),\n    n, ROWS(t),\n    CHOOSEROWS(t, SEQUENCE(MIN(12, n), 1, MAX(1, n - 11)))), \"\")"
+            ]
+          ]
+        },
+        {
+          "range": "A6",
+          "values": [
+            [
+              "MRR, last 12 months"
+            ]
+          ]
+        },
+        {
+          "range": "C6:P6",
+          "values": [
+            [
+              "=IFERROR(SPARKLINE(FILTER(AE2:AE13, AE2:AE13 <> \"\"), {\"charttype\", \"column\"; \"color\", \"#2f6bff\"; \"highcolor\", \"#1e40af\"}), \"\")"
+            ]
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "range": "A1",
+          "fontSize": 16,
+          "bold": true
+        },
+        {
+          "range": "A2",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A4:B4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A5:B5",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\"",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "C4:D4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "C5:D5",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\"",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "E4:F4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "E5:F5",
+          "numberFormat": "0",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "G4:H4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "G5:H5",
+          "numberFormat": "\"$\"#,##0.00;[Red]-\"$\"#,##0.00;\"-\"",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "I4:J4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "I5:J5",
+          "numberFormat": "\"$\"#,##0;[Red]-\"$\"#,##0;\"-\"",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "K4:L4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "K5:L5",
+          "numberFormat": "0.0%",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "M4:N4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "M5:N5",
+          "numberFormat": "0.0%",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "O4:P4",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "O5:P5",
+          "numberFormat": "0.0%",
+          "fontSize": 20,
+          "bold": true
+        },
+        {
+          "range": "AD1:AM1",
+          "bold": true,
+          "background": "#eef2ff"
+        },
+        {
+          "range": "AD2:AD13",
+          "numberFormat": "mmm yy"
+        },
+        {
+          "range": "A6",
+          "fontColor": "#64748b"
+        },
+        {
+          "range": "A3",
+          "bold": true,
+          "fontSize": 12
+        }
+      ],
+      "merges": [
+        "A4:B4",
+        "A5:B5",
+        "C4:D4",
+        "C5:D5",
+        "E4:F4",
+        "E5:F5",
+        "G4:H4",
+        "G5:H5",
+        "I4:J4",
+        "I5:J5",
+        "K4:L4",
+        "K5:L5",
+        "M4:N4",
+        "M5:N5",
+        "O4:P4",
+        "O5:P5",
+        "C6:P6"
+      ],
+      "columnWidths": [
+        {
+          "columns": "A:P",
+          "width": 90
+        }
+      ],
+      "rowHeights": [
+        {
+          "rows": "6:6",
+          "height": 60
+        }
+      ],
+      "charts": [
+        {
+          "ranges": [
+            "AD1:AE13"
+          ],
+          "options": {
+            "title": "MRR by month",
+            "legend": {
+              "position": "none"
+            },
+            "colors": [
+              "#2f6bff"
+            ],
+            "width": 620,
+            "height": 320
+          },
+          "type": "COLUMN",
+          "headerRows": 1,
+          "anchor": "A8"
+        },
+        {
+          "ranges": [
+            "AD1:AD13",
+            "AI1:AM13"
+          ],
+          "options": {
+            "title": "MRR movements by month",
+            "isStacked": true,
+            "colors": [
+              "#2f6bff",
+              "#14b8a6",
+              "#9db8ff",
+              "#f59e0b",
+              "#dc2626"
+            ],
+            "width": 620,
+            "height": 320
+          },
+          "type": "COLUMN",
+          "headerRows": 1,
+          "anchor": "I8"
+        },
+        {
+          "ranges": [
+            "'MRR report'!J11:J20",
+            "'MRR report'!L11:L20"
+          ],
+          "options": {
+            "title": "MRR by plan",
+            "pieHole": 0.5,
+            "width": 620,
+            "height": 320
+          },
+          "type": "PIE",
+          "headerRows": 1,
+          "anchor": "A25"
+        },
+        {
+          "ranges": [
+            "'MRR report'!F11:G21"
+          ],
+          "options": {
+            "title": "Top customers by MRR",
+            "legend": {
+              "position": "none"
+            },
+            "colors": [
+              "#2f6bff"
+            ],
+            "width": 620,
+            "height": 320
+          },
+          "type": "BAR",
+          "headerRows": 1,
+          "anchor": "I25"
+        }
+      ],
+      "hideGridlines": true,
+      "hiddenColumns": "AD:AM",
+      "conditionalFormats": [
+        {
+          "range": "A3:P3",
+          "formula": "=LEFT($A$3, 12) = \"Check failed\"",
+          "background": "#fee2e2",
+          "fontColor": "#991b1b"
+        },
+        {
+          "range": "A3:P3",
+          "formula": "=$A$3 = \"All checks passed\"",
+          "background": "#dcfce7",
+          "fontColor": "#166534"
+        }
+      ],
+      "tabColor": "#2f6bff",
+      "protect": "warning",
+      "columnCount": 40
+    }
+  ],
+  "displayOrder": [
+    "MRR dashboard",
+    "MRR report",
+    "MRR settings",
+    "MRR sources",
+    "MRR rows",
+    "MRR grid",
+    "MRR movements",
+    "MRR customers",
+    "MRR inputs"
+  ],
+  "retiredTabs": [
+    "MRR lines"
+  ]
+}
