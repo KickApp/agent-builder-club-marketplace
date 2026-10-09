@@ -131,37 +131,37 @@ schema, never from memory.
 
 ## Google Sheets add-on pull (Google Sheets mode)
 
-Reports the released add-on can pull, read from its report list in October 2026: Profit
-& Loss, Balance Sheet, Trial Balance, Cash Flow Statement, General Ledger, and Expenses by
-Vendor. Revenue Rollforward and Revenue Waterfall are built but not released yet. Until
-they ship, the General Ledger is the Kick source in a spreadsheet; never ask a user to
-pull a Waterfall or Rollforward or blame their plan for a missing one. If a spreadsheet
-already holds those tabs, read them with the rules below. Check the menu in the user's
-spreadsheet rather than this list when they differ, and add a method note.
+Reports the add-on can pull, read from its report list in October 2026: Profit & Loss,
+Balance Sheet, Trial Balance, Cash Flow Statement, General Ledger, Expenses by Vendor,
+Revenue Rollforward, and Revenue Waterfall. The last two show only on Advanced and
+Enterprise workspaces. On a lower plan, say in one line that the Waterfall needs
+Advanced and use the ledger; don't ask again. Check the menu in the user's spreadsheet
+rather than this list when they differ, and add a method note.
 
 How to recognize a Kick tab:
 
 - Name: `<Entity> - <Report>`. A refresh clears and rewrites the same tab, so formulas
   in other tabs that read it by header keep working.
 - Header block in column B: row 2 the entity, row 3 the report title, row 4 the date
-  label ("January 2026", "January 1, 2026 - September 30, 2026", "All time", "Before …",
-  "After …"), then a blank row. The basis is in the footer row, not the header:
+  label ("January 2026", "January - September 2026", "January 5 - March 20, 2026",
+  "November 2025 - February 2026", "All time", "Before …", "After …"), then a blank row. The basis is in the footer row, not the header:
   `Kick.co | Accrual Basis | <pull time>` or `Kick.co | Cash Basis | <pull time>`.
 - General Ledger: a table whose header row has `Date` in column B, then Source,
   Reference, Description, Counterparty, Class, Split, Amount, Balance. A multi-entity
   pull adds an Entity column after Counterparty. Each account is a block: the label
   (`400000 - Revenue`) on its own row, a Beginning Balance row, its lines, then an
   Ending Balance row. Dates are text like `Jan 8, 2026`.
-- Revenue Waterfall (layout from the unreleased build; confirm it against the tab): a
-  period header row with month labels ("Jan 2026") and, with the start-month summary,
-  "Booked total", "Recognized as of …", "Remaining as of …" columns. Rows are indented
-  two spaces per level: policy, then customer, then schedule (By schedule), or customer,
-  then policy, then schedule (By customer). "No counterparty" marks revenue with no
-  customer. A Waterfall grouped by start month has "Start month" in column B and no
-  customers; it can't feed MRR.
-- Revenue Rollforward (same caveat): the period label spans five merged columns over
-  Beginning, Additions, Recognized, Adjustments, Ending; `Schedule start date` and
-  `Schedule end date` columns sit before the periods, as `MM/DD/YYYY`.
+- Revenue Waterfall: a period header row with month labels ("Jan 2026") and, with the
+  start-month summary, "Booked total", "Recognized as of …", "Remaining as of …"
+  columns. Rows are indented two spaces per level: policy, then customer, then schedule
+  (By schedule), or customer, then policy, then schedule (By customer). "No counterparty"
+  marks revenue with no customer, and the last row is "Total". A Waterfall grouped by
+  start month has "Start month" in column B and no customers; it can't feed MRR.
+- Revenue Rollforward: the period label spans five merged columns over Beginning,
+  Additions, Recognized, Adjustments, Ending; `Schedule start date` and `Schedule end
+  date` columns sit before the periods, as `MM/DD/YYYY`, when any schedule has a term.
+- Both revenue reports are accrual only: the footer always says Accrual Basis, and any
+  footnotes sit in column B between the last row and the footer.
 - The add-on writes with `setValues`, so period labels and dates can arrive as real
   dates rather than text. Read both.
 - Auto-refresh cadences include daily, weekly, and month-end.
