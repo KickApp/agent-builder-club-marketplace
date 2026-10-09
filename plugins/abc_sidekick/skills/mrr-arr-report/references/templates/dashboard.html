@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MRR dashboard</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --line: rgba(15, 23, 42, 0.08); --ink: #0f172a;
+    --ink2: #334155; --mut: #64748b; --accent: #2f6bff; --accent2: #9db8ff;
+    --pos: #16a34a; --neg: #dc2626; --warn: #b45309; --tint: #eef3ff;
+    --c1: #2f6bff; --c2: #14b8a6; --c3: #f59e0b; --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 28px 24px 40px; }
+  header h1 { margin: 0; font-size: 22px; font-weight: 650; }
+  header .sub { color: var(--mut); margin-top: 4px; }
+  header .source { margin-top: 10px; padding: 8px 12px; background: var(--tint);
+    border-radius: 8px; color: var(--ink2); font-size: 13px; }
+  header .quality { margin-top: 10px; padding: 10px 12px; background: #fdecec; border: 1px solid #f3b4b4;
+    border-radius: 8px; color: #8a1c1c; font-size: 13px; }
+  header .quality strong { display: block; margin-bottom: 2px; }
+  .grid { display: grid; gap: 16px; margin-top: 16px; }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+  .g2 { grid-template-columns: 3fr 2fr; }
+  .g2e { grid-template-columns: 1fr 1fr; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 18px; }
+  .card h2 { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: var(--ink2); }
+  .card .note { color: var(--mut); font-size: 12px; margin-top: 8px; }
+  .kpi .label { color: var(--mut); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .kpi .value { font-size: 28px; font-weight: 650; margin-top: 4px; }
+  .kpi .delta { font-size: 13px; margin-top: 2px; }
+  .mini .value { font-size: 20px; }
+  .pos { color: var(--pos); } .neg { color: var(--neg); } .mut { color: var(--mut); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--mut); font-weight: 500; padding: 6px 8px;
+    border-bottom: 1px solid var(--line); }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar { height: 6px; background: var(--accent2); border-radius: 3px; }
+  .heat td.num { text-align: center; }
+  .gaps li { margin: 6px 0; } .gaps { margin: 0; padding-left: 18px; }
+  .gaps .amt { font-weight: 600; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink2); margin-top: 6px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px;
+    border-radius: 2px; margin-right: 6px; background: var(--sw); vertical-align: -1px; }
+  footer { margin-top: 20px; color: var(--mut); font-size: 12px; }
+  svg text { font-family: inherit; }
+  @media (max-width: 900px) { .g4, .g5, .g2, .g2e { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1 id="title"></h1>
+    <div class="sub" id="subtitle"></div>
+    <div class="source" id="source"></div>
+    <div class="quality" id="quality" hidden></div>
+  </header>
+
+  <section class="grid g4" id="hero"></section>
+  <section class="grid g5" id="strip"></section>
+
+  <section class="grid g2">
+    <div class="card"><h2>MRR by month</h2><div id="trend"></div></div>
+    <div class="card"><h2 id="bridge-title"></h2><div id="bridge"></div></div>
+  </section>
+
+  <section class="grid g2">
+    <div class="card"><h2>MRR movements by month</h2><div id="movements"></div>
+      <div class="legend" id="movements-legend"></div></div>
+    <div class="card"><h2>MRR by plan</h2><div id="classes"></div></div>
+  </section>
+
+  <section class="grid g2e">
+    <div class="card"><h2 id="customers-title">Top customers</h2><div id="customers"></div></div>
+    <div class="card"><h2>Revenue retention by start cohort</h2><div id="cohorts"></div></div>
+  </section>
+
+  <section class="grid g2e">
+    <div class="card"><h2>Up for renewal</h2><div id="renewals"></div></div>
+    <div class="card"><h2>What's missing from this data</h2><ul class="gaps" id="gaps"></ul></div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<!-- scripts/build_dashboard.py replaces the placeholder below with the payload. Never type figures here. -->
+<script id="payload" type="application/json">__MRR_DASHBOARD_PAYLOAD__</script>
+
+<script>
+(function () {
+  var d = JSON.parse(document.getElementById("payload").textContent);
+  var NS = "http://www.w3.org/2000/svg";
+  var SYM = d.symbol || "$";
+
+  function trimZeros(t) { return t.indexOf(".") >= 0 ? t.replace(/\.?0+$/, "") : t; }
+  function money(n) {
+    var s = SYM + Math.abs(Math.round(n)).toLocaleString("en-US");
+    return n < 0 ? "-" + s : s;
+  }
+  function short(n) {
+    var a = Math.abs(n), s;
+    if (a >= 1000000) s = SYM + trimZeros((a / 1000000).toFixed(2)) + "M";
+    else if (a >= 1000) s = SYM + trimZeros((a / 1000).toFixed(a >= 10000 ? 1 : 2)) + "k";
+    else s = SYM + Math.round(a);
+    return n < 0 ? "-" + s : s;
+  }
+  function niceCeil(v) {
+    if (!(v > 0)) return 0;
+    var p = Math.pow(10, Math.floor(Math.log10(v))), steps = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < steps.length; i++) { if (steps[i] * p >= v) return steps[i] * p; }
+    return 10 * p;
+  }
+  function el(tag, attrs, text) {
+    var e = document.createElementNS(NS, tag);
+    Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function svg(w, h) { return el("svg", { viewBox: "0 0 " + w + " " + h, width: "100%" }); }
+  function byId(id) { return document.getElementById(id); }
+  function setText(id, t) { byId(id).textContent = t; }
+  function html(id, s) { byId(id).innerHTML = s; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]; }); }
+  function drop(id) {
+    var node = byId(id); if (!node) return;
+    var card = node.closest(".card"); if (!card) return;
+    var sec = card.parentNode; sec.removeChild(card);
+    var left = sec.querySelectorAll(".card").length;
+    if (left === 0) sec.parentNode.removeChild(sec);
+    else if (left === 1) sec.style.gridTemplateColumns = "1fr";
+  }
+  function tiles(id, list, extra) {
+    var node = byId(id);
+    if (!list || !list.length) { node.parentNode.removeChild(node); return; }
+    node.style.gridTemplateColumns = "repeat(auto-fit, minmax(170px, 1fr))";
+    html(id, list.map(function (k) {
+      var v = k.fmt === "money" ? money(k.value) : esc(k.value);
+      return '<div class="card kpi' + extra + '"><div class="label">' + esc(k.label) +
+        '</div><div class="value">' + v + '</div><div class="delta ' + esc(k.tone) + '">' +
+        esc(k.delta) + "</div></div>";
+    }).join(""));
+  }
+
+  document.title = d.entity + " · MRR dashboard · " + d.period;
+  setText("title", d.entity + ": MRR and ARR");
+  setText("subtitle", d.period + " · generated " + d.generated + " · " + d.currency);
+  setText("source", d.source);
+  if (d.data_quality) {
+    html("quality", "<strong>" + esc(d.data_quality.title) + "</strong>" + esc(d.data_quality.text));
+    byId("quality").hidden = false;
+  }
+  setText("footer", "Every figure comes from " + (d.data_source || "Kick") + ", read on " + d.generated +
+    ". Snapshot, not live. Definitions: ARR is the month's MRR x 12. Logo churn is churned customers / opening customers. Quick ratio is (new + expansion + reactivation) / (contraction + churn).");
+
+  tiles("hero", d.hero, "");
+  tiles("strip", d.strip, " mini");
+
+  (function trend() {
+    if (!d.trend || !d.trend.mrr || !d.trend.mrr.length) { drop("trend"); return; }
+    var W = 640, H = 240, L = 50, B = 28, T = 20, vals = d.trend.mrr;
+    var max = niceCeil(Math.max.apply(null, vals.concat([1]))), min = 0;
+    var s = svg(W, H), bw = (W - L - 10) / vals.length;
+    for (var g = 0; g <= 4; g++) {
+      var gv = min + (max - min) * g / 4, gy = H - B - (H - B - T) * g / 4;
+      s.appendChild(el("line", { x1: L, x2: W - 10, y1: gy, y2: gy, stroke: "rgba(15,23,42,0.08)" }));
+      s.appendChild(el("text", { x: L - 8, y: gy + 4, "text-anchor": "end", "font-size": 11, fill: "#64748b" }, short(gv)));
+    }
+    vals.forEach(function (v, i) {
+      var h = (H - B - T) * (v - min) / (max - min), x = L + i * bw + bw * 0.18, w = bw * 0.64;
+      var last = i === vals.length - 1;
+      s.appendChild(el("rect", { x: x, y: H - B - h, width: w, height: h, rx: 4,
+        fill: last ? "#2f6bff" : "#9db8ff" }));
+      s.appendChild(el("text", { x: x + w / 2, y: H - B - h - 6, "text-anchor": "middle", "font-size": 11,
+        fill: "#334155", "font-weight": last ? 600 : 400 }, money(v)));
+      s.appendChild(el("text", { x: x + w / 2, y: H - 8, "text-anchor": "middle", "font-size": 12, fill: "#64748b" },
+        d.trend.months[i]));
+    });
+    byId("trend").appendChild(s);
+  })();
+
+  (function bridge() {
+    if (!d.bridge || !d.bridge.steps) { drop("bridge"); return; }
+    setText("bridge-title", d.bridge.title);
+    var steps = d.bridge.steps, W = 440, H = 260, B = 56, T = 22, L = 8, peak = 0, floor = Infinity, acc = 0;
+    steps.forEach(function (st) { acc = st.kind === "total" ? st.value : acc + st.value;
+      peak = Math.max(peak, acc); floor = Math.min(floor, acc); });
+    var lo = 0;
+    if (floor > 0) {
+      var mag = Math.pow(10, Math.max(0, Math.floor(Math.log10(floor)) - 1));
+      lo = Math.floor(floor * 0.9 / mag) * mag;
+    }
+    var hi = peak + Math.max((peak - lo) * 0.08, 1);
+    var s = svg(W, H), bw = (W - L * 2) / steps.length, run = 0;
+    function y(v) { return H - B - (H - B - T) * (v - lo) / (hi - lo); }
+    steps.forEach(function (st, i) {
+      var x = L + i * bw + bw * 0.15, w = bw * 0.7, top, bot, color;
+      if (st.kind === "total") { top = y(st.value); bot = y(lo); run = st.value; color = "#2f6bff"; }
+      else { var a = run, b = run + st.value; top = y(Math.max(a, b)); bot = y(Math.min(a, b));
+        run = b; color = st.kind === "up" ? "#16a34a" : "#dc2626"; }
+      s.appendChild(el("rect", { x: x, y: top, width: w, height: Math.max(bot - top, 1.5), rx: 3, fill: color }));
+      var lbl = st.kind === "total" ? money(st.value) : (st.value > 0 ? "+" : "") + money(st.value);
+      s.appendChild(el("text", { x: x + w / 2, y: top - 6, "text-anchor": "middle", "font-size": 10.5, fill: "#334155" }, lbl));
+      s.appendChild(el("text", { x: x + w / 2, y: i % 2 ? H - 26 : H - 40, "text-anchor": "middle", "font-size": 11, fill: "#64748b" }, st.label));
+    });
+    s.appendChild(el("text", { x: W / 2, y: H - 4, "text-anchor": "middle", "font-size": 11, fill: "#64748b" },
+      (lo > 0 ? "Axis starts at " + short(lo) + ". " : "") + "Opening + movements = closing."));
+    byId("bridge").appendChild(s);
+  })();
+
+  (function movements() {
+    var m = d.movements;
+    if (!m || !m.months || m.months.length < 2) { drop("movements"); return; }
+    var W = 640, H = 240, L = 50, T = 14, B = 26;
+    var pos = m.months.map(function (_, i) { return m.series.reduce(function (a, s) { return a + Math.max(s.values[i], 0); }, 0); });
+    var neg = m.months.map(function (_, i) { return m.series.reduce(function (a, s) { return a + Math.min(s.values[i], 0); }, 0); });
+    var top = Math.max.apply(null, pos.concat([0])), bottom = Math.min.apply(null, neg.concat([0]));
+    var step = niceCeil(Math.max(top - bottom, 1) / 5);
+    var hi = Math.ceil(top / step) * step, lo = Math.floor(bottom / step) * step;
+    if (hi - top < step * 0.2) hi += step;
+    var s = svg(W, H), bw = (W - L - 10) / m.months.length;
+    function y(v) { return T + (H - B - T) * (hi - v) / (hi - lo); }
+    for (var gv = lo; gv <= hi + step / 1000; gv += step) {
+      s.appendChild(el("line", { x1: L, x2: W - 10, y1: y(gv), y2: y(gv),
+        stroke: Math.abs(gv) < step / 1000 ? "rgba(15,23,42,0.35)" : "rgba(15,23,42,0.08)" }));
+      s.appendChild(el("text", { x: L - 8, y: y(gv) + 4, "text-anchor": "end", "font-size": 11, fill: "#64748b" }, short(gv)));
+    }
+    m.months.forEach(function (mo, i) {
+      var x = L + i * bw + bw * 0.22, w = bw * 0.56, up = 0, down = 0;
+      m.series.forEach(function (se) {
+        var v = se.values[i]; if (!v) return;
+        var a = v > 0 ? up : down, b = a + v;
+        s.appendChild(el("rect", { x: x, y: y(Math.max(a, b)), width: w, height: Math.abs(y(a) - y(b)), fill: se.color }));
+        if (v > 0) up = b; else down = b;
+      });
+      var net = pos[i] + neg[i];
+      s.appendChild(el("text", { x: x + w / 2, y: y(pos[i]) - 6, "text-anchor": "middle", "font-size": 11,
+        fill: "#334155", "font-weight": 600 }, "net " + (net > 0 ? "+" : "") + short(net)));
+      s.appendChild(el("text", { x: x + w / 2, y: H - 6, "text-anchor": "middle", "font-size": 12, fill: "#64748b" }, mo));
+    });
+    byId("movements").appendChild(s);
+    html("movements-legend", m.series.map(function (se) {
+      return '<span style="--sw:' + esc(se.color) + '">' + esc(se.name) + "</span>"; }).join(""));
+    if (m.note) {
+      var n = document.createElement("div"); n.className = "note"; n.textContent = m.note;
+      byId("movements-legend").parentNode.appendChild(n);
+    }
+  })();
+
+  (function classes() {
+    var c = d.classes;
+    if (!c || !c.length) { drop("classes"); return; }
+    var total = c.reduce(function (a, r) { return a + r.mrr; }, 0);
+    var W = 200, H = 200, R = 80, r = 50, cx = 100, cy = 100, a0 = -Math.PI / 2, s = svg(W, H);
+    if (c.length === 1) {
+      s.appendChild(el("circle", { cx: cx, cy: cy, r: (R + r) / 2, fill: "none", stroke: c[0].color, "stroke-width": R - r }));
+    } else {
+      c.forEach(function (row) {
+        var a1 = a0 + 2 * Math.PI * row.mrr / total, large = a1 - a0 > Math.PI ? 1 : 0;
+        var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0), "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+          "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1), "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+        s.appendChild(el("path", { d: p, fill: row.color }));
+        a0 = a1;
+      });
+    }
+    s.appendChild(el("text", { x: cx, y: cy - 2, "text-anchor": "middle", "font-size": 16, "font-weight": 650, fill: "#0f172a" }, money(total)));
+    s.appendChild(el("text", { x: cx, y: cy + 16, "text-anchor": "middle", "font-size": 11, fill: "#64748b" }, "MRR"));
+    var wrap = byId("classes");
+    wrap.style.display = "grid"; wrap.style.gridTemplateColumns = "180px 1fr"; wrap.style.alignItems = "center"; wrap.style.gap = "12px";
+    var left = document.createElement("div"); left.appendChild(s); wrap.appendChild(left);
+    var right = document.createElement("div");
+    right.innerHTML = '<table><tr><th>Plan</th><th class="num">MRR</th><th class="num">Share</th><th class="num">ARPA</th></tr>' +
+      c.map(function (row) {
+        return '<tr><td style="white-space:nowrap"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;background:' +
+          esc(row.color) + '"></span>' + esc(row.name) + '</td><td class="num">' + money(row.mrr) + '</td><td class="num">' +
+          (100 * row.mrr / total).toFixed(1) + '%</td><td class="num">' + (row.customers ? money(row.mrr / row.customers) : "") + "</td></tr>";
+      }).join("") + "</table>";
+    wrap.appendChild(right);
+  })();
+
+  (function customers() {
+    var c = d.customers;
+    if (!c || !c.rows || !c.rows.length) { drop("customers"); return; }
+    if (c.title) { byId("customers-title").textContent = c.title; }
+    var max = c.rows[0].mrr || 1;
+    html("customers", '<table><tr><th>Customer</th><th class="num">MRR</th><th class="num">Share</th><th style="width:28%"></th><th>' +
+      esc(c.month || "") + "</th></tr>" +
+      c.rows.map(function (r) {
+        return "<tr><td>" + esc(r.name) + '</td><td class="num">' + money(r.mrr) + '</td><td class="num">' +
+          (c.total ? (100 * r.mrr / c.total).toFixed(1) : "0.0") + '%</td><td><div class="bar" style="width:' + (100 * r.mrr / max) +
+          '%"></div></td><td>' + esc(r.move) + "</td></tr>";
+      }).join("") + "</table>" + (c.note ? '<div class="note">' + esc(c.note) + "</div>" : ""));
+  })();
+
+  (function cohorts() {
+    var c = d.cohorts;
+    if (!c || !c.rows || !c.rows.length) { drop("cohorts"); return; }
+    function shade(v) {
+      if (v === null) return "transparent";
+      var t = Math.max(0, Math.min(1, (v - 90) / 20));
+      return "rgba(47,107,255," + (0.08 + 0.42 * t).toFixed(2) + ")";
+    }
+    html("cohorts", '<table class="heat"><tr><th>Cohort</th><th class="num">Customers</th><th class="num">Starting MRR</th>' +
+      c.cols.map(function (h) { return '<th class="num">' + esc(h) + "</th>"; }).join("") + "</tr>" +
+      c.rows.map(function (r) {
+        return "<tr><td>" + esc(r.name) + '</td><td class="num">' + esc(r.customers) + '</td><td class="num">' + money(r.start) + "</td>" +
+          r.values.map(function (v) {
+            return '<td class="num" style="background:' + shade(v) + '">' + (v === null ? "" : esc(v) + "%") + "</td>";
+          }).join("") + "</tr>";
+      }).join("") + '</table><div class="note">Share of starting MRR still there, expansion included. Above 100% means the cohort grew.</div>');
+  })();
+
+  (function renewals() {
+    var r = d.renewals;
+    if (!r || !r.rows || !r.rows.length) { drop("renewals"); return; }
+    html("renewals", '<table><tr><th>Customer</th><th class="num">MRR</th><th class="num">Renews</th></tr>' +
+      r.rows.map(function (x) {
+        return "<tr><td>" + esc(x.name) + '</td><td class="num">' + money(x.mrr) + '</td><td class="num">' + esc(x.ends) + "</td></tr>";
+      }).join("") + '</table><div class="note">' + esc(r.note) + "</div>");
+  })();
+
+  html("gaps", (d.gaps && d.gaps.length) ? d.gaps.map(function (g) {
+    return '<li><span class="amt">' + esc(g.amount) + "</span> " + esc(g.text) + "</li>";
+  }).join("") : "<li>No gaps found in the data read.</li>");
+})();
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 ---
 name: advisory
-description: "Runs an advisory engagement end to end: works out what the data supports, picks the right skills, runs them in order, and applies the firm brand to every artifact before handing anything over. Use when someone drops in financials with no specific instruction, asks how the business is doing, asks for a report or a board pack, wants more than one deliverable, or is not sure which skill they want. Also the right entry point when several skills need to share one set of pulled figures so the deliverables agree with each other. Read-only. Routes to dashboard, management-report, flux, cashflow, and benchmark, and always finishes with brand. Not needed when the user has already named a single skill, in which case run that skill directly and still finish with the brand pass."
+description: "Runs an advisory engagement end to end: works out what the data supports, picks the right skills, runs them in order, and applies the firm brand to every artifact before handing anything over. Use when someone drops in financials with no specific instruction, asks how the business is doing, asks for a report or a board pack, wants more than one deliverable, or is not sure which skill they want. Also the right entry point when several skills need to share one set of pulled figures so the deliverables agree with each other. Read-only. Routes to dashboard, management-report, flux, cashflow, benchmark, and mrr-arr-report, and always finishes with brand. Not needed when the user has already named a single skill, in which case run that skill directly and still finish with the brand pass."
 ---
 
 # Advisory
@@ -31,7 +31,7 @@ Read `references/HOUSE-RULES.md`, `references/DATA.md`, `references/ARTIFACTS.md
 - [ ] 2. Choose the deliverables and state the plan in one line.
       Default to one: a single report someone reads beats three they skim. "How are we doing" means the dashboard against the business's own history; "send me the financials" means the management report. The line between them: the dashboard is business segments at a point in time, the management report is statement lines over time. Dimensional cuts and rankings only ever go in the dashboard; the full statements only ever go in the management report.
       Benchmark is never the default answer to a vague ask. It runs on a genuinely comparative request, or as the reference layer under another skill's run.
-      Run more than one only when the request genuinely spans them, ordered so the later skill inherits: flux after dashboard (inherits the line and the period rather than re-deriving them), cashflow after dashboard (carries the cash balance and burn across rather than recomputing), benchmark after dashboard (inherits the figures dashboard computed, so both state the same margin to the decimal), management-report then dashboard for the classic close-and-deliver pairing.
+      Run more than one only when the request genuinely spans them, ordered so the later skill inherits: flux after dashboard (inherits the line and the period rather than re-deriving them), cashflow after dashboard (carries the cash balance and burn across rather than recomputing), benchmark after dashboard (inherits the figures dashboard computed, so both state the same margin to the decimal), management-report then dashboard for the classic close-and-deliver pairing, mrr-arr-report after dashboard (holds the same entity, period, and basis, and builds its own customer revenue rows from the shared pull).
       If the ask is genuinely ambiguous, show the routing table and ask rather than guessing.
 - [ ] 3. Pull the ledger once into scratch; every skill in the run reads from it.
       Fix before the first skill starts, and hold for the whole run: entity, period and comparison period, basis (accrual or cash), closed-through date, and which dimensions the books actually carry per `references/DIMENSIONS.md`. Every artifact carries the same four in its header and footnote.
@@ -45,6 +45,7 @@ Read `references/HOUSE-RULES.md`, `references/DATA.md`, `references/ARTIFACTS.md
       The pass is idempotent; re-running it after a palette change is the supported way to re-skin a finished set. It reports banned punctuation and ledger words rather than rewriting; fix each in the payload, rebuild that file, and brand the set again.
       Workbooks have no script: apply the input convention and number formats from `brand` by hand, then re-run `verify_model.py`, because a formatting pass can hide an error value behind a custom format.
       The management report is the exception: its engine builds the PDF directly with brand tokens baked in and takes no `theme.py` pass, but its sentences follow the brand copy rules, so write them to those rules the first time.
+      mrr-arr-report is the other exception: its scripts build the HTML snapshot and the Google Sheet tabs to its own spec, so it takes no `theme.py` pass. Write its chat and file text to the brand copy rules.
 - [ ] 6. Verify against Completion, then hand over the paths, the one-sentence story, the top finding, and what was skipped for missing data.
 
 ## Guardrails
@@ -58,7 +59,10 @@ Read `references/HOUSE-RULES.md`, `references/DATA.md`, `references/ARTIFACTS.md
   written, then brand them together; one invocation over the set is what guarantees
   they come out identical.
 - **This skill never computes.** No figures of its own, no reconciliation, no
-  recomputation of what a skill produced. Read-only, like everything it routes to.
+  recomputation of what a skill produced. Read-only over the books, like everything it
+  routes to. The one write in the set is mrr-arr-report adding its `MRR` tabs to a
+  Google Sheet the user linked, and only through that skill's own announce-then-write
+  step.
 - **Two skills pulling the same period separately** is how one report says $4,205,000
   and the next says $4,204,880. Pull once.
 - **Never state a dimensional cut is out of scope.** Say which skill does it and what
@@ -76,6 +80,7 @@ The routing table, the fastest honest answer to "which one":
 | `flux` | Why did this line move | HTML variance report |
 | `cashflow` | Will we run out, and when | Excel or Sheets workbook |
 | `benchmark` | Are we normal for our industry and size, how do we compare | HTML comparison, every figure source-labeled |
+| `mrr-arr-report` | What is our MRR and ARR, who churned, upgraded, or renews next | HTML snapshot or live Google Sheet tabs |
 
 Orientation, one line and moving:
 
