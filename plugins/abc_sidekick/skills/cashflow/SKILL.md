@@ -98,9 +98,9 @@ companion. The phases:
 
 ## Example
 
-> "You go below your $30,000 minimum in the week of September 7, and cash bottoms out at
-> -$8,000 in the week of November 2. Staying above it across the whole thirteen weeks
-> takes $38,000. Change the collections cell to test it."
+> "You go below your \$30,000 minimum in the week of September 7, and cash bottoms out at
+> -\$8,000 in the week of November 2. Staying above it across the whole thirteen weeks
+> takes \$38,000. Change the collections cell to test it."
 
 ## Completion
 

@@ -1,7 +1,7 @@
 # How we write a skill
 
 Input: anything. An SOP, a pasted prompt, a transcript, a user's own skill folder.
-Output: a skill in the `abc/TEMPLATE.md` shape. Same transformation every time:
+Output: a skill in the `TEMPLATE.md` shape (the file beside this one). Same transformation every time:
 
 1. **Template it.** Whatever structure the source has, the result is Purpose (+outline),
    Procedure, Caveats, Example, Completion (+cleanup).
@@ -30,11 +30,15 @@ Output: a skill in the `abc/TEMPLATE.md` shape. Same transformation every time:
    source becomes one bullet: the mistake, the tell, the rule. Keep precision wording
    verbatim where the playground proved wording-sensitivity (an em-dash ban held only once
    it said "including the title tag"). Zero caveats is allowed; padding is not.
+   Each failure this workflow can meet gets one caveat: the tell and the response.
+   An empty period is one of those when the procedure reads a period. Ask only when
+   the answer is the user's to give. Skip a failure the workflow cannot meet.
 5. **Pick one load-bearing Example.** The output format block or one worked miniature.
    Models copy shape from examples more reliably than from rules, so the example carries
    the format and the rules keep only what an example cannot show.
-6. **Write Completion as binary checks plus cleanup.** Every line answerable yes or no.
-   Cleanup names where every artifact and open question lands.
+6. **Write Completion as yes or no states.** Every line is a state that is yes or no.
+   Done when is the work. Cleanup is where the file, the open questions, and anything
+   that must not remain now are.
 7. **Iterate against the live connector.** First run is a pilot at the smallest scope (one
    settlement, one account, one report) before any batch. A rejected call trusts the live
    error over the binding, fixes, retries once, and the discrepancy goes back into the

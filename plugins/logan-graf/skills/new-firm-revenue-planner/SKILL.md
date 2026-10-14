@@ -27,11 +27,11 @@ Kick execution lives in [references/kick.md](references/kick.md). The payload an
 - [ ] 3. Draft the inputs from the data.
     Window: the last 12 full months, or from the first month with revenue if later. Draft each paying client's recurring monthly amount (the latest full month) and billing basis, delivery cost as a percent of revenue from the delivery expense lines, fixed overhead from the remaining operating expense lines, and the count of active recurring clients. A window under 12 months is annualized as window total / months x 12, and the plan says so. Show the owner's current take-home pace (net income, plus owner draws when the books carry them) beside the goal as context only. Tag every drafted figure "Books" or "File" with its period.
 - [ ] 4. Open with a short projection conversation.
-    Lead with "Let's plan out some projections." If step 3 drafted inputs, put that table under the line. Infer whatever the owner's words already settle, then ask only a gap they do not. "Make", "take home", or "profit" is take-home profit. "Revenue" or "billings" is gross revenue. A price that says monthly, annual, or one-time keeps that basis. A percent or a dollar cost per client is the delivery cost. Overhead defaults to $0. A bare goal with no basis defaults to take-home profit, and the plan says so. One or two sentences. Ask about a mixed expense line or a one-off payment only when it would change a number already on the table. Do the reading silently. The owner does not hear that a skill, a file, or the books are being checked.
+    Lead with "Let's plan out some projections." If step 3 drafted inputs, put that table under the line. Infer whatever the owner's words already settle, then ask only a gap they do not. "Make", "take home", or "profit" is take-home profit. "Revenue" or "billings" is gross revenue. A price that says monthly, annual, or one-time keeps that basis. A percent or a dollar cost per client is the delivery cost. Overhead defaults to \$0. A bare goal with no basis defaults to take-home profit, and the plan says so. One or two sentences. Ask about a mixed expense line or a one-off payment only when it would change a number already on the table. Do the reading silently. The owner does not hear that a skill, a file, or the books are being checked.
 - [ ] 5. Settle the income goal and its basis.
     The goal is the owner's number, never read from the books. Infer the basis from their words, as in step 4. Do not stop to confirm a basis the words already gave, and do not stop on a bare number that defaulted to take-home profit. Record the period. Convert a monthly goal to annual by multiplying by 12.
 - [ ] 6. Settle the service offering and prices.
-    For each service, record the name, the price, and the billing basis: monthly recurring, annual (for example a tax return), or one-time (for example onboarding or cleanup). Use the basis the price already states. Convert to annual revenue per client: monthly price x 12, annual fee x 1. Hold one-time fees aside. They do not count toward recurring revenue. Every plan shows tiers. Two or more owner prices, or tiers the owner named, are the tiers. One price, or none, goes in as the current price, and the engine builds Bronze (the current price, often over capacity), Silver (the floor rounded up to the next $100), and Gold (a premium at twice Silver). Only the current price is the owner's. Silver and Gold are placeholders: tagged Placeholder and named in chat as numbers to replace. Do not ask for tier prices first.
+    For each service, record the name, the price, and the billing basis: monthly recurring, annual (for example a tax return), or one-time (for example onboarding or cleanup). Use the basis the price already states. Convert to annual revenue per client: monthly price x 12, annual fee x 1. Hold one-time fees aside. They do not count toward recurring revenue. Every plan shows tiers. Two or more owner prices, or tiers the owner named, are the tiers. One price, or none, goes in as the current price, and the engine builds Bronze (the current price, often over capacity), Silver (the floor rounded up to the next \$100), and Gold (a premium at twice Silver). Only the current price is the owner's. Silver and Gold are placeholders: tagged Placeholder and named in chat as numbers to replace. Do not ask for tier prices first.
 - [ ] 7. Settle the delivery cost.
     Accept a percent of revenue (for example 40%) or a dollar cost per client per month. Delivery cost covers contractor or staff time and per-client software to do the work. If neither the data nor the owner gives one, ask. Do not assume a percent.
 - [ ] 8. Settle optional inputs.
@@ -39,7 +39,7 @@ Kick execution lives in [references/kick.md](references/kick.md). The payload an
 - [ ] 9. Compute required revenue.
     Profit goal with percent cost: required revenue = (goal + fixed overhead) / (1 - delivery cost %). Revenue goal: required revenue = goal. Dollar cost per client: skip this step and use step 10's contribution form.
 - [ ] 10. Compute clients needed for each price scenario.
-    Percent cost: clients = required revenue / annual revenue per client. Dollar cost: clients = (goal + fixed overhead) / ((monthly price - monthly cost per client) x 12). Always round up to a whole client. Show the check: clients x annual revenue per client x (1 - cost %) - fixed overhead is at least the goal.
+    Percent cost: clients = required revenue / annual revenue per client. Dollar cost: clients = (goal + fixed overhead) / ((monthly price - monthly cost per client) x 12). Always round up to a whole client. Show the check line, which must reach the goal. Percent cost: clients x annual revenue per client x (1 - cost %) - fixed overhead. Dollar cost: clients x (monthly price - monthly cost per client) x 12 - fixed overhead.
 - [ ] 11. Compute the price floor at capacity.
     If the owner gave capacity: monthly price floor = required revenue / capacity / 12, rounded up to the next whole dollar. Dollar cost form: floor = (goal + fixed overhead) / capacity / 12 + monthly cost per client. If any scenario's client count exceeds capacity, flag it: that price cannot reach the goal with the hours the owner has.
 - [ ] 12. Check the proposal, if one is given.
@@ -51,15 +51,15 @@ Kick execution lives in [references/kick.md](references/kick.md). The payload an
 
 ## Caveats
 
-- **Ignoring delivery cost in the client count.** Tell: clients = goal / annual price (a $100,000 goal at $6,000 per client gives 17, not 28). Rule: a profit goal always passes through (1 - delivery cost %) first.
-- **Profit goal read as revenue, or the reverse.** Tell: the owner said "make $100K" and the plan treats it as revenue, or they said "revenue" and the plan treats it as profit. Rule: infer the basis from the words. A bare number defaults to take-home profit and the plan says so.
+- **Ignoring delivery cost in the client count.** Tell: clients = goal / annual price (a \$100,000 goal at \$6,000 per client gives 17, not 28). Rule: a profit goal always passes through (1 - delivery cost %) first.
+- **Profit goal read as revenue, or the reverse.** Tell: the owner said "make \$100K" and the plan treats it as revenue, or they said "revenue" and the plan treats it as profit. Rule: infer the basis from the words. A bare number defaults to take-home profit and the plan says so.
 - **Rounding clients down.** Tell: 27.78 shown as 27 or "about 28" with no check line. Rule: round clients up, round the price floor up, and show the check line.
-- **One-time fees inflating the monthly price.** Tell: a $1,500 onboarding fee spread into the monthly rate to clear the floor. Rule: recurring price alone is compared to the floor. One-time fees are reported, not blended.
+- **One-time fees inflating the monthly price.** Tell: a \$1,500 onboarding fee spread into the monthly rate to clear the floor. Rule: recurring price alone is compared to the floor. One-time fees are reported, not blended.
 - **Invented service mix or cost percent.** Tell: a blended price appears that the owner never gave a split for, or "a typical 40%" fills a blank. Rule: ask. A number that did not come from the owner, their file, or their books is tagged Default or Placeholder in Parameters and Sources, or it is not used. The goal, delivery cost, and capacity are never placeholders.
 - **A placeholder passed off as the owner's.** Tell: engine-filled tier prices, a mix, or a hire salary tagged Owner or Derived when the owner never gave them, or a chat message that quotes the Mix bar as the plan without saying its split was filled in. Rule: tag it Placeholder, and name every placeholder in chat as a number to replace.
 - **Reading a client's books as the firm's.** Tell: the entity carries a client's name, or the income lines look like a client's sales rather than service fees. Rule: confirm the firm's own entity by name before any read. An owner whose only books are clients' has no firm history; ask instead.
 - **Reading the goal off the books.** Tell: the income goal equals last year's net income and the owner never stated it. Rule: the books show the current pace, as context. The goal is the owner's number.
-- **Annual or one-time payments read as monthly.** Tell: a client with one $1,200 payment in the window shows as $100 a month. Rule: a billing basis drafted from payment history is a draft. One payment in the window is annual or one-time, and the owner says which.
+- **Annual or one-time payments read as monthly.** Tell: a client with one \$1,200 payment in the window shows as \$100 a month. Rule: a billing basis drafted from payment history is a draft. One payment in the window is annual or one-time, and the owner says which.
 - **Mixed expense lines counted whole.** Tell: all payroll lands in delivery cost while the owner also pays an admin from it. Rule: a line that may serve both delivery and overhead goes to the owner to split. It is not counted until they do.
 - **Cash-basis lag.** Tell: a client signed last month shows no revenue yet. Rule: state the books' basis. On cash basis, ask about clients signed but not yet paid.
 - **A checklist opening.** Tell: "Nothing was attached," a numbered list of every input, or "put every answer in one reply." Rule: open with "Let's plan out some projections" and ask only the few gaps in step 4, in a sentence or two.
@@ -72,43 +72,75 @@ Kick execution lives in [references/kick.md](references/kick.md). The payload an
 
 ## Example
 
-Anonymized. A solo owner starting a firm. Goal: take home $100,000 a year (owner confirmed profit, not revenue). Bookkeeping at $500 or $1,000 a month. Delivery cost 40% of revenue. No fixed overhead given. Capacity 20 clients. Proposal about to go out: $550 a month plus a $1,200 one-time cleanup.
+Anonymized. A solo owner starting a firm. Goal: take home \$100,000 a year (owner confirmed profit, not revenue). Bookkeeping at \$500 or \$1,000 a month. Delivery cost 40% of revenue. No fixed overhead given. Capacity 20 clients. Proposal about to go out: \$550 a month plus a \$1,200 one-time cleanup.
 
 ```
 NEW FIRM REVENUE PLAN
 
 Parameters and Sources
-| Input              | Value             | Source        |
-|--------------------|-------------------|---------------|
-| Income goal        | $100,000 / yr     | Owner, profit |
-| Delivery cost      | 40% of revenue    | Owner         |
-| Fixed overhead     | $0                | Default       |
-| Client capacity    | 20                | Owner         |
+| Input           | Value                                                | Source                               |
+|-----------------|------------------------------------------------------|--------------------------------------|
+| Income goal     | \$100,000 / yr                                        | Owner, profit                        |
+| Delivery cost   | 40% of revenue                                       | Owner                                |
+| Fixed overhead  | \$0                                                   | Default                              |
+| Client capacity | 20                                                   | Owner                                |
+| Tier mix        | 12 at \$500 / 8 at \$1,000                             | Placeholder, 60/40 split of capacity |
+| Services        | Tax \$2,000 / yr, Books \$500 / mo, Both \$667 / mo     | Placeholder                          |
+| Hires           | Part-time \$30,000 adds 10, full-time \$60,000 adds 20 | Placeholder                          |
 
-Required revenue = ($100,000 + $0) / (1 - 0.40) = $166,667
+Required revenue = (\$100,000 + \$0) / (1 - 0.40) = \$166,667
 
 Scenarios
 | Price / mo | Revenue / client / yr | Clients needed        | Check (profit)               |
 |------------|-----------------------|-----------------------|------------------------------|
-| $500       | $6,000                | 27.78 -> 28 (over 20) | 28 x 6,000 x 0.60 = $100,800 |
-| $1,000     | $12,000               | 13.89 -> 14           | 14 x 12,000 x 0.60 = $100,800|
+| \$500       | \$6,000                | 27.78 -> 28 (over 20) | 28 x 6,000 x 0.60 = \$100,800 |
+| \$1,000     | \$12,000               | 13.89 -> 14           | 14 x 12,000 x 0.60 = \$100,800|
+| Mix, avg \$700 | \$8,400             | 20 (at capacity)      | 20 x 8,400 x 0.60 = \$100,800 |
 
-At $500 the goal needs 28 clients. Capacity is 20. That price cannot reach the goal.
+At \$500 the goal needs 28 clients. Capacity is 20. That price cannot reach the goal.
+The Mix bar is 12 clients at \$500 and 8 at \$1,000, a placeholder split.
 
-Price floor at 20 clients = $166,667 / 20 / 12 = $694.44 -> $695 / mo
+Price floor at 20 clients = \$166,667 / 20 / 12 = \$694.44 -> \$695 / mo
 
-Proposal check: $550 / mo recurring
+Proposal check: \$550 / mo recurring
 Verdict: Below the plan
-- Gap to floor: $145 / mo, $1,740 / yr for this client
-- If every client paid $550: $166,667 / $6,600 = 25.25 -> 26 clients (6 over capacity)
-- Profit at 20 clients at $550: 20 x 6,600 x 0.60 = $79,200 ($20,800 short)
-- One-time cleanup $1,200: reported separately, not counted toward the floor
+- Gap to floor: \$145 / mo, \$1,740 / yr for this client
+- If every client paid \$550: \$166,667 / \$6,600 = 25.25 -> 26 clients (6 over capacity)
+- Profit at 20 clients at \$550: 20 x 6,600 x 0.60 = \$79,200 (\$20,800 short)
+- One-time cleanup \$1,200: reported separately, not counted toward the floor
 
-Carry into the proposal: $695 / mo minimum recurring.
+Client mix (what-if rows, placeholder services)
+| Scenario     | Monthly / annual | Tax / Books / Both | Profit / client | Clients needed | Profit at 20 |
+|--------------|------------------|--------------------|-----------------|----------------|--------------|
+| Mostly tax   | 40 / 60          | 60 / 20 / 20       | \$2,400          | 42 (22 over)   | \$48,010      |
+| Mostly books | 80 / 20          | 20 / 60 / 20       | \$3,360          | 30 (10 over)   | \$67,210      |
+| Mostly both  | 80 / 20          | 20 / 20 / 60       | \$3,841          | 27 (7 over)    | \$76,829      |
+| Even split   | 66 / 34          | 34 / 33 / 33       | \$3,181          | 32 (12 over)   | \$63,616      |
+
+Margin (on the mix)
+| Delivery cost | Cost share | Price floor | Clients needed | Profit at 20 |
+|---------------|------------|-------------|----------------|--------------|
+| Today         | 40%        | \$695 / mo   | 20             | \$100,800     |
+| 5% lower      | 38%        | \$673 / mo   | 20             | \$104,160     |
+| 10% lower     | 36%        | \$652 / mo   | 19             | \$107,520     |
+| 15% lower     | 34%        | \$632 / mo   | 19             | \$110,880     |
+| 20% lower     | 32%        | \$613 / mo   | 18             | \$114,240     |
+
+Each floor is step 11 at that cost. 5% lower: \$100,000 / (1 - 0.38) / 20 / 12 = \$672.04 -> \$673 / mo.
+
+Hiring (on the mix, placeholder hires)
+| Hire                | Salary   | Capacity | Clients needed | Price floor | Profit at capacity |
+|---------------------|----------|----------|----------------|-------------|--------------------|
+| Solo                | \$0       | 20       | 20             | \$695 / mo   | \$100,800           |
+| Part-time hire      | \$30,000  | 30       | 26             | \$602 / mo   | \$121,200           |
+| Full-time hire      | \$60,000  | 40       | 32             | \$556 / mo   | \$141,600           |
+| Two full-time hires | \$120,000 | 60       | 44             | \$510 / mo   | \$182,400           |
+
+Carry into the proposal: \$695 / mo minimum recurring.
 Next scenario? Change one input: price, cost %, or capacity.
 ```
 
-Those figures are what the PDF shows. The page puts the tier chart first, then the summary and verdict, then the sensitivity tables in references/report.md. Chat does not repeat this block.
+Those figures are what the PDF shows. The page puts the tier chart first, then the summary and verdict, then the three sensitivity tables, then Parameters and Sources, laid out as in references/report.md. Chat does not repeat this block. It names the floor, the verdict, the file, and the placeholders to replace: the tier mix, the services, and the hires.
 
 When the firm's own books are connected, the same opening puts the drafted inputs under the first line. Anonymized. A solo firm eight months in, books on cash basis.
 
@@ -116,15 +148,15 @@ When the firm's own books are connected, the same opening puts the drafted input
 Let's plan out some projections. From your books (Feb to Sep 2026, cash basis, 8 full months):
 | Input             | Value                                     | Source               |
 |-------------------|-------------------------------------------|----------------------|
-| Recurring clients | 9: six at $500 / mo, three at $750 / mo   | Books, Sep 2026      |
-| Delivery cost     | 40% ($14,400 of $36,000 revenue)          | Books, Feb-Sep 2026  |
-| Fixed overhead    | $6,000 / yr ($4,000 / 8 x 12)             | Books, annualized    |
-| Current pace      | $17,600 net income in 8 months (context)  | Books, Feb-Sep 2026  |
+| Recurring clients | 9: six at \$500 / mo, three at \$750 / mo   | Books, Sep 2026      |
+| Delivery cost     | 40% (\$14,400 of \$36,000 revenue)          | Books, Feb-Sep 2026  |
+| Fixed overhead    | \$6,000 / yr (\$4,000 / 8 x 12)             | Books, annualized    |
+| Current pace      | \$17,600 net income in 8 months (context)  | Books, Feb-Sep 2026  |
 
-Delivery cost lines: contractor $12,000, client software $2,400.
+Delivery cost lines: contractor \$12,000, client software \$2,400.
 Overhead lines: insurance, base software, marketing.
 
-What do you want to take home this year? How many clients can you serve at once? Client A paid $1,200 once in March. Was that an annual fee or a one-time cleanup?
+What do you want to take home this year? How many clients can you serve at once? Client A paid \$1,200 once in March. Was that an annual fee or a one-time cleanup?
 ```
 
 With no file and no books, the same opening is just the questions:

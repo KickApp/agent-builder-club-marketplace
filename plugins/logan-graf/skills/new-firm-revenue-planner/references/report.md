@@ -160,4 +160,5 @@ fitted 6 Books / 24 Both mix needs 30, averages $570 a month, and makes $151,200
 Worked figures, the anonymized plan in SKILL.md with tiers at $500 and $1,000.
 Floor $695. $500 needs 28 clients, 8 over. $1,000 needs 14. The $550 proposal is
 below the plan by $145 a month. A 20% delivery cost cut (40% to 32% of revenue)
-moves the $500 tier from 28 clients to 25.
+moves the $500 tier from 28 clients to 25, and the Margin table, which runs on
+the 12 / 8 mix, from 20 clients to 18.

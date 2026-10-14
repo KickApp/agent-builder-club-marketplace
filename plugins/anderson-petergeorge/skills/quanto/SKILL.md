@@ -129,7 +129,7 @@ What did this miss or over-flag?
 
 ## Firm notes (quanto)
 Updated: 2026-09-14
-- Cost rate: $65/hr blended, source: owner
+- Cost rate: \$65/hr blended, source: owner
 - Hours by client: Pinecrest 5 to 6, Larkin 10 to 12, Tidewater 4 to 8 per month
 - Thin margin threshold: 20%
 - Period: trailing 12 months

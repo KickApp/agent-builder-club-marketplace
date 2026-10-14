@@ -1,6 +1,6 @@
 ---
 name: deliver
-description: "Assembles the close package: final statements, the close memo (a Word document opening with the executive summary), and a workpapers workbook. Use after review returns ready, or on the user's explicit choice to build a clearly labeled interim package when it has not."
+description: "Assembles the close package: final statements, the close memo (a Word document opening with the executive summary), and a workpapers workbook. Use when review returns ready, or when the user explicitly chooses a clearly labeled interim package because it has not."
 ---
 
 # Deliver
@@ -62,12 +62,8 @@ adjusted trial balance; the package contains nothing the close did not prove.
 - Packaging is mechanical; the judgment already happened. The only questions worth
   asking are presentation preferences, and only when the profile does not answer them.
   Running unattended, use the defaults and note them.
-- Voice, for every document this skill writes: a careful accountant's prose, not an
-  assistant's. Short declarative sentences with varied length, sentence-case headings,
-  concrete nouns and real figures. Banned tells: em dashes; filler words (delve, robust,
-  seamless, leverage, comprehensive, crucial); the "not just X, but Y" construction;
-  AI boilerplate ("It's important to note"); decorative emoji; bolded keyword openers
-  in prose. If no accountant would say a sentence aloud to a client, rewrite it.
+- Every document this skill writes follows the Voice section of
+  `references/close-package-format.md`.
 
 ## Example
 

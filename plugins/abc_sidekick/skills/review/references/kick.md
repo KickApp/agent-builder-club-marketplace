@@ -18,5 +18,6 @@ discrepancy.
 
 - The verdict logic (ready or not ready, the informed-consent acceptance protocol,
   the always-blocks pair) is entirely this skill's; the guides only supply reads.
-- When a step needs the file behind a Kick document, invoke `download-kick-document`
-  with the document id. The presigned URL stays inside that skill.
+- When a step needs the file behind a Kick document, invoke the `download-kick-document`
+  skill with the document id. It is a skill, not a Kick tool; the presigned URL
+  stays inside it.

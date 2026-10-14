@@ -25,8 +25,8 @@ morning digests.
 Copy this checklist into the response and check items off.
 
 - [ ] 1. Set defaults without blocking the brief.
-      Defaults: 90-day lookback, $1,000 anomaly floor, one-page executive format (or bullet checklist, or narrative memo), open tasks and bookkeeping health included.
-      Proceed on the defaults and label each inline: "_Assumed: 90-day lookback, $1,000 anomaly floor, one-page executive format, tell me if any should change_".
+      Defaults: 90-day lookback, \$1,000 anomaly floor, one-page executive format (or bullet checklist, or narrative memo), open tasks and bookkeeping health included.
+      Proceed on the defaults and label each inline: "_Assumed: 90-day lookback, \$1,000 anomaly floor, one-page executive format, tell me if any should change_".
       Ask first only when scope or entity is ambiguous enough to change the answer. Unattended runs proceed on labeled defaults.
 - [ ] 2. Detect connector mode before using any calendar or email data.
       Use the calendar or email connector only if it is present in the session. Absent, or an auth or availability error: books-only for that source, noted for the Skipped section.
@@ -44,7 +44,7 @@ Copy this checklist into the response and check items off.
       A large balance in a bank-transfer-clearing or transfer-in-transit account usually means an unmatched internal transfer: call it out separately and exclude it from the liquidity read.
       Note credit-card balance growth as a cash-flow driver when material.
 - [ ] 6. Flag anomalies for the agenda.
-      Material P&L line swings: |Δ| ≥ the confirmed anomaly floor, OR (|Δ%| ≥ 10% AND |Δ| ≥ $100).
+      Material P&L line swings: |Δ| ≥ the confirmed anomaly floor, OR (|Δ%| ≥ 10% AND |Δ| ≥ \$100).
       Large one-off transactions, sorted by amount.
       Suspected duplicate imports, flagged separately.
 - [ ] 7. Check bookkeeping health and open items, unless the user turned them off.
@@ -68,7 +68,7 @@ Copy this checklist into the response and check items off.
 - **Premise mismatch:** the books contradict what the user expects. Report actuals, probe at most one adjacent period, then ask.
 - **Writes:** read-only. No write or act call against the books, ever.
 - **Advice:** no tax or filing advice presented as authoritative.
-- **Precision:** round to cents; ignore variances below $0.01.
+- **Precision:** round to cents; ignore variances below \$0.01.
 - **Illustrative figures:** numbers in [references/examples.md](references/examples.md) are never quoted as live data; every delivered number comes from the current books.
 - **In-run corrections:** when the user corrects a default, format, threshold, or entity choice, apply it immediately and keep it for the rest of the run. A correction never loosens read-only or figures-from-reads.
 - **Tool errors and drift:** a rejected live call follows the drift rule in [references/kick.md](references/kick.md). Record any discrepancy in the brief's Method note.
@@ -129,7 +129,7 @@ Done when:
 - Every assumed default is labeled inline.
 - Clearing and transfer-in-transit balances sit outside the cash read and are called out.
 - Books-only or partial mode carries a Skipped (no connector) section naming each omission.
-- Anomalies apply the confirmed floor and the 10% and $100 rule.
+- Anomalies apply the confirmed floor and the 10% and \$100 rule.
 - Talking points number 5 to 8, and every number traces to steps 5 to 7.
 - No write call was made, and the brief ends with the read-only line.
 

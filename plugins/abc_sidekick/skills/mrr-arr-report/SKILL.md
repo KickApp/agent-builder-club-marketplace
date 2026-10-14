@@ -49,7 +49,7 @@ file), `scripts/sheet_sources.py` (tab inventory and rows from a spreadsheet),
       Pick the ones that fit: a one-page dashboard file plus the customer CSV, a live version in their Google Sheet that recalculates when the source tabs change (anyone with a spreadsheet, `references/google-sheets.md`), a deeper cut (by plan, by customer, the board scorecard), or a re-run with changed assumptions. Build files only after the user picks them.
       For the Google Sheet: say once what will be created (tab names, number of writes, that existing tabs are untouched), then send the payload files verbatim. If a write is refused, stop, report exactly which tabs exist by name and id, and offer retry, the installer, or removing the tabs this run created. After writing, run the checks in `references/google-sheets.md` step 6 before calling it done.
 - [ ] 7. Keep the conversation going.
-      Follow-ups ("what if the $480 customers are monthly?", "drop Brightpath", "show me Q3") change the rows and re-run the build; they never need a new scan. A newer export or a second file from an outside user does. Answers hold for this conversation only: the purpose carries to a new source, data answers don't. When something can't be explained yet, say so and say how to test it; don't offer a guess as the cause.
+      Follow-ups ("what if the \$480 customers are monthly?", "drop Brightpath", "show me Q3") change the rows and re-run the build; they never need a new scan. A newer export or a second file from an outside user does. Answers hold for this conversation only: the purpose carries to a new source, data answers don't. When something can't be explained yet, say so and say how to test it; don't offer a guess as the cause.
 
 ## Guardrails
 
@@ -85,15 +85,15 @@ file), `scripts/sheet_sources.py` (tab inventory and rows from a spreadsheet),
 User: "Help me build an MRR report for Northwind Analytics."
 
 ```markdown
-Northwind is at about **$50,950 MRR ($611,400 ARR)** across 64 customers, up from
-$44,100 in April. Most customers pay monthly; 9 pay yearly, and their invoices say so.
-September was your best month: 3 new customers added $3,600.
+Northwind is at about **\$50,950 MRR (\$611,400 ARR)** across 64 customers, up from
+\$44,100 in April. Most customers pay monthly; 9 pay yearly, and their invoices say so.
+September was your best month: 3 new customers added \$3,600.
 
 Two quick things before I write it up:
 
 1. Who's it for? A quick read for you, a board or investor update, or a working view of
    customers and renewals?
-2. Atlas Fieldworks paid $17,400 once, in March, with no plan in the description. Is that
+2. Atlas Fieldworks paid \$17,400 once, in March, with no plan in the description. Is that
    a yearly plan? If you're not sure, I'll count it in March only and note it.
 ```
 

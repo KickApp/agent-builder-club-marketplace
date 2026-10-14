@@ -150,18 +150,18 @@ Reclass total: 47 transactions in one bulk preview. The merged sources' rows wer
 
 | Line | Before | After |
 | --- | --- | --- |
-| 4000 Sales | $58,000 | $0 |
-| 4010 Coaching Revenue | | $58,000 |
-| 4900 Other Income | $6,400 | $0 |
-| 4020 Workshop Revenue | | $6,400 |
-| 6110 Software | $4,200 | $8,640 |
-| 6120 SaaS Tools | $2,880 | $0 |
-| 6130 Subscriptions | $1,560 | $0 |
-| 6990 Misc Expense | $1,150 | $250 |
-| 6410 Professional Development | | $900 |
-| Net income | $31,750 | $31,750 |
+| 4000 Sales | \$58,000 | \$0 |
+| 4010 Coaching Revenue | | \$58,000 |
+| 4900 Other Income | \$6,400 | \$0 |
+| 4020 Workshop Revenue | | \$6,400 |
+| 6110 Software | \$4,200 | \$8,640 |
+| 6120 SaaS Tools | \$2,880 | \$0 |
+| 6130 Subscriptions | \$1,560 | \$0 |
+| 6990 Misc Expense | \$1,150 | \$250 |
+| 6410 Professional Development | | \$900 |
+| Net income | \$31,750 | \$31,750 |
 
-6990 Misc Expense keeps $250 of true miscellaneous spend and stays enabled.
+6990 Misc Expense keeps \$250 of true miscellaneous spend and stays enabled.
 ```
 
 This run's connector merged natively. On a connector with no merge write, such as Kick, rows

@@ -113,10 +113,10 @@ I found Kick with 4 client workspaces, Karbon, 14 note files, and your fee list.
 
 | # | Client | Monthly fee | Last raised | Pushback? | Since | Came to you via | Hours a month (a range is fine) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Pinecrest Dental Studio | $1,800 (fee list) | | | | | |
-| 2 | Vance Refrigeration | $1,400 (fee list) | | | | | 58 in the period, actual (Karbon) |
-| 3 | Larkin Event Rentals | $600 (fee list) | | | | | |
-| 4 | Tidewater Print Shop | $500 (fee list) | | | | | |
+| 1 | Pinecrest Dental Studio | \$1,800 (fee list) | | | | | |
+| 2 | Vance Refrigeration | \$1,400 (fee list) | | | | | 58 in the period, actual (Karbon) |
+| 3 | Larkin Event Rentals | \$600 (fee list) | | | | | |
+| 4 | Tidewater Print Shop | \$500 (fee list) | | | | | |
 
 **Which ones you'd clone, and why.** Grade each clone, keep, or fire, with a line on why. Then tell me who pays late, pushes back on fees or scope, gets unbilled work, is slow with documents or asks the same things twice, had messy books at the start or falls behind, has referred someone, or has asked to buy more.
 
@@ -129,7 +129,7 @@ I found Kick with 4 client workspaces, Karbon, 14 note files, and your fee list.
 Reply in any form; blanks are fine, I will label them.
 ```
 
-Playback after the reply: "Four clients graded, four fees confirmed, cost rate $65/hr.
+Playback after the reply: "Four clients graded, four fees confirmed, cost rate \$65/hr.
 Vance's hours are actual from Karbon; the other three are your ranges. Blank: who may see
 client-level results."
 

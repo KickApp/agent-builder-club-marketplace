@@ -58,7 +58,7 @@ not run.
 - **Depreciation and Amortization are excluded.** Non-cash; always remove them from Operating Expenses.
 - **No double counting.** Any line already used for Owner's Pay, Tax, or Profit comes out of Operating Expenses. Double counting throws off every Delta row.
 - **Material & Subs on a product or agency business.** Real Revenue is Top Line minus materials and subcontractors, unless the 25% rule moves Mats & Subs into Operating Expenses. A typical service business has Material & Subs of 0.
-- **Boundaries go up.** A Real Revenue exactly on a boundary uses the higher bracket ($500,000 uses $500K-$1M). At or above $50M the script uses the top bracket and returns a note. The script enforces both; never override it by hand.
+- **Boundaries go up.** A Real Revenue exactly on a boundary uses the higher bracket (\$500,000 uses \$500K-\$1M). At or above \$50M the script uses the top bracket and returns a note. The script enforces both; never override it by hand.
 - **In-run corrections stick for the run.** A user correction to format, an account, or an entity choice applies at once and for the rest of the run. It never overrides figures-from-reads or the mapping confirmation.
 
 ## Example
@@ -75,7 +75,7 @@ python3 scripts/pf_assessment.py --top-line-revenue 420000 --materials-and-subs 
 The response:
 
 ```markdown
-**Result.** Real Revenue: 420,000.00   TAP bracket: $250K-$500K
+**Result.** Real Revenue: 420,000.00   TAP bracket: \$250K-\$500K
 
 Account               Actual       PF%          PF$      The Delta    The Fix
 Profit               8,000.00    10.0%    42,000.00    -34,000.00    Increase
@@ -84,16 +84,16 @@ Tax                 12,000.00    15.0%    63,000.00    -51,000.00    Increase
 Operating Expenses 250,000.00    40.0%   168,000.00     82,000.00    Decrease
 
 Profit and Tax are well below target (negative Delta, so Increase). Owner's Pay is
-slightly over and Operating Expenses are $82,000 over target (positive Delta, so
+slightly over and Operating Expenses are \$82,000 over target (positive Delta, so
 Decrease). The Delta is the dollar gap to close per account.
 
 **Scope.** Copperbeam Design, trailing 12 months, cash basis. Read the P&L, the
 comparative Balance Sheet, and the Statement of Cash Flows.
 
-**Details.** Confirmed mapping: Top Line Revenue $420,000 and Material & Subs $0 (a
-service business, so Real Revenue equals total income). Profit $8,000 (profit savings
-and distributions). Owner's Pay $150,000 (salary plus Equity draws). Tax $12,000.
-Operating Expenses $250,000 (including debt principal, excluding D&A and amounts
+**Details.** Confirmed mapping: Top Line Revenue \$420,000 and Material & Subs \$0 (a
+service business, so Real Revenue equals total income). Profit \$8,000 (profit savings
+and distributions). Owner's Pay \$150,000 (salary plus Equity draws). Tax \$12,000.
+Operating Expenses \$250,000 (including debt principal, excluding D&A and amounts
 already counted above). Every actual came from the ledger reads; the targets came from
 the Profit First percentages via the script.
 

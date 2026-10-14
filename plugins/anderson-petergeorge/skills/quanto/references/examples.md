@@ -27,26 +27,26 @@ because the firm has four clients.
 Confidential, firm internal use only. Estimate: hours are your figures unless marked actual; cost rate $65/hr (yours); thin below 20% (suggested, you accepted); period assumed.
 
 ## Where the numbers disagree with your gut
-- Larkin Event Rentals: you said keep. -8% to -31%, negative at both ends. Books condition: 22% of transactions awaiting review and personal spending in the business account (Kick line; notes Apr 2026). Fee age: not raised since 2023 (Fee line).
-- Tidewater Print Shop: you said keep. Depends on hours: 46% at 4 hours a month, -8% at 8. A month of tracking settles it.
+- Larkin Event Rentals: you said keep. -8% to -30%, negative at both ends. Books condition: 22% of transactions awaiting review and personal spending in the business account (Kick line; notes Apr 2026). Fee age: not raised since 2023 (Fee line).
+- Tidewater Print Shop: you said keep. Depends on hours: 48% at 4 hours a month, -4% at 8. A month of tracking settles it.
 
 ## Where they agree
-- Pinecrest Dental Studio: you said clone. 82% to 79%, healthy at both ends.
+- Pinecrest Dental Studio: you said clone. 82% to 78%, healthy at both ends.
 - Vance Refrigeration: you said clone. 78% on actual hours, healthy.
 
 ## The table
 | Client | Your grade | Fee/yr | Hours/yr | Books | Txns/mo (Kick) | Cost | Margin | Margin % | $/hr | Verdict | What the notes say |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Pinecrest Dental Studio | clone | 21,600 | 60 to 70 (est.) | clean | 410 | 3,900 to 4,550 | 17,700 to 17,050 | 82 to 79% | 360 to 309 | healthy | never late; referred one; asked for forecasting |
+| Pinecrest Dental Studio | clone | 21,600 | 60 to 72 (est.) | clean | 410 | 3,900 to 4,680 | 17,700 to 16,920 | 82 to 78% | 360 to 300 | healthy | never late; referred one; asked for forecasting |
 | Vance Refrigeration | clone | 16,800 | 58 (actual) | clean | 90 | 3,770 | 13,030 | 78% | 290 | healthy | documents before every call; referred a plumbing company |
-| Tidewater Print Shop | keep | 3,000 (6 months) | 25 to 50 (est.) | fair | 60 | 1,625 to 3,250 | 1,375 to -250 | 46 to -8% | 120 to 60 | depends on hours | statements chased twice |
-| Larkin Event Rentals | keep | 7,200 | 120 to 145 (est.) | messy | 340 | 7,800 to 9,425 | -600 to -2,225 | -8 to -31% | 60 to 50 | negative | personal spending mixed in; receipts in bulk |
+| Tidewater Print Shop | keep | 3,000 (6 months) | 24 to 48 (est.) | fair | 60 | 1,560 to 3,120 | 1,440 to -120 | 48 to -4% | 125 to 63 | depends on hours | statements chased twice |
+| Larkin Event Rentals | keep | 7,200 | 120 to 144 (est.) | messy | 340 | 7,800 to 9,360 | -600 to -2,160 | -8 to -30% | 60 to 50 | negative | personal spending mixed in; receipts in bulk |
 
 ## The math
-- Pinecrest Dental Studio: 1,800 x 12 = 21,600 · hours 5 to 6 x 12 = 60 to 72 -> 60 to 70 · cost 60 x 65 = 3,900 to 70 x 65 = 4,550 · margin 21,600 - 3,900 = 17,700 to 21,600 - 4,550 = 17,050 (82% to 79%) · healthy at both ends.
+- Pinecrest Dental Studio: 1,800 x 12 = 21,600 · hours 5 to 6 x 12 = 60 to 72 · cost 60 x 65 = 3,900 to 72 x 65 = 4,680 · margin 21,600 - 3,900 = 17,700 to 21,600 - 4,680 = 16,920 (82% to 78%) · healthy at both ends.
 - Vance Refrigeration: 1,400 x 12 = 16,800 · 58 hours actual (Karbon) · cost 58 x 65 = 3,770 · margin 16,800 - 3,770 = 13,030 (78%) · healthy.
-- Tidewater Print Shop: 500 x 6 (Mar to Aug 2026) = 3,000 · hours 4 to 8 x 6 = 24 to 48 -> 25 to 50 · cost 25 x 65 = 1,625 to 50 x 65 = 3,250 · margin 1,375 to -250 (46% to -8%) · depends on hours.
-- Larkin Event Rentals: 600 x 12 = 7,200 · hours 10 to 12 x 12 = 120 to 144 -> 120 to 145 · cost 120 x 65 = 7,800 to 145 x 65 = 9,425 · margin -600 to -2,225 (-8% to -31%) · negative at both ends.
+- Tidewater Print Shop: 500 x 6 (Mar to Aug 2026) = 3,000 · hours 4 to 8 x 6 = 24 to 48 · cost 24 x 65 = 1,560 to 48 x 65 = 3,120 · margin 3,000 - 1,560 = 1,440 to 3,000 - 3,120 = -120 (48% to -4%) · depends on hours.
+- Larkin Event Rentals: 600 x 12 = 7,200 · hours 10 to 12 x 12 = 120 to 144 · cost 120 x 65 = 7,800 to 144 x 65 = 9,360 · margin 7,200 - 7,800 = -600 to 7,200 - 9,360 = -2,160 (-8% to -30%) · negative at both ends.
 
 Estimate. Hours are yours unless marked actual. Review with your partners before client conversations.
 

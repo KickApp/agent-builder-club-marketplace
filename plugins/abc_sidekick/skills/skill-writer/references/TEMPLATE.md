@@ -26,8 +26,8 @@ A checklist. Detail sits in an indented line under its step.
 
 ## Caveats
 
-Pitfalls, one bullet each: the mistake, the tell that catches it, the rule. As
-many as the skill needs. Zero is allowed.
+Pitfalls, one bullet each: the tell and the response. As many as this workflow
+can meet. Zero is allowed.
 
 ## Example
 
@@ -35,8 +35,10 @@ One worked miniature or the output format block.
 
 ## Completion
 
-Done when: checkable criteria, one line each.
-Cleanup: what gets filed, what gets handed forward, what gets deleted.
+Done when: <a state that is true or false>.
+Cleanup: <the file> is in <the place>.
+Cleanup: <the open questions> are in the hand-off.
+Cleanup: <what must not remain> is gone.
 ```
 
 Rules of the template:
@@ -45,11 +47,14 @@ Rules of the template:
   run. The orchestrator reads only this section to route.
 - **Procedure is the spine.** A step the operator cannot check off is not a step.
 - **Caveats are variable length.** Categorization has many. A sequencer may have none.
-  Every caveat is a real failure seen or foreseen, with its tell.
+  Each failure this workflow can meet gets one caveat: the tell and the response.
+  An empty period is one of those when the procedure reads a period. Ask only when
+  the answer is the user's to give. Skip a failure the workflow cannot meet.
 - **Example is load-bearing.** Models copy shape from examples more reliably than from
   rules. Make the example carry the format; keep the rules for precision cases.
-- **Completion is binary.** Each line is checkable yes or no. Cleanup names where every
-  artifact and open question lands. Nothing ends in working memory.
+- **Completion is binary.** Every line is a state that is yes or no. Done when is the
+  work. Cleanup is where the file, the open questions, and anything that must not
+  remain now are. Nothing ends in working memory.
 
 ## Connector bindings
 
@@ -59,7 +64,8 @@ optional resource per connector, `references/<connector>.md` (`references/kick.m
 
 - **Tools used**: a table of tool, operation or report, purpose.
 - **Exact call shapes**: required params per operation, field names verbatim, the
-  mistakes the API punishes (wrong date field names, entityId vs entityIds).
+  mistakes the API punishes (wrong date field names, entityId vs entityIds). Leave out
+  a shape only when a published guide already gives it (below).
 - **Workflow mapping**: which binding call serves which Procedure step.
 
 Every tool name and param in a binding comes from that connector's pack
@@ -69,9 +75,12 @@ error over the binding, fix and retry once, report the discrepancy.
 
 **Never restate what the connector publishes.** Where the connector ships its own
 skill guides (Kick does: `list_kick_skills`, then `load_kick_skill`), the binding
-points at the published guide and loads it at runtime. The binding carries only
-what no guide holds: which guide serves which Procedure step, the skill-specific
-pull list, and any trap the guides have not absorbed yet. A binding that copies a
-guide's tables goes stale the day the guide updates.
+points at the published guide for whatever the guide covers and loads it at runtime.
+The binding carries what no guide holds: which guide serves which Procedure step, the
+skill-specific pull list, the call shapes no guide gives, and any trap the guides have
+not absorbed yet. A binding that copies a guide's tables goes stale the day the guide
+updates.
 
-Worked example: `abc/templated/management-report/references/kick.md`.
+When the guides cannot be loaded to check what they cover (no live connector), keep
+the call shapes in the binding. A stale shape is rejected at run time and the drift
+rule reports it; a missing one gets guessed.
