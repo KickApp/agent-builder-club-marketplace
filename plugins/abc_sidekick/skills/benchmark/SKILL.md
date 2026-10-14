@@ -26,7 +26,7 @@ worse than no range at all. Two modes:
 - [ ] 3. Resolve the classification (NAICS or equivalent, from the ledger and the user's
       description) and the size band from revenue or receipts. Play both back in one line
       and let the user correct them before pulling: "Comparing as NAICS 332710, machine
-      shops, $1M to $5M receipts. Right?" A business that does not classify cleanly gets
+      shops, \$1M to \$5M receipts. Right?" A business that does not classify cleanly gets
       told plainly, and the skill stops rather than forcing a peer group.
 - [ ] 4. Check the tiers in strict order, per metric, stopping at the first usable figure:
       user-supplied, then the firm's own client book, then public government data, then
@@ -54,15 +54,15 @@ worse than no range at all. Two modes:
   usable figure wins for that metric.
 - **Every external figure carries its source and vintage on its face**, where the reader
   meets it, never in a footnote alone: "31% (your firm's book, 6 comparable clients,
-  Q2 2026)", "29% (IRS SOI, NAICS 332710, $1M to $5M receipts, tax year 2024)".
+  Q2 2026)", "29% (IRS SOI, NAICS 332710, \$1M to \$5M receipts, tax year 2024)".
 - **Sources are never blended.** Two tiers with figures for one metric sit side by side,
   each labeled; averaging them manufactures a number with no source. The tell: a benchmark
   column whose header names no single source.
 - **A missing comparison is a complete answer.** A metric no tier supports reads "no citable
   comparison available", never an estimate dressed as one, and the metric stays in the table.
 - **The confident misclassification.** The tell: no classification line in chat before the
-  pull. Confirm first, always. Size band matters: a $2M shop against an industry-wide
-  average dominated by $500M companies misleads politely; with no band match, use the
+  pull. Confirm first, always. Size band matters: a \$2M shop against an industry-wide
+  average dominated by \$500M companies misleads politely; with no band match, use the
   industry-wide figure with the band named as unavailable in its label.
 - **The immortal vintage.** The tell: a label with a source but no date. Vintage is part of
   the label. Tier 3 lag is disclosed, never hidden: always the latest published tax year,
@@ -87,13 +87,28 @@ subject, the benchmarks are context. Then the table, `"measures": true`: measure
 column per source tier that produced figures, each headed with its source and vintage,
 `null` where a tier had nothing.
 
-| Measure | You | Your firm's book, 6 comparable clients, Q2 2026 | IRS SOI, NAICS 332710, $1M to $5M receipts, tax year 2024 |
+| Measure | You | Your firm's book, 6 comparable clients, Q2 2026 | IRS SOI, NAICS 332710, \$1M to \$5M receipts, tax year 2024 |
 | --- | --- | --- | --- |
 | Gross margin | 34.2% | 31% (quartiles 27% to 35%) | 29% |
 | Current ratio | 1.6 | | 1.4 |
 
 Top finding, a question: "You run 3 points above your firm's comparable clients and 5 above
 the industry. Worth confirming that is pricing or mix rather than an undercounted cost."
+
+The reference set, `benchmarks.json`: one row per metric per tier that produced a figure,
+the label already in citation grammar so a carrying skill copies it whole. `expires` is the
+shelf-life date from Caveats.
+
+```json
+{ "built": "2026-07-14", "naics": "332710", "size_band": "$1M to $5M receipts",
+  "rows": [
+    { "metric": "gross_margin", "tier": 2, "value": 0.31,
+      "label": "31% (your firm's book, 6 comparable clients, Q2 2026)", "expires": "2026-09-30" },
+    { "metric": "gross_margin", "tier": 3, "value": 0.29,
+      "label": "29% (IRS SOI, NAICS 332710, $1M to $5M receipts, tax year 2024)", "expires": "2027-06-30" },
+    { "metric": "current_ratio", "tier": 3, "value": 1.4,
+      "label": "1.4 (IRS SOI, NAICS 332710, $1M to $5M receipts, tax year 2024)", "expires": "2027-06-30" } ] }
+```
 
 ## Completion
 

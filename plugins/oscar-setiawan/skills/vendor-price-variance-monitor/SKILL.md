@@ -93,11 +93,11 @@ variants (vendor-duplicate-merge), AP bill screening before a payment run
 
 > "We log each vendor's contracted monthly price in our vendor sheet. Compare that to
 > what actually hit our Ramp corporate card this month for Acme Rocket Co, and flag
-> anyone billing more than contracted. Vercel is contracted at $29, Notion at $96, Slack
-> at $120."
+> anyone billing more than contracted. Vercel is contracted at \$29, Notion at \$96, Slack
+> at \$120."
 
 Run: one clean record per vendor, the Ramp card as the only account, calendar July. Totals
-from the connector: Vercel $29, Notion $96, Slack $156 (contracted $120, +$36, +30%).
+from the connector: Vercel \$29, Notion \$96, Slack \$156 (contracted \$120, +\$36, +30%).
 
 ```markdown
 ### Vendor price variance: Acme Rocket Co, July 2026
@@ -110,9 +110,9 @@ from the connector: Vercel $29, Notion $96, Slack $156 (contracted $120, +$36, +
 
 | Vendor | Contracted | Actual (this month) | Variance | Status |
 | --- | --- | --- | --- | --- |
-| Vercel | $29.00 | $29.00 | $0.00 | Within contract |
-| Notion | $96.00 | $96.00 | $0.00 | Within contract |
-| Slack | $120.00 | $156.00 | +$36.00 (+30%) | Flagged: over contract |
+| Vercel | \$29.00 | \$29.00 | \$0.00 | Within contract |
+| Notion | \$96.00 | \$96.00 | \$0.00 | Within contract |
+| Slack | \$120.00 | \$156.00 | +\$36.00 (+30%) | Flagged: over contract |
 
 **Status:** flagged 1 vendor (Slack) for review; the other two match their contracted price.
 

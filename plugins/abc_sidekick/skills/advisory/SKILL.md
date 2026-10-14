@@ -63,8 +63,8 @@ Read `references/HOUSE-RULES.md`, `references/DATA.md`, `references/ARTIFACTS.md
   routes to. The one write in the set is mrr-arr-report adding its `MRR` tabs to a
   Google Sheet the user linked, and only through that skill's own announce-then-write
   step.
-- **Two skills pulling the same period separately** is how one report says $4,205,000
-  and the next says $4,204,880. Pull once.
+- **Two skills pulling the same period separately** is how one report says \$4,205,000
+  and the next says \$4,204,880. Pull once.
 - **Never state a dimensional cut is out of scope.** Say which skill does it and what
   coverage the data has.
 - **If a skill file can't be found, say so** rather than improvising it from memory.

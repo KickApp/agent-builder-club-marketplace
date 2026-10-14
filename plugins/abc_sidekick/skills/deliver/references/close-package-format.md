@@ -6,8 +6,9 @@ Everything in the package reads as the accountant's own work product. Plain prof
 prose, short sentences with varied length, sentence-case headings, figures over adjectives.
 Banned tells, in every document: em dashes; filler words (delve, robust, seamless,
 leverage, comprehensive, crucial); "not just X, but Y"; AI boilerplate ("It's important to
-note", "In conclusion", "Overall,"); decorative emoji; three-item rhetorical lists where
-one plain sentence would do. The exec summary especially: a business owner should hear
+note", "In conclusion", "Overall,"); decorative emoji; bolded keyword openers in prose;
+three-item rhetorical lists where one plain sentence would do. If no accountant would say
+a sentence aloud to a client, rewrite it. The exec summary especially: a business owner should hear
 their accountant's voice in it, so write "July lost $2,517, mostly the workstation
 purchase" rather than "the period reflected a challenging performance landscape".
 

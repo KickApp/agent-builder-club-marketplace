@@ -29,5 +29,6 @@ discrepancy.
 
 In that skill's `references/kick.md`, one line:
 
-When a step needs the file behind a Kick document, invoke `download-kick-document`
-with the document id. The presigned URL stays inside that skill.
+When a step needs the file behind a Kick document, invoke the `download-kick-document`
+skill with the document id. It is a skill, not a Kick tool; the presigned URL
+stays inside it.

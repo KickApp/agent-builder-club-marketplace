@@ -19,5 +19,6 @@ discrepancy.
 - The readiness guide produces a checklist; this skill's deliverable (the readiness
   report and request list, per its Example) stays the output contract. Guide
   findings feed it; they do not replace it.
-- When a step needs the file behind a Kick document, invoke `download-kick-document`
-  with the document id. The presigned URL stays inside that skill.
+- When a step needs the file behind a Kick document, invoke the `download-kick-document`
+  skill with the document id. It is a skill, not a Kick tool; the presigned URL
+  stays inside it.

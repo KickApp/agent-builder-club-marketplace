@@ -104,8 +104,8 @@ Palette semantics. Color carries meaning or it should not be there; every hue ha
 - **No red versus green scoring, ever.** Adverse gets pastel red; good things get no color.
 - **A negative number is not automatically bad.** Costs render in parentheses in charcoal. Set
   the plain tone on any cell whose negative is favorable, table cell or matrix row.
-- **Color lands on signed numerals, never on worded deltas.** `($13,500)` may carry the tone;
-  "Up $5,425" renders in body ink. The word already carries the direction.
+- **Color lands on signed numerals, never on worded deltas.** `(\$13,500)` may carry the tone;
+  "Up \$5,425" renders in body ink. The word already carries the direction.
 - **This pass owns chart hues.** Incoming chart colors get restyled to this palette. Two
   ramps in one report is a defect, not a blend.
 
@@ -164,7 +164,7 @@ Delivery and lane.
   line**: the period in the heading dates the report.
 - What never changes, regardless of config: no network (no CDN, web font, remote image, or
   analytics), no dead controls, no new components (restyle what exists), omit rather than pad,
-  raw numbers into the renderer (`410220`, not `"$410,220"`).
+  raw numbers into the renderer (`410220`, not `"\$410,220"`).
 - Stay in your lane: never compute, verify, or explain the numbers; never add, remove, or
   reorder sections. A missing structural piece is flagged in chat for the skill that owns the
   content; filling it yourself is authoring financial commentary.
@@ -172,12 +172,12 @@ Delivery and lane.
 ## Example
 
 ```
-Correct: +$540,700 vs last year (2025 partial, no comparable period)
+Correct: +\$540,700 vs last year (2025 partial, no comparable period)
 Wrong:   ▲ 4057.7% vs last year
 ```
 
 The lead finding the copy sweep accepts carries a dollar figure or a date: "Your third-largest
-location has lost money for six months running, $31,400 in total." Adjectives get flagged.
+location has lost money for six months running, \$31,400 in total." Adjectives get flagged.
 
 ## Completion
 
