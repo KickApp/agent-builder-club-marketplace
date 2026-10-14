@@ -56,7 +56,7 @@ whatever prepared it.
   difference inside the data itself. That always blocks.
 - **Acceptance above materiality is informed consent, never a checkbox.** Present each such
   exception one at a time with its consequence in the deliverable's terms ("accepting this
-  means the balance sheet shows $7,000 of receivables nobody has verified"); never batch
+  means the balance sheet shows \$7,000 of receivables nobody has verified"); never batch
   material acceptances. An acceptance substantively the client's (an unsupported material
   balance, a judgment on their revenue) may be operator-accepted, memo-disclosed as pending client confirmation.
 - **Reviewing the summary.** Confirming a workpaper by reading its own conclusion. The tell: a

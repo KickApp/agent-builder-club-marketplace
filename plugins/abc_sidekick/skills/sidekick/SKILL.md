@@ -53,8 +53,8 @@ Request: "How bad was August, and do I need to worry about cash?"
 Plan line: "Pulling August actuals once; flux's decompose for the drivers; the cash
 read from management-report; one branded summary."
 
-Report: "August: revenue $60,200, down $13,500 from July, mostly project-fee timing
-(August P&L vs July). Cash $191,430 across both accounts; the $12,780 dip is
+Report: "August: revenue \$60,200, down \$13,500 from July, mostly project-fee timing
+(August P&L vs July). Cash \$191,430 across both accounts; the \$12,780 dip is
 receivables timing, not burn. Summary attached. Two card charges need your confirmation."
 
 ## Completion

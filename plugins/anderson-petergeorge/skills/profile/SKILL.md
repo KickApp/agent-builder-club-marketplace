@@ -89,7 +89,7 @@ or more it reads "## Your ideal client".
 
 ```markdown
 ## Your ideal client (a hypothesis from 2 clients)
-Pinecrest and Vance are established Scranton businesses with $1M to $5M in revenue, both on Gusto, both upload documents before every call, both asked for forecasting, and both have referred someone. Pinecrest is an LLC on Xero and Vance an S-corp on QuickBooks, so entity type and ledger software are not the pattern. Your hardest one, Larkin, is under $1M, mixes personal spending into the business account, and gets chased for statements. Larkin is one client, so the anti-profile is an observation.
+Pinecrest and Vance are established Scranton businesses with \$1M to \$5M in revenue, both on Gusto, both upload documents before every call, both asked for forecasting, and both have referred someone. Pinecrest is an LLC on Xero and Vance an S-corp on QuickBooks, so entity type and ledger software are not the pattern. Your hardest one, Larkin, is under \$1M, mixes personal spending into the business account, and gets chased for statements. Larkin is one client, so the anti-profile is an observation.
 
 Your grades against the data
 - Pinecrest Dental Studio: clone agrees.
@@ -100,7 +100,7 @@ Your grades against the data
 | Field | Your ideal client | Evidence |
 | --- | --- | --- |
 | Industry | not enough evidence | dental and HVAC |
-| Business size | $1M to $5M revenue | Pinecrest, Vance |
+| Business size | \$1M to \$5M revenue | Pinecrest, Vance |
 | Location | Scranton area | Pinecrest, Vance |
 | Entity type | not enough evidence | LLC and S-corp |
 | Services they buy and ask for | monthly books, payroll review; asking for forecasts | Pinecrest, Vance |
@@ -109,7 +109,7 @@ Your grades against the data
 | Who decides, how fast | the owner or office manager, within a week | Pinecrest, Vance |
 | Tools | Gusto for payroll | Pinecrest, Vance |
 
-Anti-profile, from one client: under $1M, personal and business spending mixed, statements chased.
+Anti-profile, from one client: under \$1M, personal and business spending mixed, statements chased.
 Worth validating: Tidewater Print Shop, one month of tracked hours settles it.
 What would sharpen this: a time export for all four clients.
 

@@ -36,6 +36,9 @@ skills point here from their Kick binding and pass the document id.
   fresh one. Hand forward the file.
 - **Several files in downloads, or several document matches: ask.** Show the names.
   The user picks.
+- **No document matches: stop and say so.** Name what was searched (the id, name, or
+  date). Ask the user for the document id or the file itself. A similar document is
+  never a stand-in.
 - **Read-only.** This skill retrieves a file. It does not upload, attach, rename, or
   change a Kick record.
 - On a rejected call, trust the live error over this skill's text, fix, and retry once.
@@ -47,7 +50,7 @@ skills point here from their Kick binding and pass the document id.
 June operating bank statement, document id in hand. Chrome is connected.
 
 Fresh URL, save `june-operating-statement.pdf`, close the tab, read the PDF.
-Handoff: "June operating statement, statement date June 30, ending balance $42,180.
+Handoff: "June operating statement, statement date June 30, ending balance \$42,180.
 File: june-operating-statement.pdf."
 
 Chrome is not connected.
@@ -67,4 +70,5 @@ Done when:
 - [ ] No Kick record was uploaded, attached, or changed
 
 Cleanup: hand the file path, or the attachment, to the skill that asked. Discard
-the URL. An ambiguous match stays an open question for the user.
+the URL. An ambiguous match or a document that was not found stays an open question
+for the user.

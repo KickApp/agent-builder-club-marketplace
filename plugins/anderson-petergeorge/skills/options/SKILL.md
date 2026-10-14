@@ -82,7 +82,7 @@ Run on 2026-09-14, so the closing question's date is 30 days later.
 
 ```markdown
 ## Where to find more of them
-Rests on: established Scranton businesses with $1M to $5M in revenue, clean books, documents before every call, asking for forecasts; a hypothesis from 2 clients. Capacity: 6 new clients this year (yours).
+Rests on: established Scranton businesses with \$1M to \$5M in revenue, clean books, documents before every call, asking for forecasts; a hypothesis from 2 clients. Capacity: 6 new clients this year (yours).
 
 | # | Move | Rests on | Effort | Impact | First client in | Why |
 | --- | --- | --- | --- | --- | --- | --- |

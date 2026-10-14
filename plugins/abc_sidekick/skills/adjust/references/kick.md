@@ -19,5 +19,6 @@ discrepancy.
   import CSV. Kick's `kick/manual-journal-entry` guide can post entries under its
   own preview and confirm flow, but that is a separate decision the user makes
   outside this skill, and this binding deliberately does not wire it in.
-- When a step needs the file behind a Kick document, invoke `download-kick-document`
-  with the document id. The presigned URL stays inside that skill.
+- When a step needs the file behind a Kick document, invoke the `download-kick-document`
+  skill with the document id. It is a skill, not a Kick tool; the presigned URL
+  stays inside it.

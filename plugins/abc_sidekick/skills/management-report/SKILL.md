@@ -47,9 +47,9 @@ on the P&L, balance sheet, or cash flow statement, it does not belong here.
   zero crossing: print the absolute change instead. A swing into loss is never "113%
   lower". Margin changes are points, `(1.5 pts)`, never `(1.5%)`.
 - **Sentences are mechanical restatements.** One per chart, fixed word order, no
-  interpretation: "Jun 2026: income ($862.3k) was 29% lower ($353.3k) than June 2025
-  ($1.2m)." The dashboard and flux own judgment.
-- Negatives in parentheses. Sum then round. True zero is an em rule, never `$0`. No cell
+  interpretation: "Jun 2026: income (\$862.3k) was 29% lower (\$353.3k) than June 2025
+  (\$1.2m)." The dashboard and flux own judgment.
+- Negatives in parentheses. Sum then round. True zero is an em rule, never `\$0`. No cell
   fills. No budget columns without real budget data.
 - A statement group never splits across a page break.
 - The Inter font files sit beside the script or the build warns and falls back; a
@@ -73,7 +73,7 @@ Done when:
 - [ ] Every total cross-foots to the dollar; the balance sheet balances at every date
 - [ ] Statements tie to each other: net profit opens the cash flow; closing cash equals
       bank accounts on the balance sheet
-- [ ] Zero dimensional content, zero `-$` strings, zero `$0` cells
+- [ ] Zero dimensional content, zero `-$` strings, zero `\$0` cells
 - [ ] One favorable negative on a cost line spot-checked charcoal, not red
 - [ ] Printed and read at letter size: no clipped labels, no orphaned totals, no group
       split from its total, no font warning in the build log

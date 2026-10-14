@@ -111,7 +111,7 @@ This is the first output and the headline of the page.
 
 ```markdown
 # Your clients, ranked: Copperleaf Bookkeeping, Sep 2025 to Aug 2026 (assumed)
-Confidential, firm internal use only. Estimate: hours are your figures unless marked actual; cost rate $65/hr (yours); thin below 20% (suggested, you accepted); period assumed.
+Confidential, firm internal use only. Estimate: hours are your figures unless marked actual; cost rate \$65/hr (yours); thin below 20% (suggested, you accepted); period assumed.
 
 ## Where the numbers disagree with your gut
 - Larkin Event Rentals: you said keep. -8% to -31%, negative at both ends. Books condition: 22% of transactions awaiting review and personal spending in the business account (Kick line; notes Apr 2026). Fee age: not raised since 2023 (Fee line).

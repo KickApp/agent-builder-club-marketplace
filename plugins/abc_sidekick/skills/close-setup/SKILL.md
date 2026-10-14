@@ -31,7 +31,7 @@ updates the existing profile. Closes work without a profile; they are just sharp
       3. Earned versus billed: paid at the same time as the work, in advance, after across long projects, or a mix. Contracts spanning periods, and whether a WIP or percent-complete schedule exists and where.
       4. What builds up outside the bank account: inventory, equipment and vehicles, loans, leases, owner or intercompany balances, foreign currency. Each yes needs period evidence.
       5. People: payroll provider, contractors, commissions or bonuses that lag the work; where AR and AP aging reports come from.
-      6. Materiality: the threshold below which the close proceeds and discloses. Offer the default: greater of $500 or 1% of period expenses before adjustments.
+      6. Materiality: the threshold below which the close proceeds and discloses. Offer the default: greater of \$500 or 1% of period expenses before adjustments.
       7. Risk areas and schedules: accounts or vendors deserving line-by-line scrutiny; which recurring schedules exist (prepaids, fixed assets with method and in-service convention, deferred revenue, WIP, standing accruals) and where each lives.
       8. Estimation policies, deliverables, state home: named policies the close may estimate under when a document is late (no policy means no estimates, ever); who receives the package; the shared folder where close artifacts live (default: this workspace).
       For every yes in questions 3 to 5, capture two follow-ups in the same breath: the governing method or policy (costing method, recognition method, depreciation convention, FX rate policy) and where its data lives. A fact without a stated method is a question the close asks later anyway.
