@@ -26,7 +26,7 @@ have not named a skill. Ledger access requires a Kick account.
 
 | Plugin | Built by | Skill | What it does |
 | --- | --- | --- | --- |
-| `kick-abc` | Kick | The full suite | The Agent Builder Club accounting suite: close, advisory, reporting, and skill-writer |
+| `kick-abc` | Kick | The full suite | The Agent Builder Club accounting suite: close, advisory, and reporting |
 | `mike-michalowicz` | Mike Michalowicz | `profit-first-instant-assessment` | Runs the Profit First Instant Assessment against a client's books |
 | `josh-schneider` | Josh Schneider | `client-meeting` | A one-page client meeting brief from the books |
 | `oscar-setiawan` | Oscar Setiawan | `vendor-price-variance-monitor` | Flags vendors billing above contract or creeping up in price |

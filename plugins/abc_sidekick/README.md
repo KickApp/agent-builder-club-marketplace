@@ -22,7 +22,6 @@ Enable the plugin, then complete Kick sign-in when a skill needs the ledger.
 - **sidekick**: the entry point. Plans which skills to run and at what scope, runs them with their own resources, finishes artifacts through brand, and reports results only.
 - **Action skills**: adjust, advisory, benchmark, cashflow, close, close-setup, dashboard, deliver, intake, management-report, mrr-arr-report, prep, review.
 - **brand**: the appearance layer. Runs last over finished artifacts and never changes a number.
-- **skill-writer**: turn your own workflows into new skills with clean-room test runs.
 
 Skills are connector-agnostic; Kick execution lives in each skill's
 `references/kick.md`, which loads Kick's published guides at runtime.
