@@ -53,7 +53,11 @@ on the P&L, balance sheet, or cash flow statement, it does not belong here.
   fills. No budget columns without real budget data.
 - A statement group never splits across a page break.
 - The Inter font files sit beside the script or the build warns and falls back; a
-  fallback build is off-brand and never handed over.
+  fallback build is off-brand and never handed over. On the warning, copy
+  `inter-latin-400.ttf` and `inter-latin-640.ttf` from `references/templates/` next to
+  the script you ran, delete the fallback PDF, and rebuild. If the warning says Inter
+  could not be embedded, or the files are missing from `references/templates/`, stop and
+  tell the user the report was not built on brand and why.
 
 ## Example
 
@@ -66,6 +70,24 @@ above a six-row table in statement order. Every statement carries the same spine
 Year-to-date P&L drops the sequential column: January-to-June against July-to-December is
 not like for like.
 
+The rest of the report, section by section, for a June 2026 close with a balance sheet:
+
+- Trends: twelve monthly bars per line (income, cost of goods sold, total expense, net
+  profit), a variance strip under each, one sentence per chart: "Jun 2026: income
+  (\$862.3k) was 29% lower (\$353.3k) than June 2025 (\$1.2m)."
+- Cash management: opening cash, operating, investing, and financing movement, closing
+  cash, then the same for year to date. Closing cash \$412.6k matches the bank lines on
+  the balance sheet.
+- Balance sheet snapshot: total assets, total liabilities, and equity at June 30, prior
+  month end, and December 31, each with its variance.
+- Statements in full: P&L, balance sheet, cash flow, every leaf line on the spine above,
+  subtotals summed from leaves.
+- Ratio appendix: current ratio 1.8x, gross margin 41.2%, net margin 6.4%, debt to
+  equity 0.6x, each with its prior year beside it.
+
+A P&L-only run stops after the statements: no cash management, no snapshot, no appendix,
+and the about page says why.
+
 ## Completion
 
 Done when:
@@ -73,11 +95,10 @@ Done when:
 - [ ] Every total cross-foots to the dollar; the balance sheet balances at every date
 - [ ] Statements tie to each other: net profit opens the cash flow; closing cash equals
       bank accounts on the balance sheet
-- [ ] Zero dimensional content, zero `-$` strings, zero `\$0` cells
+- [ ] Zero dimensional content (the grep in Caveats came back empty) and no rankings or
+      top-N lists, zero `-$` strings, zero `\$0` cells
 - [ ] One favorable negative on a cost line spot-checked charcoal, not red
 - [ ] Printed and read at letter size: no clipped labels, no orphaned totals, no group
       split from its total, no font warning in the build log
-- [ ] Put beside the dashboard: a reader could never confuse the two
-
 Cleanup: hand over `{entity}-management-report-{period}.pdf` with one sentence on the
 period and what was omitted for missing data. Never paste the statements into chat.

@@ -18,15 +18,17 @@ cleans up, reports. It owns the plan; the skills own their methods.
 
 ## Procedure
 
-- [ ] 1. Discover. Send a subagent to search the available skills for relevance:
-      `list_kick_skills` for the catalog, `load_kick_skill` on the plausible matches.
+- [ ] 1. Discover. Send a subagent to search the available skills for relevance: the
+      catalog first, then the plausible matches loaded. On Kick: the catalog calls are in `references/kick.md`.
       It returns a shortlist only: skill, what it covers, which steps apply to this request. The full skill texts stay out of the main context until the plan needs them.
+      No skill fits: say so in one line. A single figure the books hold can still come from one direct read; anything larger gets one question about what the user wants.
 - [ ] 2. Plan, in one stated line. The plan names skills or portions of skills:
       "flux steps 2 and 4 for the why, management-report end to end for the artifact."
       Smallest work that answers the request. One shared pull of figures across every skill in the plan. Ask only what the context cannot answer; take disclosed defaults for the rest.
 - [ ] 3. Execute the plan with each skill's own resources: its reference files, scripts,
       and templates, under its own rules.
       A borrowed step keeps its owner's tie-outs, thresholds, and confirmation gates. Never restate a sibling's method; load it and run it.
+      A step stops mid-plan (a failed tie-out, a missing input, a rejected call after its one retry): halt the steps that depend on it, finish the ones that do not, and carry the stop into the report.
 - [ ] 4. Run the brand skill over every finished artifact, as its own pass, never fused
       with generation.
 - [ ] 5. Report to the user: the answer or the artifact path, the figures with their
@@ -42,9 +44,7 @@ cleans up, reports. It owns the plan; the skills own their methods.
 - **Nothing user-facing carries internal plumbing.** No entity IDs, tool names, or
   skill names the reader did not ask about; say the account, the client, the period.
 - A wrong plan stated costs one correction; a wrong plan silent costs the deliverable.
-- On a rejected tool call, trust the live error over any guide or skill text, fix, and
-  retry once. A rejected write restarts its approval.
-  Never edit this skill file mid-run; report the discrepancy with the deliverable.
+- Tool errors and drift follow `references/HOUSE-RULES.md`.
 
 ## Example
 

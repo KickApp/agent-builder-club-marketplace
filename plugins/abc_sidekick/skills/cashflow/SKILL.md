@@ -28,10 +28,10 @@ companion. The phases:
       four weeks of outflows as a planning heuristic, confirm once. Never ask who funds a
       gap or in what increments.
 - [ ] 2. Pull cash and bank balances, AR and AP aging, the recurring expense list, and the
-      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       trailing 13 weeks of actual flows as the baseline. Without aging, build from the P&L:
       average weekly flows labeled a *straight-line assumption from the P&L*, noting that an
       aging report converts timing into real collection dates. Deliver; never refuse.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
 - [ ] 3. Put every recurring item on its real cadence, driven by dates, never by counting
       columns: payroll biweekly or semi-monthly from a real recent pay date (two runs in one
       week is the squeeze the grid exists to reveal); monthly items in the week their day
@@ -51,6 +51,11 @@ companion. The phases:
       unevaluated formulas (an unevaluated formula is a circular reference, showing 0 in
       Excel); the second edits inputs and asserts the grid responds, which a Python-decided
       schedule fails. If the checker cannot run, say the formulas were not verified.
+      Any error, unevaluated formula, or failed `model_test.py` assertion: do not hand over
+      the workbook. Find the failing cell or driver, fix it in `build_cash_model.py`'s
+      `CONFIG` or its formula construction, rebuild, and rerun both checks until both are
+      clean. If it cannot be fixed, stop and tell the user which check failed and on which
+      cells.
 - [ ] 6. Deliver `{entity}-cash-forecast-{YYYY-MM-DD}.xlsx`, leading with the week and the
       number. Then burn, read off the grid, operands shown: gross burn (average monthly
       outflows), net burn (outflows less inflows, what "burn rate" means unless they say

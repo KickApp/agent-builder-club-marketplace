@@ -20,5 +20,6 @@ discrepancy.
   skill reads scratch, nothing re-pulls. The guides describe single reports; the
   once-per-engagement discipline is advisory's own.
 - Resolve `ledgerId` and basis once; every deliverable in the set states the same basis.
-- When a step needs the file behind a Kick document, invoke `download-kick-document`
-  with the document id. The presigned URL stays inside that skill.
+- When a step needs the file behind a Kick document, invoke the `download-kick-document`
+  skill with the document id. It is a skill, not a Kick tool; the presigned URL
+  stays inside it.

@@ -23,8 +23,8 @@ whatever prepared it.
       the client profile for materiality and risk areas. No close folder: review what the
       user provides (a TB and draft statements at minimum), scope the verdict to it.
 - [ ] 2. TB roll: prior TB plus GL activity plus approved adjustments equals the final
-      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       adjusted TB, account by account. List every account that does not roll.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
 - [ ] 3. Substantiation: every material balance sheet account ties to a reconciliation proof,
       a schedule, or a named register exception; none of the three is a blocker.
       First-period equity: the equity roll (contributions traced to cash receipts plus
@@ -95,6 +95,7 @@ whatever prepared it.
 ```markdown
 ### Review: <client>, <period>
 **Verdict:** <ready / not ready>
+**Figures reviewed:** adjusted TB <debits> / <credits>; <n> entries totaling <amount>; <n> exceptions
 **TB roll:** <clean, or accounts listed>
 **Substantiation:** <n of m material BS accounts tied; failures listed>
 **Entries:** <register vs TB result>

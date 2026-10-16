@@ -24,5 +24,6 @@ and report the discrepancy.
   basis in the deliverable.
 - Real retained earnings come from the books where they exist; a derived plug prints
   itself (see the payload contract in the skill body).
-- When a step needs the file behind a Kick document, invoke `download-kick-document`
-  with the document id. The presigned URL stays inside that skill.
+- When a step needs the file behind a Kick document, invoke the `download-kick-document`
+  skill with the document id. It is a skill, not a Kick tool; the presigned URL
+  stays inside it.
