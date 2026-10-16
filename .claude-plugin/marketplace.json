@@ -11,7 +11,7 @@
       "name": "kick-abc",
       "source": "./plugins/abc_sidekick",
       "description": "Sidekick plans and runs the right skills at the right scope, action skills do the close and advisory work, and brand keeps every artifact on one visual standard",
-      "version": "1.0.11",
+      "version": "1.0.12",
       "author": {
         "name": "Kick",
         "email": "support@kick.co",

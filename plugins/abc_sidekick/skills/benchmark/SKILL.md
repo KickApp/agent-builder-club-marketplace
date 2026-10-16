@@ -21,8 +21,8 @@ worse than no range at all. Two modes:
       and `references/BENCHMARK-DATA.md` (the retrieval manual for every tier: where each
       source lives, how its tables read, the citation grammar) before touching any tier.
 - [ ] 2. Take the client's own figures from the run's shared pull, or compute them with the
-      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       same formulas dashboard uses, so one margin never reads two ways.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
 - [ ] 3. Resolve the classification (NAICS or equivalent, from the ledger and the user's
       description) and the size band from revenue or receipts. Play both back in one line
       and let the user correct them before pulling: "Comparing as NAICS 332710, machine

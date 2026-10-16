@@ -78,8 +78,17 @@ Read `references/PALETTE.md` before changing any of it. Surfaces and tooltips:
 
       It injects `<style id="brand-theme">` and `<script id="brand-icons">`, both replaced,
       so re-running is safe; it never touches the renderer, the payload, or a number.
-- [ ] 3. Apply the workbook input convention to Excel and Google Sheets, sweep the number
-      formats, re-run `verify_model.py`: formatting can mask an error value behind a format.
+- [ ] 3. Workbooks: copy the file to `{name}-prebrand.xlsx` first. Then, with `openpyxl`, give
+      every hardcoded input cell the input style and every formula cell (value starts with
+      `=`) the formula style, set number and date formats, turn gridlines off, and freeze
+      panes, all per "Make it readable without instructions" in `references/MODELS.md`.
+      Touch styles only, never a value or a formula. Google Sheets: apply the same to the
+      `.xlsx` and import it per the Google Sheets section of `MODELS.md`. Then re-run
+      `python3 references/templates/verify_model.py {name}.xlsx`, because a format can mask
+      an error value. If it fails, run it on the prebrand copy. The copy fails too: the
+      error was already there, so do not deliver the workbook; name the failing cells in
+      chat for the skill that built it. Only the branded file fails: discard it and redo
+      the pass from the copy. Delete the prebrand copy once the branded file is green.
 - [ ] 4. Run the copy sweep on every deliverable with prose in it, including the chat message
       that goes with it. Report one line per class of change; never paste the diff. A vague
       lead finding is flagged in chat, never replaced with numbers you did not pull.
@@ -98,12 +107,10 @@ Palette semantics. Color carries meaning or it should not be there; every hue ha
   every background and is never a fill. A pastel used as text ink fails contrast.
 - `posbar` and `negbar` stay a matched pair at one lightness; the sign carries the meaning.
 - `cats` are categorical, assigned by position, never ranking or scoring. `cmut` grey means
-  unclassified or other, never a real member. Ramp rules, enforced by `brand_verify.js`: one
-  lightness, chroma under 0.42, nothing in the red range `negbar` owns, at least 25 degrees
-  of hue between neighbours.
-- **No red versus green scoring, ever.** Adverse gets pastel red; good things get no color.
-- **A negative number is not automatically bad.** Costs render in parentheses in charcoal. Set
-  the plain tone on any cell whose negative is favorable, table cell or matrix row.
+  unclassified or other, never a real member. The ramp rules live in `references/PALETTE.md`,
+  and `brand_verify.js` enforces them.
+- Sign and sentiment are separate channels: no red versus green scoring, and a favorable
+  negative takes the plain tone. The full rule is in `references/ARTIFACTS.md`.
 - **Color lands on signed numerals, never on worded deltas.** `(\$13,500)` may carry the tone;
   "Up \$5,425" renders in body ink. The word already carries the direction.
 - **This pass owns chart hues.** Incoming chart colors get restyled to this palette. Two
@@ -120,7 +127,8 @@ Layout and identity.
   labels 28, KPI label 22, sub 34. A long member name is a signal: shorten it, explain it in
   the note or a finding.
 - Inter at 14px, embedded (about 25 KB Latin subset); `"embed": false` only for a hard size
-  limit. Weights 400 body, 500 labels, 600 title and KPI headlines. Numbers always
+  limit. The unbranded template uses 400 and 500 only (`references/ARTIFACTS.md`); this pass
+  adds 600 for the title and KPI headlines through `theme.py`, never by hand. Numbers always
   `font-variant-numeric: tabular-nums`, tracking `-0.005em`. Charts are inline SVG, never
   canvas, which prints fuzzy or blank.
 - Icons are identifiers, not decoration: inline Lucide paths, 24x24, 1.7 stroke, no icon font
@@ -148,11 +156,8 @@ Copy. The words are part of the look.
   outright: always prose, never part of a company name. Fix each hit in the payload, rebuild.
 
 Workbooks and close deliverables.
-- Input convention: blue font on yellow fill for hardcoded inputs, black on white for formulas,
-  green font for in-workbook links. No cross-file links; hardcode the value and label it an
-  input. Formats: `#,##0`, `(1,234)` negatives, `0.0%`, `0.0"x"`. Tabs sentence case.
-- **Formulas, never computed values.** Hardcoded numbers are a screenshot with extra steps.
-  **One direction of flow**: inputs and an actuals spine feed everything; nothing feeds back.
+- Workbook styles, formulas, and flow follow `references/MODELS.md`. A workbook that arrives
+  with hardcoded results where formulas belong is flagged for its owning skill, never rebuilt.
 - **A statement is a statement, not a trial balance.** Anything headed "balance sheet" or "P&L"
   carries the chart of accounts hierarchy with subtotals, in statement order; derive it from
   the GL when the connection cannot supply it. **One entity per file, and name it.**
@@ -178,6 +183,18 @@ Wrong:   ▲ 4057.7% vs last year
 
 The lead finding the copy sweep accepts carries a dollar figure or a date: "Your third-largest
 location has lost money for six months running, \$31,400 in total." Adjectives get flagged.
+
+The handover after a two-file pass:
+
+> Branded and checked:
+> - `harbor-dental-dashboard-2026-06.html`: themed, icons injected, opens offline, prints clean
+> - `harbor-dental-cash-forecast-2026-06.xlsx`: input convention applied to 14 driver cells,
+>   formats swept, `verify_model.py` green
+>
+> Copy sweep, fixed in the payload and rebuilt: 3 en dashes in ranges now read "to",
+> 1 "supplier" now reads "vendor", 2 semicolons split into sentences.
+> For the dashboard skill: the lead finding "Margins look strong" has no figure. Flagged,
+> not rewritten.
 
 ## Completion
 

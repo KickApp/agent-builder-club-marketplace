@@ -36,6 +36,15 @@ Hues are ordered so neighbors sit far apart on the wheel, because adjacent bars 
 reader actually compares. The closest neighboring pair here is 80 degrees apart. Reordering the
 ramp for looks will put two greens next to each other.
 
+### The limits the verifier checks
+
+`brand_verify.js` fails the build on any entry that breaks one of these:
+
+- Lightness between 0.74 and 0.90 for every entry, with a spread under 0.12 across the ramp.
+- Chroma at or under 0.42. The current entries sit under 0.35, so the ceiling leaves room.
+- Hue outside the red range `negbar` owns: below 25 degrees or above 320 fails.
+- At least 25 degrees of hue between neighboring entries.
+
 ### Segments are separated by paper, not by borders
 
 Touching shapes are separated by a 2px gap that shows `card` through: the bands of a stacked

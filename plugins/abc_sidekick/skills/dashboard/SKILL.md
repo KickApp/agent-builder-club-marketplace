@@ -23,9 +23,12 @@ Fixed page order, most important first:
 - [ ] 1. Confirm books, period, basis. Read `references/HOUSE-RULES.md`, `references/DATA.md`,
       `references/ARTIFACTS.md`, and `references/DIMENSIONS.md` first.
 - [ ] 2. Pull the P&L for the period and the comparisons: prior period, trailing three-period
-      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       average, same period last year when twelve months exist. Label every column; no targets
       or plans, only what happened against what happened before.
+      Pull the balance sheet at period end too: cash for the cash tiles, and the AR and AP
+      control balances the aging re-sums to. No balance sheet available: omit the cash
+      tiles and the aging, and say so in the chat message.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
 - [ ] 3. Detect dimensions and measure coverage per `references/DIMENSIONS.md`: never ask, read
       for it, then say what you found; its coverage bands decide whether a view ships. One
       section per owner question, three dimensional sections maximum.
@@ -98,11 +101,53 @@ Fixed page order, most important first:
 
 ## Example
 
+The whole page as a trimmed `data.json`, one section per line in the fixed order, `"..."`
+standing for the rows and months left out:
+
 ```json
-{ "type": "yoy", "title": "Revenue", "span": "half", "fmt": "currency",
-  "labels": ["Jan", "Feb", "...", "Dec"],
-  "current": { "name": "FY 2026", "values": [340000, 355000, "...", null] },
-  "prior":   { "name": "FY 2025", "values": [298000, 310000, "...", 331000] } }
+{ "meta": { "entity": "Northwind Trading Co.", "title": "Performance dashboard",
+            "period": "FY 2026", "source": "Accounting system, accrual basis",
+            "closedThrough": "December 2026" },
+  "views": [ { "sections": [
+    { "type": "kpi", "items": [
+        { "label": "Revenue", "value": 4205000, "fmt": "currency", "delta": { "value": 0.062 },
+          "spark": [315375, 323785, "..."] },
+        { "label": "Net income", "value": 104000, "fmt": "currency", "delta": { "value": -0.262 } },
+        { "label": "Cash on hand", "value": 612000, "fmt": "currency" },
+        { "label": "Monthly spend", "value": 341000, "fmt": "currency", "sub": "1.8 months of cash" } ] },
+    { "type": "yoy", "title": "Revenue", "span": "half", "fmt": "currency",
+      "labels": ["Jan", "Feb", "...", "Dec"],
+      "current": { "name": "FY 2026", "values": [340000, 355000, "...", null] },
+      "prior":   { "name": "FY 2025", "values": [298000, 310000, "...", 331000] } },
+    { "type": "yoy", "title": "Net income", "span": "half", "fmt": "currency", "...": "..." },
+    { "type": "kpi", "compact": true, "items": [
+        { "label": "Locations", "value": 5, "fmt": "number", "sub": "plus untagged activity" }, "..." ] },
+    { "type": "stack", "title": "Profit by location, by month", "fmt": "currency",
+      "columns": ["Jan", "Feb", "..."],
+      "series": [ { "label": "Northgate", "values": [41200, 39800, "..."] }, "...",
+                  { "label": "Unassigned", "values": [-1200, -900, "..."] } ] },
+    { "type": "kpi", "compact": true, "items": [
+        { "label": "Products", "value": 19, "fmt": "number" }, "..." ] },
+    { "type": "table", "title": "Profit per unit by product", "fmt": "currency", "sort": true,
+      "columns": ["Item", "Units", "Revenue", "Price", "Unit cost", "Unit margin", "Margin %", "Profit"],
+      "rows": [ "...", { "total": true, "cells": ["Total", null, { "v": 4205000 }, null, null, null,
+                { "v": 0.346, "fmt": "percent" }, { "v": 1455000 }] } ] },
+    { "type": "donut", "title": "Revenue mix", "fmt": "currency",
+      "items": [ "...", { "label": "Other (11)", "value": 9100, "color": "cmut" } ] },
+    { "type": "hbars", "title": "Top customers by revenue", "fmt": "currency",
+      "items": [ "...", { "label": "Other (43)", "value": 1724050, "color": "cmut" } ] },
+    { "type": "hbars", "title": "Top vendors by spend", "fmt": "currency", "note": "Excludes payroll.",
+      "items": [ "...", { "label": "Other (58)", "value": 375000, "color": "cmut" } ] },
+    { "type": "hbars", "title": "Money owed to you", "span": "half", "fmt": "currency",
+      "note": "Unpaid invoices, \$184,300 total. \$61,200 is past due.",
+      "items": [ { "label": "Current", "value": 123100, "color": "posbar" },
+                 { "label": "1-30 days late", "value": 34600, "color": "cmut" },
+                 { "label": "31-60 days late", "value": 14200, "color": "cmut" },
+                 { "label": "61-90 days late", "value": 5900, "color": "cmut" },
+                 { "label": "Over 90 days late", "value": 6500, "color": "negbar" } ] },
+    { "type": "hbars", "title": "Money you owe", "span": "half", "fmt": "currency", "...": "..." }
+  ] } ],
+  "footnote": "Accrual basis, FY 2026 against FY 2025. Location profit plus \$235,600 of unallocated overhead re-sums to operating income. Review before this reaches an owner." }
 ```
 
 ## Completion

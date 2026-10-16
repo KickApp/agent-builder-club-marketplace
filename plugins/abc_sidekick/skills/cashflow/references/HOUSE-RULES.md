@@ -22,7 +22,7 @@ transcript should read like a status board, not a lab notebook.
 
 In a run producing more than one deliverable, finish generating an artifact and stop: say it
 is built in one line, give its top finding, and ask whether to continue ("Dashboard's built
-and its numbers tie — continue with the management report?"). Never start artifact N+1 in
+and its numbers tie. Continue with the management report?"). Never start artifact N+1 in
 the same turn that finished artifact N. The brand-and-verify pass over the whole set, and
 the handover of every file path, is its own closing turn. This keeps long runs inside the
 platform's per-turn limits at natural finish lines instead of stopping mid-build.

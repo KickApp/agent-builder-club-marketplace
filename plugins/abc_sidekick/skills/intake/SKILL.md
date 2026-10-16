@@ -22,10 +22,10 @@ the artifact; the request list lives inside it. Never require a perfect data pac
       `profile.md` at the root in a single-client workspace, or in project knowledge): it
       names the accounts, schedules, and statements this client's close expects.
 - [ ] 2. Inventory what was provided: each file's type, system of origin, and period coverage,
-      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
       identified from its contents, never its filename or the user's description. Inputs, any
       subset: trial balance (required for a full close; a GL export substitutes per Caveats),
       prior-period TB, GL detail, bank and card statements, subledgers or schedules.
+      On Kick: guides and pull mapping in `references/kick.md`. Other connectors: discover at runtime, never guess names.
 - [ ] 3. Validate the TB: debits equal credits; the period label matches the period being
       closed. With a prior TB, confirm prior close balances roll into this period's openings;
       flag any account that moved outside the period.

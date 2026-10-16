@@ -19,5 +19,6 @@ discrepancy.
 - Kick's own 13-week guide is a full workflow; load it for its data-pull pattern,
   then build the model per this skill's method (the workbook contract in
   `references/MODELS.md` stays the deliverable, not the guide's output).
-- When a step needs the file behind a Kick document, invoke `download-kick-document`
-  with the document id. The presigned URL stays inside that skill.
+- When a step needs the file behind a Kick document, invoke the `download-kick-document`
+  skill with the document id. It is a skill, not a Kick tool; the presigned URL
+  stays inside it.

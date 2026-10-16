@@ -43,21 +43,16 @@ Read `references/HOUSE-RULES.md`, `references/DATA.md`, `references/ARTIFACTS.md
 - [ ] 5. Brand the whole set in one pass, after the last artifact is generated:
       `python3 references/templates/theme.py references/brand-config.md report1.html report2.html`
       The pass is idempotent; re-running it after a palette change is the supported way to re-skin a finished set. It reports banned punctuation and ledger words rather than rewriting; fix each in the payload, rebuild that file, and brand the set again.
-      Workbooks have no script: apply the input convention and number formats from `brand` by hand, then re-run `verify_model.py`, because a formatting pass can hide an error value behind a custom format.
+      Workbooks have no `theme.py` pass: brand them per Step 3 of the `brand` skill, which ends by re-running `verify_model.py`, because a formatting pass can hide an error value behind a custom format.
       The management report is the exception: its engine builds the PDF directly with brand tokens baked in and takes no `theme.py` pass, but its sentences follow the brand copy rules, so write them to those rules the first time.
       mrr-arr-report is the other exception: its scripts build the HTML snapshot and the Google Sheet tabs to its own spec, so it takes no `theme.py` pass. Write its chat and file text to the brand copy rules.
 - [ ] 6. Verify against Completion, then hand over the paths, the one-sentence story, the top finding, and what was skipped for missing data.
 
 ## Guardrails
 
-- **Content is generated. Then, as a separate pass over the finished file, brand is
-  applied. Never both in one step.** Fused, three things go wrong: a copy slip destroys
-  the artifact (the audit lives in the brand pass), you cannot see what you built (the
-  unbranded file is the honest check on structure), and re-branding stops being free (a
-  palette change would mean rebuilding every payload). There is no flag that does both.
-  And never brand file by file as each is generated: wait until the last artifact is
-  written, then brand them together; one invocation over the set is what guarantees
-  they come out identical.
+- **Brand the set, never file by file.** Generate and brand stay two passes (why, in
+  `references/ARTIFACTS.md`). Wait until the last artifact is written, then brand them
+  together; one invocation over the set is what guarantees they come out identical.
 - **This skill never computes.** No figures of its own, no reconciliation, no
   recomputation of what a skill produced. Read-only over the books, like everything it
   routes to. The one write in the set is mrr-arr-report adding its `MRR` tabs to a
@@ -88,14 +83,27 @@ Orientation, one line and moving:
 > dashboard with margins and per-location profit against your own prior quarter. Running
 > that now. An AR aging report would also let me show what's trapped in receivables."
 
+The handover at the end of a two-skill run, pointing at the artifacts rather than repeating them:
+
+> Ready, both branded and checked:
+> - `harbor-dental-dashboard-2026-q2.html`
+> - `harbor-dental-flux-2026-q2.html`
+>
+> The story: revenue grew 6.2% on last year's second quarter, but the Riverside location's
+> losses ate most of the gain.
+> Top finding: Riverside has lost money for six months running, \$31,400 in total.
+> Skipped for missing data: AR and AP aging. Add an aging report and the dashboard shows what
+> is trapped in receivables.
+> Places the two artifacts point opposite ways on the same ledger: none.
+
 ## Completion
 
 Done when:
 
 - [ ] Where two artifacts state one figure, they agree to the dollar
 - [ ] One period, one basis, one closed-through date across every header and footnote
-- [ ] No two reports imply opposite conclusions from the same ledger; a genuine
-      contradiction is raised as a finding, never papered over
+- [ ] The handover lists each place two artifacts point opposite ways on the same
+      ledger, or says there are none
 - [ ] Every artifact was branded, the last file checked too (the unbranded tell: no Kick
       blue on the header mark, text in the system font rather than Inter)
 - [ ] One artifact opened and worth a screenshot; if not, the reason is said in chat
