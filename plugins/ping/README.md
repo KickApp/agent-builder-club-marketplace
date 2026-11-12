@@ -12,7 +12,8 @@ Built by [Kick](https://kick.co) for firms that run client conversations through
 ```
 
 The plugin connects to Ping and to Kick. Sign in to each when Claude asks. No sign-in
-prompt? Run `/mcp`, pick the server, and choose **Authenticate**.
+prompt? Run `/mcp`, pick the server, and choose **Authenticate**. Then say "set up Ping
+Agents": Claude checks both connections and suggests what to try first.
 
 ## What it does
 

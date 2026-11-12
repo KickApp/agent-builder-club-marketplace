@@ -125,7 +125,7 @@
       "name": "ping",
       "source": "./plugins/ping",
       "description": "Prep for client meetings, recap the day's client calls and email, and find what else each client has asked for, from Ping conversations and Kick books, read-only.",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "author": {
         "name": "Kick",
         "email": "support@kick.co",
