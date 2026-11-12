@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ping": {
+      "type": "http",
+      "url": "https://app.pingassistant.com/api/mcp"
+    },
+    "kick": {
+      "type": "http",
+      "url": "https://use.kick.co/mcp"
+    }
+  }
+}
